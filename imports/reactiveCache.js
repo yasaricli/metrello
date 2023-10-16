@@ -1,4 +1,8 @@
 import { DataCache } from '@wekanteam/meteor-reactive-cache';
+import { ReactiveCache } from '@wekanteam/meteor-reactive-cache';
+import { ReactiveCacheClient } from '@wekanteam/meteor-reactive-cache';
+import { ReactiveCacheServer } from '@wekanteam/meteor-reactive-cache';
+import { ReactiveMiniMongoIndex } from '@wekanteam/meteor-reactive-cache';
 
 // Server isn't reactive, so search for the data always.
 ReactiveCacheServer = {

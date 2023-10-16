@@ -1,4 +1,5 @@
-Translation = new Mongo.Collection('translation');
+import SimpleSchema from 'simpl-schema';
+let Translation = new Mongo.Collection('translation');
 
 /**
  * A Organization User in wekan

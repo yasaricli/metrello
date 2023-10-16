@@ -1,0 +1,31 @@
+//- visit https://www.meteor.com/try for the tutorial that produces this jade
+
+head
+  title Todo List
+
+body
+  .container
+    header
+      h1 Todo List (#{incompleteCount})
+      label.hide-completed
+        input(type="checkbox" checked="#{hideCompleted}")
+        | Hide Completed Tasks
+      +loginButtons
+      if currentUser
+        form.new-task
+          input(type="text" name="text" placeholder="Type to add new tasks")
+    ul
+      each tasks
+        +task
+
+template(name="task")
+  li(class="{{#if checked}}checked{{/if}} {{#if private}}private{{/if}}")
+    button.delete &times;
+    input.toggle-checked(type="checkbox" checked=checked)
+    if isOwner
+      button.toggle-private
+        if private
+          | Private
+        else
+          | Public
+    span.text <strong>#{username}</strong> - #{text}

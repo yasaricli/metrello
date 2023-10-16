@@ -1,96 +1,36 @@
 # Meteor packages used by this project, one per line.
+# Check this file (and the other files in this directory) into your repository.
 #
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-base@1.5.1
+meteor-base@1.5.2-alpha300.15             # Packages every Meteor app needs to have
+mobile-experience@1.1.1-alpha300.15       # Packages for a great mobile UX
+mongo@2.0.0-alpha300.15                   # The database Meteor supports right now
+reactive-var@1.0.13-alpha300.15            # Reactive variable for tracker
 
-# Build system
-ecmascript@0.16.7
-standard-minifier-js@2.8.1
-mquandalle:jade
-coffeescript@2.4.1!
+standard-minifier-css@1.9.3-alpha300.15   # CSS minifier run for production mode
+standard-minifier-js@3.0.0-alpha300.15    # JS minifier run for production mode
+es5-shim@4.8.1-alpha300.15                # ECMAScript 5 compatibility for older browsers
+ecmascript@0.16.8-alpha300.15              # Enable ECMAScript2015+ syntax in app code
+typescript@4.9.5-alpha300.15              # Enable TypeScript syntax in .ts and .tsx modules
+shell-server@0.6.0-alpha300.15            # Server-side component of the `meteor shell` command
+hot-module-replacement@0.5.4-alpha300.15  # Update client in development without reloading the page
 
-# Polyfills
-es5-shim@4.8.0
 
-# Collections
-aldeed:collection2
-cottz:publish-relations
-dburles:collection-helpers
-idmontie:migrations
-easy:search
-mongo@1.16.7
-mquandalle:collection-mutations
-
-# Account system
-accounts-password@2.3.4
-useraccounts:core
-useraccounts:flow-routing
-useraccounts:unstyled
-simple:rest-accounts-password
-wekan-ldap
-wekan-accounts-cas
-wekan-accounts-sandstorm
+static-html@1.3.3-alpha300.15             # Define static page content in .html files
+react-meteor-data       # React higher-order component for reactively tracking Meteor data
+accounts-password
+wekan-markdown
+kadira:dochead
+wekan-autofocus
 wekan-accounts-lockout
 wekan-oidc
-wekan-accounts-oidc
-
-# Utilities
-check@1.3.2
-jquery@3.0.0!
-random@1.2.1
-reactive-dict@1.3.1
-session@1.2.1
-tracker@1.3.2
-underscore@1.0.13
-arillo:flow-router-helpers
-audit-argument-checks@1.0.7
-kadira:dochead
-mquandalle:autofocus
-ongoworks:speakingurl
-raix:handlebar-helpers
-http@2.0.0! # force new http package
-
-# Datepicker
+wekan-autosize
 wekan-bootstrap-datepicker
-
-# UI components
-ostrio:i18n
-reactive-var@1.0.12
-mousetrap:mousetrap
-mquandalle:jquery-textcomplete
-mquandalle:mousetrap-bindglobal
-templates:tabs
-meteor-autosize
-shell-server@0.5.0
-email@2.2.5
-dynamic-import@0.7.3
-msavin:usercache
-# Keep stylus in 1.1.0, because building v2 takes extra 52 minutes.
-meteorhacks:subs-manager
-meteorhacks:aggregate@1.3.0
-wekan-markdown
-konecty:mongo-counter
-percolate:synced-cron
-ostrio:cookies
-ostrio:files@2.3.0
-pascoual:pdfkit
-lmieulet:meteor-coverage
-meteortesting:mocha@2.0.3
-aldeed:simple-schema
-matb33:collection-hooks
-simple:json-routes
-kadira:flow-router
-spacebars
-service-configuration@1.3.1
-communitypackages:picker
-minifier-css@1.6.4
-blaze
-kadira:blaze-layout
-peerlibrary:blaze-components
-ejson@1.1.3
-logging@1.3.2
-wekan-fullcalendar
-momentjs:moment@2.29.3
+jquery@3.0.0!
 wekan-fontawesome
+wekan-fullcalendar
+wekan-ldap
+ostrio:cron-jobs
+oauth

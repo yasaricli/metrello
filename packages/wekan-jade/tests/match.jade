@@ -1,0 +1,258 @@
+//- HTML tags
+
+template(name="match-jade-singleTagAttribute")
+  input(required)
+
+template(name="match-jade-nonStandardTag")
+  qr(text="jade rocks")
+
+template(name="match-jade-tagAttributeWithTextValue-1")
+  input(type='text')
+
+template(name="match-jade-tagAttributeWithTextValue-2")
+  input(type="text")
+
+template(name="match-jade-emptyTagAttribute")
+  input(placehover="")
+
+template(name="match-jade-parentContextInTagAttribute")
+  a(href="/users/{{../userId}}/")
+
+template(name="match-jade-helperInTagAttribute")
+  input(required=isRequired)
+
+template(name="match-jade-dynamicTagAttributes")
+  input($dyn=attrs)
+
+template(name="match-jade-dynamicTagAttributesWithArgs")
+  input($dyn="{{attrs arg1 arg2}}")
+
+template(name="match-jade-multipleTagAttributes-1")
+  input(type="password" required=isRequired autofocus $dyn=attrs)
+
+template(name="match-jade-multipleTagAttributes-2")
+  input(type="password", required=isRequired, autofocus, $dyn=attrs)
+
+template(name="match-jade-charRef")
+  script(src="//maps.googleapis.com/maps/api/js?language=ru&region=ru")
+
+template(name="match-jade-classNames")
+  div.class1.class2(class="class3")
+
+template(name="match-jade-classNamesMerging")
+  .sixteen.wide.mobile.twelve.wide.computer.column
+
+template(name="match-jade-multipleIdentifiers")
+  #id1.class1(class="class2" class="class3 class4")
+
+template(name="match-jade-inlineColonTags")
+  form: input
+
+template(name="match-jade-inlineBracketsTags")
+  div styling #[span #[span tags]]
+
+template(name="match-jade-iframe")
+  iframe(width="13" height="37")
+
+template(name="match-jade-styleTag")
+  style.
+    body {
+      background-color: {{themeColor}};
+    }
+
+template(name="match-jade-empty-1")
+
+template(name="match-jade-empty-2")
+  = ""
+
+template(name="match-jade-justText-1")
+  | Hello world
+
+template(name="match-jade-justText-2")
+  = "Hello world"
+
+template(name="match-jade-justText-3")
+  = 'Hello world'
+
+template(name="match-jade-justText-4")
+  = 'Hello '
+  = 'world'
+
+template(name="match-jade-textWithEscapedQuote")
+  = 'Je t\'aime'
+
+template(name="match-jade-multipleChildren")
+  p
+    | Hello
+    | world
+
+template(name="match-jade-noSpaceBetweenChildren")
+  p
+    | Hello
+    = "."
+
+//- Template helpers
+
+template(name="match-jade-tagHelper")
+  textarea= textareaValue
+
+template(name="match-jade-justHelper")
+  = helper
+
+template(name="match-jade-inlineHelper-1")
+  p Hello #{world}
+
+template(name="match-jade-inlineHelper-2")
+  p Hello {{world}}
+
+template(name="match-jade-unescapedInlineHelper-1")
+  p Hello !{world}
+
+template(name="match-jade-unescapedInlineHelper-2")
+  p Hello {{{world}}}
+
+template(name="match-jade-mustacheCall")
+  p {{func arg1 arg2}}
+
+template(name="match-jade-multipleInlineHelpers")
+  p Hello #{foo} #{bar} #{baz}
+
+template(name="match-jade-tagAttributeInterpolation")
+  button(class="btn #{btnKind}")
+
+
+//- Build-in components
+
+template(name="match-jade-if-1")
+  if weAreTheWorld
+    | hello world
+
+template(name="match-jade-if-2")
+  if(weAreTheWorld)
+    | hello world
+
+template(name="match-jade-if-3")
+  +if(weAreTheWorld)
+    | hello world
+
+template(name="match-jade-if-4")
+  +if weAreTheWorld
+    | hello world
+
+template(name="match-jade-if-5")
+  +if (weAreTheWorld)
+    | hello world
+
+template(name="match-jade-ifWithHelper-1")
+  if helper arg1 arg2
+    | hello world
+
+template(name="match-jade-ifWithHelper-2")
+  if(helper arg1 arg2)
+    | hello world
+
+template(name="match-jade-ifAndElse")
+  if weAreTheWorld
+    | hello world
+  else
+    | we are the children
+
+template(name="match-jade-ifSubscriptionReady")
+  if Template.subscriptionsReady
+    | ready
+  else
+    | loading
+
+template(name="match-jade-with")
+  with user
+    = name
+
+template(name="match-jade-each")
+  each users
+    = name
+
+template(name="match-jade-eachIn-1")
+  each u in users
+    = u.name
+
+template(name="match-jade-eachIn-2")
+  +each(u in users)
+    = u.name
+
+//- else if syntaxic sugar
+
+template(name="match-jade-elseif")
+  if condA
+    h1 hello A
+  else if condB
+    h2 hello B
+  else if condC
+    h3 hello C
+  else
+    h4 goodbye
+
+
+//- Components - templates inclusions
+
+template(name="match-jade-inclusion")
+  +myTemplate
+
+template(name="match-jade-inclusionWithContent")
+  +myTemplate
+    | this is some {{content}}
+
+template(name="match-jade-contentsInclusion")
+  +UI.content
+  +UI.elseContent
+
+template(name="match-jade-inclusionWithPositionalArgs-1")
+  +myTemplate(arg1 arg2)
+
+template(name="match-jade-inclusionWithPositionalArgs-2")
+  +myTemplate(arg1
+    arg2)
+
+template(name="match-jade-inclusionWithPositionalArgs-3")
+  +myTemplate(
+    arg1
+    arg2
+  )
+
+template(name="match-jade-inclusionWithPositionalArgs-4")
+  +myTemplate arg1 arg2
+
+template(name="match-jade-inclusionWithKeywordArgs-1")
+  +myTemplate(key1=arg1 key2=arg2)
+
+template(name="match-jade-inclusionWithKeywordArgs-2")
+  +myTemplate key1=arg1 key2=arg2
+
+template(name="match-jade-dynamicTemplate")
+  +Template.dynamic(template=template)
+
+template(name="match-jade-callableInComponentArg-1")
+  +Component test="moo()"
+
+template(name="match-jade-callableInComponentArg-2")
+  +Component(test="moo()")
+
+//- Blocks of text
+
+template(name="match-jade-blockOfText")
+  p.
+    This <b>is</b> a block
+    of text on multiple
+    lines.
+
+template(name="match-jade-textareaContent")
+  textarea.
+    Inside a textarea
+    <i>tags</i> shouldn't be interpreted
+
+template(name="match-jade-specialMarkdownComponent")
+  +markdown
+    This is my email: <address@example.com>
+
+template(name="match-jade-specialMarkdownComponentWithHelper")
+  +markdown
+    This is my email: {{email}}

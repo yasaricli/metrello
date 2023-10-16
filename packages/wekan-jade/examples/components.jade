@@ -1,0 +1,18 @@
+//- First, define the component (jade + js)
+template(name="ifEven")
+  if isEven value
+    +UI.contentBlock
+  else
+    +UI.elseBlock
+
+//-
+  Template.ifEven.isEven = function (value) {
+    return value % 2 === 0;
+  };
+
+//- And now we can use it!
+body
+  +ifEven(value=2)
+    | 2 is even
+  else
+    | 2 is odd

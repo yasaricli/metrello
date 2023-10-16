@@ -1,0 +1,121 @@
+<!-- HTML tags -->
+
+<template name="match-html-singleTagAttribute"><input required></template>
+
+<template name="match-html-nonStandardTag"><qr text="jade rocks"></qr></template>
+
+<template name="match-html-tagAttributeWithTextValue"><input type="text"></template>
+
+<template name="match-html-emptyTagAttribute"><input placehover=""></template>
+
+<template name="match-html-parentContextInTagAttribute"><a href="/users/{{../userId}}/"></a></template>
+
+<template name="match-html-helperInTagAttribute"><input required={{isRequired}}></template>
+
+<template name="match-html-dynamicTagAttributes"><input {{attrs}}></template>
+
+<template name="match-html-dynamicTagAttributesWithArgs"><input {{attrs arg1 arg2}}></template>
+
+<template name="match-html-multipleTagAttributes"><input type="password" required={{isRequired}} autofocus {{attrs}}></template>
+
+<template name="match-html-charRef"><script src="//maps.googleapis.com/maps/api/js?language=ru&region=ru"></script></template>
+
+<template name="match-html-classNames"><div class="class1 class2 class3"></div></template>
+
+<template name="match-html-classNamesMerging"><div class="sixteen wide mobile twelve wide computer column"></div></template>
+
+<template name="match-html-multipleIdentifiers"><div id="id1" class="class1 class2 class3 class4"></div></template>
+
+<template name="match-html-inlineColonTags"><form><input></form></template>
+
+<template name="match-html-inlineBracketsTags"><div>styling <span><span>tags</span></span></div></template>
+
+<template name="match-html-iframe"><iframe width="13" height="37"></iframe></template>
+
+<template name="match-html-styleTag"><style>body {
+  background-color: {{themeColor}};
+}
+</style></template>
+
+<template name="match-html-empty"></template>
+
+<template name="match-html-justText">Hello world</template>
+
+<template name="match-html-textWithEscapedQuote">Je t'aime</template>
+
+<template name="match-html-multipleChildren"><p>Hello
+world</p></template>
+
+<template name="match-html-noSpaceBetweenChildren"><p>Hello.</p></template>
+
+
+<!-- Template helpers -->
+
+<template name="match-html-tagHelper"><textarea>{{textareaValue}}</textarea></template>
+
+<template name="match-html-justHelper">{{helper}}</template>
+
+<template name="match-html-inlineHelper"><p>Hello {{world}}</p></template>
+
+<template name="match-html-unescapedInlineHelper"><p>Hello {{{world}}}</p></template>
+
+<template name="match-html-mustacheCall"><p>{{func arg1 arg2}}</p></template>
+
+<template name="match-html-multipleInlineHelpers"><p>Hello {{foo}} {{bar}} {{baz}}</p></template>
+
+<template name="match-html-tagAttributeInterpolation"><button class="btn {{btnKind}}"></button></template>
+
+
+<!-- Build-in components -->
+
+<template name="match-html-if">{{#if weAreTheWorld}}hello world{{/if}}</template>
+
+<template name="match-html-ifWithHelper">{{#if helper arg1 arg2}}hello world{{/if}}</template>
+
+<template name="match-html-ifAndElse">{{#if weAreTheWorld}}hello world{{else}}we are the children{{/if}}</template>
+
+<template name="match-html-ifSubscriptionReady">{{#if Template.subscriptionsReady}}ready{{else}}loading{{/if}}</template>
+
+<template name="match-html-with">{{#with user}}{{name}}{{/with}}</template>
+
+<template name="match-html-each">{{#each users}}{{name}}{{/each}}</template>
+
+<template name="match-html-eachIn">{{#each u in users}}{{u.name}}{{/each}}</template>
+
+
+<!-- else if syntaxic sugar -->
+
+<template name="match-html-elseif">{{#if condA}}<h1>hello A</h1>{{else}}{{#if condB}}<h2>hello B</h2>{{else}}{{#if condC}}<h3>hello C</h3>{{else}}<h4>goodbye</h4>{{/if}}{{/if}}{{/if}}</template>
+
+
+<!-- Components - templates inclusions -->
+
+<template name="match-html-inclusion">{{> myTemplate}}</template>
+
+<template name="match-html-inclusionWithContent">{{# myTemplate}}this is some {{content}}{{/myTemplate}}</template>
+
+<template name="match-html-contentsInclusion">{{> UI.content}}{{> UI.elseContent}}</template>
+
+<template name="match-html-inclusionWithPositionalArgs">{{> myTemplate arg1 arg2}}</template>
+
+<template name="match-html-inclusionWithKeywordArgs">{{> myTemplate key1=arg1 key2=arg2}}</template>
+
+<template name="match-html-dynamicTemplate">{{> Template.dynamic template=template}}</template>
+
+<template name="match-html-callableInComponentArg">{{> Component test="moo()"}}</template>
+
+<!-- Blocks of text -->
+
+<template name="match-html-blockOfText"><p>This <b>is</b> a block
+of text on multiple
+lines.
+</p></template>
+
+<template name="match-html-textareaContent"><textarea>Inside a textarea
+<i>tags</i> shouldn't be interpreted
+</textarea></template>
+
+<template name="match-html-specialMarkdownComponent">{{#markdown}}This is my email: <address@example.com>
+{{/markdown}}</template>
+
+<template name="match-html-specialMarkdownComponentWithHelper">{{#markdown}}This is my email: {{email}}{{/markdown}}</template>

@@ -1,5 +1,6 @@
+/*
 import _ from 'underscore';
-import SyncedCron from 'meteor/percolate:synced-cron';
+//import SyncedCron from 'meteor/percolate:synced-cron';
 import LDAP from './ldap';
 import { log_debug, log_info, log_warn, log_error } from './logger';
 
@@ -466,9 +467,10 @@ const addCronJob = _.debounce(Meteor.bindEnvironment(function addCronJobDebounce
   sc.start();
 
 }), 500);
+*/
 
 Meteor.startup(() => {
   Meteor.defer(() => {
-    if(LDAP.settings_get('LDAP_BACKGROUND_SYNC')){addCronJob();}
+    //if(LDAP.settings_get('LDAP_BACKGROUND_SYNC')){addCronJob();}
   });
 });
