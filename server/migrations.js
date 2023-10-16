@@ -140,7 +140,7 @@ Migrations.add('change-attachments-type-for-non-images', () => {
 
 Migrations.add('card-covers', () => {
   Cards.find().forEach(card => {
-    const cover = Attachments.findOne({ cardId: card._id, cover: true });
+    const cover = Attachments.findOneAsync({ cardId: card._id, cover: true });
     if (cover) {
       Cards.update(card._id, { $set: { coverId: cover._id } }, noValidate);
     }
@@ -150,7 +150,7 @@ Migrations.add('card-covers', () => {
 
 */
 
-Migrations.add('use-css-class-for-boards-colors', () => {
+Migrations.add('use-css-class-for-boards-colors', async () => {
   const associationTable = {
     '#27AE60': 'nephritis',
     '#C0392B': 'pomegranate',
@@ -170,7 +170,7 @@ Migrations.add('use-css-class-for-boards-colors', () => {
     '#2a2a2a': 'moderndark',
     '#222222': 'exodark',
   };
-  Boards.find().forEach(board => {
+  await Boards.find().forEachAsync(board => {
     const oldBoardColor = board.background.color;
     const newBoardColor = associationTable[oldBoardColor];
     Boards.update(
@@ -184,22 +184,22 @@ Migrations.add('use-css-class-for-boards-colors', () => {
   });
 });
 
-Migrations.add('denormalize-star-number-per-board', () => {
-  Boards.find().forEach(board => {
-    const nStars = Users.find({ 'profile.starredBoards': board._id }).count();
+Migrations.add('denormalize-star-number-per-board', async () => {
+  await Boards.find().forEachAsync(async board => {
+    const nStars = await Users.find({ 'profile.starredBoards': board._id }).countAsync();
     Boards.update(board._id, { $set: { stars: nStars } }, noValidate);
   });
 });
 
 // We want to keep a trace of former members so we can efficiently publish their
 // infos in the general board publication.
-Migrations.add('add-member-isactive-field', () => {
-  Boards.find({}, { fields: { members: 1 } }).forEach(board => {
+Migrations.add('add-member-isactive-field', async () => {
+  await Boards.find({}, { fields: { members: 1 } }).forEachAsync(async board => {
     const allUsersWithSomeActivity = _.chain(
-      Activities.find(
+      await Activities.find(
         { boardId: board._id },
         { fields: { userId: 1 } },
-      ).fetch(),
+      ).fetchAsync(),
     )
       .pluck('userId')
       .uniq()
@@ -223,8 +223,8 @@ Migrations.add('add-member-isactive-field', () => {
   });
 });
 
-Migrations.add('add-sort-checklists', () => {
-  Checklists.find().forEach((checklist, index) => {
+Migrations.add('add-sort-checklists', async () => {
+  await Checklists.find().forEachAsync((checklist, index) => {
     if (!checklist.hasOwnProperty('sort')) {
       Checklists.direct.update(
         checklist._id,
@@ -244,10 +244,10 @@ Migrations.add('add-sort-checklists', () => {
   });
 });
 
-Migrations.add('add-swimlanes', () => {
-  Boards.find().forEach(board => {
+Migrations.add('add-swimlanes', async () => {
+  await Boards.find().forEachAsync(async board => {
     const swimlaneId = board.getDefaultSwimline()._id;
-    Cards.find({ boardId: board._id }).forEach(card => {
+    await Cards.find({ boardId: board._id }).forEachAsync(card => {
       if (!card.hasOwnProperty('swimlaneId')) {
         Cards.direct.update(
           { _id: card._id },
@@ -259,8 +259,8 @@ Migrations.add('add-swimlanes', () => {
   });
 });
 
-Migrations.add('add-views', () => {
-  Boards.find().forEach(board => {
+Migrations.add('add-views', async () => {
+  await Boards.find().forEachAsync(board => {
     if (!board.hasOwnProperty('view')) {
       Boards.direct.update(
         { _id: board._id },
@@ -271,8 +271,8 @@ Migrations.add('add-views', () => {
   });
 });
 
-Migrations.add('add-checklist-items', () => {
-  Checklists.find().forEach(checklist => {
+Migrations.add('add-checklist-items', async () => {
+  await Checklists.find().forEachAsync(checklist => {
     // Create new items
     _.sortBy(checklist.items, 'sort').forEach((item, index) => {
       ChecklistItems.direct.insert({
@@ -293,8 +293,8 @@ Migrations.add('add-checklist-items', () => {
   });
 });
 
-Migrations.add('add-card-types', () => {
-  Cards.find().forEach(card => {
+Migrations.add('add-card-types', async () => {
+  await Cards.find().forEachAsync(card => {
     Cards.direct.update(
       { _id: card._id },
       {
@@ -573,7 +573,7 @@ Migrations.add('add-defaultAuthenticationMethod', () => {
   );
 });
 
-Migrations.add('add-templates', () => {
+Migrations.add('add-templates', async () => {
   Boards.update(
     {
       type: {
@@ -617,11 +617,11 @@ Migrations.add('add-templates', () => {
     },
     noValidateMulti,
   );
-  Users.find({
+  await Users.find({
     'profile.templatesBoardId': {
       $exists: false,
     },
-  }).forEach(user => {
+  }).forEachAsync(user => {
     // Create board and swimlanes
     Boards.insert(
       {
@@ -696,16 +696,16 @@ Migrations.add('add-templates', () => {
   });
 });
 
-Migrations.add('fix-circular-reference_', () => {
-  Cards.find().forEach(card => {
+Migrations.add('fix-circular-reference_', async () => {
+  await Cards.find().forEachAsync(card => {
     if (card.parentId === card._id) {
       Cards.update(card._id, { $set: { parentId: '' } }, noValidateMulti);
     }
   });
 });
 
-Migrations.add('mutate-boardIds-in-customfields', () => {
-  CustomFields.find().forEach(cf => {
+Migrations.add('mutate-boardIds-in-customfields', async () => {
+  await CustomFields.find().forEachAsync(cf => {
     CustomFields.update(
       cf,
       {
@@ -799,21 +799,20 @@ Migrations.add('fix-incorrect-dates', () => {
   ];
 
   // Dates were previously created with Date.now() which is a number, not a date
-  tables.forEach(t =>
-    t
-      .rawCollection()
-      .find({ $or: [{ createdAt: { $type: 1 } }, { updatedAt: { $type: 1 } }] })
-      .forEach(({ _id, createdAt, updatedAt }) => {
-        t.rawCollection().updateMany(
-          { _id },
-          {
-            $set: {
-              createdAt: new Date(createdAt),
-              updatedAt: new Date(updatedAt),
-            },
+  tables.forEach(async t => await t
+    .rawCollection()
+    .find({ $or: [{ createdAt: { $type: 1 } }, { updatedAt: { $type: 1 } }] })
+    .forEachAsync(({ _id, createdAt, updatedAt }) => {
+      t.rawCollection().updateMany(
+        { _id },
+        {
+          $set: {
+            createdAt: new Date(createdAt),
+            updatedAt: new Date(updatedAt),
           },
-        );
-      }),
+        },
+      );
+    }),
   );
 });
 
@@ -1121,16 +1120,16 @@ Migrations.add('add-description-text-allowed-on-minicard', () => {
   );
 });
 
-Migrations.add('add-sort-field-to-boards', () => {
-  Boards.find().forEach((board, index) => {
+Migrations.add('add-sort-field-to-boards', async () => {
+  await Boards.find().forEachAsync((board, index) => {
     if (!board.hasOwnProperty('sort')) {
       Boards.direct.update(board._id, { $set: { sort: index } }, noValidate);
     }
   });
 });
 
-Migrations.add('add-default-profile-view', () => {
-  Users.find().forEach(user => {
+Migrations.add('add-default-profile-view', async () => {
+  await Users.find().forEachAsync(user => {
     if (!user.hasOwnProperty('profile.boardView')) {
       // Set default view
       Users.direct.update(
@@ -1206,10 +1205,10 @@ Migrations.add('add-card-number-allowed', () => {
   );
 });
 
-Migrations.add('assign-boardwise-card-numbers', () => {
-  Boards.find().forEach(board => {
+Migrations.add('assign-boardwise-card-numbers', async () => {
+  await Boards.find().forEachAsync(async board => {
     let nextCardNumber = board.getNextCardNumber();
-    Cards.find(
+    await Cards.find(
       {
         boardId: board._id,
         cardNumber: {
@@ -1219,7 +1218,7 @@ Migrations.add('assign-boardwise-card-numbers', () => {
       {
         sort: { createdAt: 1 }
       }
-    ).forEach(card => {
+    ).forEachAsync(card => {
       Cards.update(
         card._id,
         { $set: { cardNumber: nextCardNumber } },
@@ -1374,7 +1373,7 @@ Migrations.add('migrate-avatars-collectionFS-to-ostrioFiles', () => {
             Avatars.update({ _id: fileRef._id }, { $set: { userId } });
             Users.find().forEach(user => {
               const old_url = fileObj.url();
-              new_url = Avatars.findOne({ _id: fileRef._id }).link(
+              new_url = Avatars.findOneAsync({ _id: fileRef._id }).link(
                 'original',
                 '/',
               );
@@ -1427,7 +1426,7 @@ Migrations.add('migrate-attachment-migration-fix-source-import', () => {
 Migrations.add('attachment-cardCopy-fix-boardId-etc', () => {
   Attachments.find( {"meta.source": "copy"} ).forEach(_attachment => {
     const cardId = _attachment.meta.cardId;
-    const card = Cards.findOne(cardId);
+    const card = Cards.findOneAsync(cardId);
     if (card.boardId !== undefined && card.listId !== undefined && card.swimlaneId !== undefined) {
       console.log("update attachment id: ", _attachment._id);
       Attachments.update(_attachment._id, {

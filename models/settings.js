@@ -248,7 +248,7 @@ if (Meteor.isServer) {
     return config;
   }
 
-  function sendInvitationEmail(_id) {
+  async function sendInvitationEmail(_id) {
     const icode = ReactiveCache.getInvitationCode(_id);
     const author = ReactiveCache.getCurrentUser();
     try {
@@ -286,7 +286,7 @@ if (Meteor.isServer) {
         });
       }
 */
-      Email.send({
+      await Email.sendAsync({
         to: icode.email,
         from: Accounts.emailTemplates.from,
         subject: TAPi18n.__('email-invite-register-subject', params, lang),
@@ -346,7 +346,7 @@ if (Meteor.isServer) {
         rc = -1;
         throw new Meteor.Error('not-allowed');
       }
-      emails.forEach(email => {
+      emails.forEach(async email => {
         if (email && SimpleSchema.RegEx.Email.test(email)) {
           // Checks if the email is already link to an account.
           const userExist = ReactiveCache.getUser({ email });
@@ -363,7 +363,7 @@ if (Meteor.isServer) {
             InvitationCodes.update(invitation, {
               $set: { boardsToBeInvited: boards },
             });
-            sendInvitationEmail(invitation._id);
+            await sendInvitationEmail(invitation._id);
           } else {
             const code = getRandomNum(100000, 999999);
             InvitationCodes.insert(
@@ -374,9 +374,9 @@ if (Meteor.isServer) {
                 createdAt: new Date(),
                 authorId: Meteor.userId(),
               },
-              function(err, _id) {
+              async function(err, _id) {
                 if (!err && _id) {
-                  sendInvitationEmail(_id);
+                  await sendInvitationEmail(_id);
                 } else {
                   rc = -1;
                   throw new Meteor.Error(
@@ -392,7 +392,7 @@ if (Meteor.isServer) {
       return rc;
     },
 
-    sendSMTPTestEmail() {
+    async sendSMTPTestEmail() {
       if (!Meteor.userId()) {
         throw new Meteor.Error('invalid-user');
       }
@@ -427,7 +427,7 @@ if (Meteor.isServer) {
           });
         }
 */
-        Email.send({
+        await Email.sendAsync({
           to: user.emails[0].address,
           from: Accounts.emailTemplates.from,
           subject: TAPi18n.__('email-smtp-test-subject', { lng: lang }),

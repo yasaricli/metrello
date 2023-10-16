@@ -206,7 +206,7 @@ const casValidate = (req, ticket, token, service, callback) => {
  * Register a server-side login handle.
  * It is call after Accounts.callLoginMethod() is call from client.
  */
- Accounts.registerLoginHandler((options) => {
+ Accounts.registerLoginHandler(async options => {
   if (!options.cas)
     return undefined;
 
@@ -252,13 +252,13 @@ const casValidate = (req, ticket, token, service, callback) => {
   if (attrs.debug) {
     console.log(`CAS response : ${JSON.stringify(result)}`);
   }
-  let user = Meteor.users.findOne({ 'username': options.username });
+  let user = await Meteor.users.findOneAsync({ 'username': options.username });
   if (! user) {
     if (attrs.debug) {
       console.log(`Creating user account ${JSON.stringify(options)}`);
     }
     const userId = Accounts.insertUserDoc({}, options);
-    user = Meteor.users.findOne(userId);
+    user = await Meteor.users.findOneAsync(userId);
   }
   if (attrs.debug) {
     console.log(`Using user account ${JSON.stringify(user)}`);

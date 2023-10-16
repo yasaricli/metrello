@@ -1,8 +1,8 @@
 import LDAP from './ldap';
 
 Meteor.methods({
-  ldap_test_connection() {
-    const user = Meteor.user();
+  async ldap_test_connection() {
+    const user = await Meteor.userAsync();
     if (!user) {
       throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'ldap_test_connection' });
     }

@@ -101,7 +101,7 @@ Attachments = new FilesCollection({
     Attachments.update({ _id: fileObj.uploadedAtOstrio }, { $set: { "uploadedAtOstrio" : this._now } });
 
     let storageDestination = fileObj.meta.copyStorage || STORAGE_NAME_GRIDFS;
-    Meteor.defer(() => Meteor.call('validateAttachmentAndMoveToStorage', fileObj._id, storageDestination));
+    Meteor.defer(async () => await Meteor.callAsync('validateAttachmentAndMoveToStorage', fileObj._id, storageDestination));
   },
   interceptDownload(http, fileObj, versionName) {
     const ret = fileStoreStrategyFactory.getFileStrategy(fileObj, versionName).interceptDownload(http, this.cacheControl);
@@ -161,26 +161,26 @@ if (Meteor.isServer) {
       const fileObj = ReactiveCache.getAttachment(fileObjId);
       rename(fileObj, newName, fileStoreStrategyFactory);
     },
-    validateAttachment(fileObjId) {
+    async validateAttachment(fileObjId) {
       check(fileObjId, String);
 
       const fileObj = ReactiveCache.getAttachment(fileObjId);
-      const isValid = Promise.await(isFileValid(fileObj, attachmentUploadMimeTypes, attachmentUploadSize, attachmentUploadExternalProgram));
+      const isValid = Promise.await(await isFileValid(fileObj, attachmentUploadMimeTypes, attachmentUploadSize, attachmentUploadExternalProgram));
 
       if (!isValid) {
         Attachments.remove(fileObjId);
       }
     },
-    validateAttachmentAndMoveToStorage(fileObjId, storageDestination) {
+    async validateAttachmentAndMoveToStorage(fileObjId, storageDestination) {
       check(fileObjId, String);
       check(storageDestination, String);
 
-      Meteor.call('validateAttachment', fileObjId);
+      await Meteor.callAsync('validateAttachment', fileObjId);
 
       const fileObj = ReactiveCache.getAttachment(fileObjId);
 
       if (fileObj) {
-        Meteor.defer(() => Meteor.call('moveAttachmentToStorage', fileObjId, storageDestination));
+        Meteor.defer(async () => await Meteor.callAsync('moveAttachmentToStorage', fileObjId, storageDestination));
       }
     },
   });

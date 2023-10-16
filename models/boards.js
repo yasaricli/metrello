@@ -1687,14 +1687,14 @@ if (Meteor.isServer) {
         } else throw new Meteor.Error('error-board-notAMember');
       } else throw new Meteor.Error('error-board-doesNotExist');
     },
-    acceptInvite(boardId) {
+    async acceptInvite(boardId) {
       check(boardId, String);
       const board = ReactiveCache.getBoard(boardId);
       if (!board) {
         throw new Meteor.Error('error-board-doesNotExist');
       }
 
-      Meteor.users.update(Meteor.userId(), {
+      await Meteor.users.updateAsync(Meteor.userId(), {
         $pull: {
           'profile.invitedBoards': boardId,
         },

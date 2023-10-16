@@ -230,7 +230,7 @@ export function getDataToSyncUserData(ldapUser, user) {
 }
 
 
-export function syncUserData(user, ldapUser) {
+export async function syncUserData(user, ldapUser) {
   log_info('Syncing user data');
   log_debug('user', {'email': user.email, '_id': user._id});
   // log_debug('ldapUser', ldapUser.object);
@@ -239,7 +239,7 @@ export function syncUserData(user, ldapUser) {
     const username = slug(getLdapUsername(ldapUser));
     if (user && user._id && username !== user.username) {
       log_info('Syncing user username', user.username, '->', username);
-      Meteor.users.findOne({ _id: user._id }, { $set: { username }});
+      await Meteor.users.findOneAsync({ _id: user._id }, { $set: { username }});
     }
   }
 
@@ -248,7 +248,7 @@ export function syncUserData(user, ldapUser) {
     log_debug('fullname=',fullname);
     if (user && user._id && fullname !== '') {
       log_info('Syncing user fullname:', fullname);
-      Meteor.users.update({ _id:  user._id }, { $set: { 'profile.fullname' : fullname, }});
+      await Meteor.users.updateAsync({ _id:  user._id }, { $set: { 'profile.fullname' : fullname, }});
     }
   }
 
@@ -258,7 +258,7 @@ export function syncUserData(user, ldapUser) {
 
     if (user && user._id && email !== '') {
       log_info('Syncing user email:', email);
-      Meteor.users.update({
+      await Meteor.users.updateAsync({
         _id: user._id
       }, {
         $set: {
@@ -270,7 +270,7 @@ export function syncUserData(user, ldapUser) {
 
 }
 
-export function addLdapUser(ldapUser, username, password) {
+export async function addLdapUser(ldapUser, username, password) {
   const uniqueId = getLdapUserUniqueID(ldapUser);
 
   const userObject = {
@@ -310,7 +310,7 @@ export function addLdapUser(ldapUser, username, password) {
     userObject._id = Accounts.createUser(userObject);
 
     // Add the services.ldap identifiers
-    Meteor.users.update({ _id:  userObject._id }, {
+    await Meteor.users.updateAsync({ _id:  userObject._id }, {
 		    $set: {
 		        'services.ldap': { id: uniqueId.value },
 		        'emails.0.verified': true,
@@ -345,7 +345,7 @@ export function importNewUsers(ldap) {
       throw error;
     }
 
-    ldapUsers.forEach((ldapUser) => {
+    ldapUsers.forEach(async ldapUser => {
       count++;
 
       const uniqueId = getLdapUserUniqueID(ldapUser);
@@ -362,7 +362,7 @@ export function importNewUsers(ldap) {
       }
 
       // Add user if it was not added before
-      let user = Meteor.users.findOne(userQuery);
+      let user = await Meteor.users.findOneAsync(userQuery);
 
       if (!user && username && LDAP.settings_get('LDAP_MERGE_EXISTING_USERS') === true) {
         const userQuery = {
@@ -371,7 +371,7 @@ export function importNewUsers(ldap) {
 
         log_debug('userQuery merge', userQuery);
 
-        user = Meteor.users.findOne(userQuery);
+        user = await Meteor.users.findOneAsync(userQuery);
         if (user) {
           syncUserData(user, ldapUser);
         }

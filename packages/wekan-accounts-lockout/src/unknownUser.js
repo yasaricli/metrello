@@ -53,7 +53,7 @@ class UnknownUser {
     }
   }
 
-  scheduleUnlocksForLockedAccounts() {
+  async scheduleUnlocksForLockedAccounts() {
     const lockedAccountsCursor = this.AccountsLockoutCollection.find(
       {
         'services.accounts-lockout.unlockTime': {
@@ -67,7 +67,7 @@ class UnknownUser {
       },
     );
     const currentTime = Number(new Date());
-    lockedAccountsCursor.forEach((connection) => {
+    await lockedAccountsCursor.forEachAsync((connection) => {
       let lockDuration = this.unlockTime(connection) - currentTime;
       if (lockDuration >= this.settings.lockoutPeriod) {
         lockDuration = this.settings.lockoutPeriod * 1000;

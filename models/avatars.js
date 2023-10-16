@@ -90,7 +90,7 @@ Avatars = new FilesCollection({
     }
     return TAPi18n.__('avatar-too-big', {size: filesize(avatarsUploadSize)});
   },
-  onAfterUpload(fileObj) {
+  async onAfterUpload(fileObj) {
     // current storage is the filesystem, update object and database
     Object.keys(fileObj.versions).forEach(versionName => {
       fileObj.versions[versionName].storage = STORAGE_NAME_FILESYSTEM;
@@ -98,7 +98,7 @@ Avatars = new FilesCollection({
 
     Avatars.update({ _id: fileObj._id }, { $set: { "versions": fileObj.versions } });
 
-    const isValid = Promise.await(isFileValid(fileObj, avatarsUploadMimeTypes, avatarsUploadSize, avatarsUploadExternalProgram));
+    const isValid = Promise.await(await isFileValid(fileObj, avatarsUploadMimeTypes, avatarsUploadSize, avatarsUploadExternalProgram));
 
     if (isValid) {
       ReactiveCache.getUser(fileObj.userId).setAvatarUrl(`${formatFleURL(fileObj)}?auth=false&brokenIsFine=true`);

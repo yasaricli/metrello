@@ -30,7 +30,7 @@ Meteor.startup(() => {
     // Meteor.setTimeout(func, delay) does not accept args :-(
     // so we pass userId with closure
     const userId = user._id;
-    Meteor.setTimeout(() => {
+    Meteor.setTimeout(async () => {
       const user = ReactiveCache.getUser(userId);
 
       // for each user, in the timed period, only the first call will get the cached content,
@@ -66,7 +66,7 @@ Meteor.startup(() => {
           });
         }
 */
-        Email.send({
+        await Email.sendAsync({
           to: user.emails[0].address.toLowerCase(),
           from: Accounts.emailTemplates.from,
           subject,

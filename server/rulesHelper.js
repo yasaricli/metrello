@@ -57,7 +57,7 @@ RulesHelper = {
     });
     return matchingMap;
   },
-  performAction(activity, action) {
+  async performAction(activity, action) {
     const card = ReactiveCache.getCard(activity.cardId);
     const boardId = activity.boardId;
     if (
@@ -149,7 +149,7 @@ RulesHelper = {
           });
         }
 */
-        Email.send({
+        await Email.sendAsync({
           to,
           from: Accounts.emailTemplates.from,
           subject,

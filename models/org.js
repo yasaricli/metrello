@@ -165,14 +165,14 @@ if (Meteor.isServer) {
         });
       }
     },
-    setOrgDisplayName(org, orgDisplayName) {
+    async setOrgDisplayName(org, orgDisplayName) {
       if (ReactiveCache.getCurrentUser()?.isAdmin) {
         check(org, Object);
         check(orgDisplayName, String);
         Org.update(org, {
           $set: { orgDisplayName: orgDisplayName },
         });
-        Meteor.call('setUsersOrgsOrgDisplayName', org._id, orgDisplayName);
+        await Meteor.callAsync('setUsersOrgsOrgDisplayName', org._id, orgDisplayName);
       }
     },
 
@@ -205,14 +205,7 @@ if (Meteor.isServer) {
         });
       }
     },
-    setOrgAllFieldsFromOidc(
-      org,
-      orgDisplayName,
-      orgDesc,
-      orgShortName,
-      orgWebsite,
-      orgIsActive,
-    ) {
+    async setOrgAllFieldsFromOidc(org, orgDisplayName, orgDesc, orgShortName, orgWebsite, orgIsActive) {
       check(org, Object);
       check(orgDisplayName, String);
       check(orgDesc, String);
@@ -228,16 +221,9 @@ if (Meteor.isServer) {
           orgIsActive: orgIsActive,
         },
       });
-      Meteor.call('setUsersOrgsOrgDisplayName', org._id, orgDisplayName);
+      await Meteor.callAsync('setUsersOrgsOrgDisplayName', org._id, orgDisplayName);
     },
-    setOrgAllFields(
-      org,
-      orgDisplayName,
-      orgDesc,
-      orgShortName,
-      orgWebsite,
-      orgIsActive,
-    ) {
+    async setOrgAllFields(org, orgDisplayName, orgDesc, orgShortName, orgWebsite, orgIsActive) {
       if (ReactiveCache.getCurrentUser()?.isAdmin) {
         check(org, Object);
         check(orgDisplayName, String);
@@ -254,7 +240,7 @@ if (Meteor.isServer) {
             orgIsActive: orgIsActive,
           },
         });
-        Meteor.call('setUsersOrgsOrgDisplayName', org._id, orgDisplayName);
+        await Meteor.callAsync('setUsersOrgsOrgDisplayName', org._id, orgDisplayName);
       }
     },
   });

@@ -1248,18 +1248,18 @@ Meteor.methods({
     check(startDay, Number);
     ReactiveCache.getCurrentUser().setStartDayOfWeek(startDay);
   },
-  applyListWidth(boardId, listId, width) {
+  async applyListWidth(boardId, listId, width) {
     check(boardId, String);
     check(listId, String);
     check(width, Number);
-    const user = Meteor.user();
+    const user = await Meteor.userAsync();
     user.setListWidth(boardId, listId, width);
   },
-  applySwimlaneHeight(boardId, swimlaneId, height) {
+  async applySwimlaneHeight(boardId, swimlaneId, height) {
     check(boardId, String);
     check(swimlaneId, String);
     check(height, Number);
-    const user = Meteor.user();
+    const user = await Meteor.userAsync();
     user.setSwimlaneHeight(boardId, swimlaneId, height);
   },
 });
@@ -1413,7 +1413,7 @@ if (Meteor.isServer) {
         }
       }
     },
-    setUsernameAndEmail(username, email, userId) {
+    async setUsernameAndEmail(username, email, userId) {
       check(username, String);
       check(email, String);
       check(userId, String);
@@ -1421,8 +1421,8 @@ if (Meteor.isServer) {
         if (Array.isArray(email)) {
           email = email.shift();
         }
-        Meteor.call('setUsername', username, userId);
-        Meteor.call('setEmail', email, userId);
+        await Meteor.callAsync('setUsername', username, userId);
+        await Meteor.callAsync('setEmail', email, userId);
       }
     },
     setPassword(newPassword, userId) {
@@ -1461,7 +1461,7 @@ if (Meteor.isServer) {
       }
     },
     // we accept userId, username, email
-    inviteUserToBoard(username, boardId) {
+    async inviteUserToBoard(username, boardId) {
       check(username, String);
       check(boardId, String);
 
@@ -1585,7 +1585,7 @@ if (Meteor.isServer) {
           });
         }
 */
-        Email.send({
+        await Email.sendAsync({
           to: user.emails[0].address.toLowerCase(),
           from: Accounts.emailTemplates.from,
           subject: TAPi18n.__('email-invite-subject', params, lang),
@@ -1670,7 +1670,7 @@ if (Meteor.isServer) {
       }
     },
   });
-  Accounts.onCreateUser((options, user) => {
+  Accounts.onCreateUser(async (options, user) => {
     const userCount = ReactiveCache.getUsers({}, {}, true).count();
     user.isAdmin = userCount === 0;
 
@@ -1721,10 +1721,10 @@ if (Meteor.isServer) {
       existingUser.profile = user.profile;
       existingUser.authenticationMethod = user.authenticationMethod;
 
-      Meteor.users.remove({
+      await Meteor.users.removeAsync({
         _id: user._id,
       });
-      Meteor.users.remove({
+      await Meteor.users.removeAsync({
         _id: existingUser._id,
       }); // is going to be created again
       return existingUser;
@@ -2152,12 +2152,12 @@ if (Meteor.isServer) {
    * @return_type [{ _id: string,
    *                 username: string}]
    */
-  JsonRoutes.add('GET', '/api/users', function (req, res) {
+  JsonRoutes.add('GET', '/api/users', async function(req, res) {
     try {
       Authentication.checkUserId(req.userId);
       JsonRoutes.sendResult(res, {
         code: 200,
-        data: Meteor.users.find({}).map(function (doc) {
+        data: await Meteor.users.find({}).mapAsync(function (doc) {
           return {
             _id: doc._id,
             username: doc.username,
@@ -2479,7 +2479,7 @@ if (Meteor.isServer) {
    * @param {string} userId the ID of the user to delete
    * @return_type {_id: string}
    */
-  JsonRoutes.add('DELETE', '/api/users/:userId', function (req, res) {
+  JsonRoutes.add('DELETE', '/api/users/:userId', async function(req, res) {
     try {
       Authentication.checkUserId(req.userId);
       const id = req.params.userId;
@@ -2494,7 +2494,7 @@ if (Meteor.isServer) {
       //   that does now remove member from board, card members and assignees correctly,
       //   but that should be used to remove user from all boards similarly
       // - wekan/models/users.js Delete is not enabled
-      Meteor.users.remove({ _id: id });
+      await Meteor.users.removeAsync({ _id: id });
       JsonRoutes.sendResult(res, {
         code: 200,
         data: {

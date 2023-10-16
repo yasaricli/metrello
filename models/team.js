@@ -162,14 +162,14 @@ if (Meteor.isServer) {
         });
       }
     },
-    setTeamDisplayName(team, teamDisplayName) {
+    async setTeamDisplayName(team, teamDisplayName) {
       if (ReactiveCache.getCurrentUser()?.isAdmin) {
         check(team, Object);
         check(teamDisplayName, String);
         Team.update(team, {
           $set: { teamDisplayName: teamDisplayName },
         });
-        Meteor.call('setUsersTeamsTeamDisplayName', team._id, teamDisplayName);
+        await Meteor.callAsync('setUsersTeamsTeamDisplayName', team._id, teamDisplayName);
       }
     },
 
@@ -202,14 +202,7 @@ if (Meteor.isServer) {
         });
       }
     },
-    setTeamAllFieldsFromOidc(
-      team,
-      teamDisplayName,
-      teamDesc,
-      teamShortName,
-      teamWebsite,
-      teamIsActive,
-    ) {
+    async setTeamAllFieldsFromOidc(team, teamDisplayName, teamDesc, teamShortName, teamWebsite, teamIsActive) {
         check(team, Object);
         check(teamDisplayName, String);
         check(teamDesc, String);
@@ -225,16 +218,9 @@ if (Meteor.isServer) {
             teamIsActive: teamIsActive,
           },
         });
-        Meteor.call('setUsersTeamsTeamDisplayName', team._id, teamDisplayName);
+        await Meteor.callAsync('setUsersTeamsTeamDisplayName', team._id, teamDisplayName);
       },
-    setTeamAllFields(
-      team,
-      teamDisplayName,
-      teamDesc,
-      teamShortName,
-      teamWebsite,
-      teamIsActive,
-    ) {
+    async setTeamAllFields(team, teamDisplayName, teamDesc, teamShortName, teamWebsite, teamIsActive) {
       if (ReactiveCache.getCurrentUser()?.isAdmin) {
         check(team, Object);
         check(teamDisplayName, String);
@@ -251,7 +237,7 @@ if (Meteor.isServer) {
             teamIsActive: teamIsActive,
           },
         });
-        Meteor.call('setUsersTeamsTeamDisplayName', team._id, teamDisplayName);
+        await Meteor.callAsync('setUsersTeamsTeamDisplayName', team._id, teamDisplayName);
       }
     },
   });

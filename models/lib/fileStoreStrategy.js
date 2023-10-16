@@ -540,9 +540,9 @@ export class FileStoreStrategyS3 extends FileStoreStrategy {
     super.onAfterRemove();
     // Intercept FilesCollection's remove method to remove file from AWS:S3
     const _origRemove = UserFiles.remove;
-    UserFiles.remove = function (selector, callback) {
+    UserFiles.remove = async function(selector, callback) {
       const cursor = this.collection.find(selector);
-      cursor.forEach((fileRef) => {
+      await cursor.forEachAsync((fileRef) => {
         _.each(fileRef.versions, (vRef) => {
           if (vRef && vRef.meta && vRef.meta.pipePath) {
             // Remove the object from AWS:S3 first, then we will call the original FilesCollection remove

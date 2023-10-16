@@ -18,7 +18,7 @@ var profile = {};
 var serviceData = {};
 var userinfo = {};
 
-OAuth.registerService('oidc', 2, null, function (query) {
+OAuth.registerService('oidc', 2, null, async function(query) {
   var debug = process.env.DEBUG || false;
 
   var token = getToken(query);
@@ -88,7 +88,7 @@ OAuth.registerService('oidc', 2, null, function (query) {
   //    therefore: keep admin privileges for wekan as before
   if(Array.isArray(serviceData.groups) && serviceData.groups.length && typeof serviceData.groups[0] === "string" )
   {
-    user = Meteor.users.findOne({'_id':  serviceData.id});
+    user = await Meteor.users.findOneAsync({'_id':  serviceData.id});
 
     serviceData.groups.forEach(function(groupName, i)
     {
