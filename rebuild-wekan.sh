@@ -44,11 +44,11 @@ do
 			# - Custom source: https://github.com/tj/n#custom-source
 			# - sudo -E uses existing environment variables, so that this can be used in build script:
 			#   https://github.com/tj/n/issues/584#issuecomment-523640742
-			export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			sudo -E n 14.21.4
-			sudo npm -g uninstall node-pre-gyp
+			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
+			sudo -E n 18.18.2
+			##sudo npm -g uninstall node-pre-gyp
 			# Latest fibers for Meteor sudo mkdir -p /usr/local/lib/node_modules/fibers/.node-gyp sudo npm -g install fibers
-			sudo npm -g install @mapbox/node-pre-gyp
+			##sudo npm -g install @mapbox/node-pre-gyp
 			# Install Meteor, if it's not yet installed
 			sudo npm -g install meteor --unsafe-perm
 			#sudo chown -R $(id -u):$(id -g) $HOME/.npm $HOME/.meteor
@@ -56,10 +56,10 @@ do
 		        echo "macOS";
 			brew install npm
 			npm -g install n
-			export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			n 14.21.4
-			npm -g uninstall node-pre-gyp
-			npm -g install @mapbox/node-pre-gyp
+			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
+			n 18.18.2
+			#npm -g uninstall node-pre-gyp
+			#npm -g install @mapbox/node-pre-gyp
 			npm -g install meteor
 		elif [[ "$OSTYPE" == "cygwin" ]]; then
 		        # POSIX compatibility layer and Linux environment emulation for Windows

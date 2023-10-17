@@ -21,7 +21,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV BUILD_DEPS="apt-utils libarchive-tools gnupg gosu wget curl bzip2 g++ build-essential git ca-certificates python3" \
     DEBUG=false \
-    NODE_VERSION=v14.21.4 \
+    NODE_VERSION=v18.18.2 \
     METEOR_RELEASE=METEOR@2.13.3 \
     USE_EDGE=false \
     METEOR_EDGE=1.5-beta.17 \
