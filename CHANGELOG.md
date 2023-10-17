@@ -45,6 +45,12 @@ and adds the following updates:
   [Part 3](https://github.com/wekan/wekan/commit/fe985e219a9e467973e9449762fc17c6a94e9031),
   [Part 4](https://github.com/wekan/wekan/commit/90da40fde0b2c68d3f751fe8ff2a06f3180cf6d9),
   [Part 5](https://github.com/wekan/wekan/commit/2c74240bcb9d24e206ffe4e59bc8242a6abd07d9).
+- Upgrade to Meteor 3.0-alpha.15.
+  [Part 1](https://github.com/wekan/wekan/commit/f838438f0060ad51a28395972929a2fadf235456),
+  [Part 2](https://github.com/wekan/wekan/commit/4fcaadb11b972170174caa33a14b4e2c76cd9703).
+  Thanks to Meteor developers and xet7.
+- [Upgraded Node.js to 18.18.2](https://github.com/wekan/wekan/commit/0fa895031c889cde0a439ac6cfbdca5dcdc32e71).
+  Thanks to Node.js and Meteor developers and xet7.
 
 and fixed the following bugs:
 
