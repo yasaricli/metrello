@@ -51,6 +51,8 @@ and adds the following updates:
   Thanks to Meteor developers and xet7.
 - [Upgraded Node.js to 18.18.2](https://github.com/wekan/wekan/commit/0fa895031c889cde0a439ac6cfbdca5dcdc32e71).
   Thanks to Node.js and Meteor developers and xet7.
+- [Updated dependencies](https://github.com/wekan/wekan/commit/36727be7f5731679598ca4c188393a1c40642660).
+  Thanks to developers of dependencies and xet7.
 
 and fixed the following bugs:
 
