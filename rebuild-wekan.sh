@@ -101,7 +101,7 @@ do
 		meteor build .build --directory --platforms=web.browser
 		rm -rf .build/bundle/programs/web.browser.legacy
 		(cd .build/bundle/programs/server && rm -rf node_modules && chmod u+w *.json && meteor npm install)
-                (cd .build/bundle/programs/server/node_modules/fibers && node build.js)
+                #(cd .build/bundle/programs/server/node_modules/fibers && node build.js)
 		(cd .build/bundle/programs/server/npm/node_modules/meteor/accounts-password && meteor npm remove bcrypt && meteor npm install bcrypt)
 		# Cleanup
 		cd .build/bundle
