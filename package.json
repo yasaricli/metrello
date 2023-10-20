@@ -13,8 +13,7 @@
   },
   "homepage": "https://wekan.github.io",
   "devDependencies": {
-    "flatted": "^3.2.2",
-    "sinon": "^13.0.2"
+    "flatted": "^3.2.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.20.7",
