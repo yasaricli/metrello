@@ -34,3 +34,8 @@ wekan-fullcalendar
 wekan-ldap
 ostrio:cron-jobs
 oauth
+aldeed:simple-schema
+wekan-collection2
+wekan-schema-deny
+accounts-base@3.0.0-alpha300.15
+tracker
