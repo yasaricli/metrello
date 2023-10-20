@@ -46,7 +46,11 @@ Users.attachSchema(
       /**
        * the list of organizations that a user belongs to
        */
-      type: [Object],
+      type: Array,
+      optional: true,
+    },
+    'orgs.$': {
+      type: String,
       optional: true,
     },
     'orgs.$.orgId': {
@@ -65,8 +69,12 @@ Users.attachSchema(
       /**
        * the list of teams that a user belongs to
        */
-      type: [Object],
+      type: Array,
       optional: true,
+    },
+    'teams.$': {
+     type: String,
+     optional: true,
     },
     'teams.$.teamId': {
       /**
@@ -84,14 +92,24 @@ Users.attachSchema(
       /**
        * the list of emails attached to a user
        */
-      type: [Object],
+      type: Array,
+      optional: true,
+    },
+    'emails.$': {
+      type: String,
       optional: true,
     },
     'emails.$.address': {
       /**
        * The email address
        */
-      type: SimpleSchema.RequiredEmail,
+      type: Array,
+      optional: true,
+    },
+    'emails.$.address.$': {
+      type: String,
+      //type: SimpleSchema.RequiredEmail,
+      optional: true,
     },
     'emails.$.verified': {
       /**
@@ -155,7 +173,11 @@ Users.attachSchema(
       /**
        * list of email buffers of the user
        */
-      type: [String],
+      type: Array,
+      optional: true,
+    },
+    'profile.emailBuffer.$': {
+      type: String,
       optional: true,
     },
     'profile.fullname': {
@@ -218,7 +240,11 @@ Users.attachSchema(
       /**
        * board IDs the user has been invited to
        */
-      type: [String],
+      type: Array,
+      optional: true,
+    },
+    'profile.invitedBoards.$': {
+      type: String,
       optional: true,
     },
     'profile.language': {
@@ -232,9 +258,13 @@ Users.attachSchema(
       /**
        * move and copy card dialog
        */
-      type: Object,
+      type: Array,
       optional: true,
       blackbox: true,
+    },
+    'profile.moveAndCopyDialog.$': {
+      type: String,
+      optional: true,
     },
     'profile.moveAndCopyDialog.$.boardId': {
       /**
@@ -258,15 +288,24 @@ Users.attachSchema(
       /**
        * move checklist dialog
        */
-      type: Object,
+      type: Array,
       optional: true,
       blackbox: true,
+    },
+    'profile.moveChecklistDialog.$': {
+      type: String,
+      optional: true,
     },
     'profile.moveChecklistDialog.$.boardId': {
       /**
        * last selected board id
        */
+      type: Array,
+      optional: true,
+    },
+    'profile.moveChecklistDialog.$.boardId.$': {
       type: String,
+      optional: true,
     },
     'profile.moveChecklistDialog.$.swimlaneId': {
       /**
@@ -290,9 +329,13 @@ Users.attachSchema(
       /**
        * copy checklist dialog
        */
-      type: Object,
+      type: Array,
       optional: true,
       blackbox: true,
+    },
+    'profile.copyChecklistDialog.$': {
+      type: String,
+      optional: true,
     },
     'profile.copyChecklistDialog.$.boardId': {
       /**
@@ -322,7 +365,11 @@ Users.attachSchema(
       /**
        * enabled notifications for the user
        */
-      type: [Object],
+      type: Array,
+      optional: true,
+    },
+    'profile.notifications.$': {
+      type: String,
       optional: true,
     },
     'profile.notifications.$.activity': {
@@ -363,7 +410,11 @@ Users.attachSchema(
       /**
        * list of starred board IDs
        */
-      type: [String],
+      type: Array,
+      optional: true,
+    },
+    'profile.starredBoards.$': {
+      type: String,
       optional: true,
     },
     'profile.icode': {
@@ -509,7 +560,11 @@ Users.attachSchema(
       /**
        * username for imported
        */
-      type: [String],
+      type: Array,
+      optional: true,
+    },
+    'importUsernames.$': {
+      type: String,
       optional: true,
     },
     lastConnectionDate: {
@@ -566,7 +621,7 @@ Users.deny({
 
 // Search a user in the complete server database by its name, username or emails adress. This
 // is used for instance to add a new user to a board.
-UserSearchIndex = new Index({
+let UserSearchIndex = new Index({
   collection: Users,
   fields: ['username', 'profile.fullname', 'profile.avatarUrl'],
   allowedFields: ['username', 'profile.fullname', 'profile.avatarUrl'],
