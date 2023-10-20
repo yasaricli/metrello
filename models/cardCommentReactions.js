@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
 
 const commentReactionSchema = new SimpleSchema({

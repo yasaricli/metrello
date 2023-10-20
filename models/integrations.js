@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
 
 Integrations = new Mongo.Collection('integrations');

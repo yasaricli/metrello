@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
 
 // Activities don't need a schema because they are always set from the a trusted

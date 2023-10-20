@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 OrgUser = new Mongo.Collection('orgUser');
 
 /**

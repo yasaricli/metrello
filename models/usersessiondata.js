@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 SessionData = new Mongo.Collection('sessiondata');
 
 /**

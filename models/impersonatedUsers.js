@@ -1,4 +1,5 @@
-ImpersonatedUsers = new Mongo.Collection('impersonatedUsers');
+import SimpleSchema from 'simpl-schema';
+let ImpersonatedUsers = new Mongo.Collection('impersonatedUsers');
 
 /**
  * A Impersonated User in wekan

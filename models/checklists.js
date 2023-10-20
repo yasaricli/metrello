@@ -1,3 +1,4 @@
+import SimpleSchema from 'simpl-schema';
 import { ReactiveCache, ReactiveMiniMongoIndex } from '/imports/reactiveCache';
 
 Checklists = new Mongo.Collection('checklists');
