@@ -43,3 +43,6 @@ coffeescript@2.7.0!
 spacebars
 blaze@3.0.0-alpha300.15!
 wekan-easy-search
+dburles:collection-helpers
+cottz:publish-relations
+wekan-collection-mutations
