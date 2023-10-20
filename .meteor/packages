@@ -6,12 +6,12 @@
 
 meteor-base@1.5.2-alpha300.15             # Packages every Meteor app needs to have
 mobile-experience@1.1.1-alpha300.15       # Packages for a great mobile UX
-mongo@2.0.0-alpha300.15                   # The database Meteor supports right now
-reactive-var@1.0.13-alpha300.15            # Reactive variable for tracker
+mongo@2.0.0-alpha300.15!                   # The database Meteor supports right now
+reactive-var            # Reactive variable for tracker
 
 standard-minifier-css@1.9.3-alpha300.15   # CSS minifier run for production mode
 standard-minifier-js@3.0.0-alpha300.15    # JS minifier run for production mode
-es5-shim@4.8.1-alpha300.15                # ECMAScript 5 compatibility for older browsers
+es5-shim                # ECMAScript 5 compatibility for older browsers
 ecmascript@0.16.8-alpha300.15              # Enable ECMAScript2015+ syntax in app code
 typescript@4.9.5-alpha300.15              # Enable TypeScript syntax in .ts and .tsx modules
 shell-server@0.6.0-alpha300.15            # Server-side component of the `meteor shell` command
@@ -46,3 +46,25 @@ wekan-easy-search
 dburles:collection-helpers
 cottz:publish-relations
 wekan-collection-mutations
+check
+random
+audit-argument-checks
+underscore
+ongoworks:speakingurl
+raix:handlebar-helpers
+reactive-dict
+arillo:flow-router-helpers
+session
+mquandalle:jquery-textcomplete
+mquandalle:mousetrap-bindglobal
+dynamic-import
+templates:tabs
+msavin:usercache
+ostrio:cookies
+meteorhacks:subs-manager
+ejson
+logging
+webapp@2.0.0-alpha300.15!
+ostrio:files
+konecty:mongo-counter
+tunguska:reactive-aggregate
