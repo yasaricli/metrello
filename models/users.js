@@ -1,5 +1,5 @@
 import { ReactiveCache } from '/imports/reactiveCache';
-import { SyncedCron } from 'meteor/percolate:synced-cron';
+//import { SyncedCron } from 'meteor/percolate:synced-cron';
 import { TAPi18n } from '/imports/i18n';
 import ImpersonatedUsers from './impersonatedUsers';
 import { Index, MongoDBEngine } from 'meteor/easy:search';
@@ -1784,6 +1784,7 @@ if (Meteor.isServer) {
   });
 }
 
+/*
 const addCronJob = _.debounce(
   Meteor.bindEnvironment(function notificationCleanupDebounced() {
     // passed in the removeAge has to be a number standing for the number of days after a notification is read before we remove it
@@ -1816,6 +1817,7 @@ const addCronJob = _.debounce(
   }),
   500,
 );
+*/
 
 if (Meteor.isServer) {
   // Let mongoDB ensure username unicity
