@@ -1,0 +1,9 @@
+<template name="EasySearch.IfInputEmpty">
+    {{#if inputEmpty}}
+        {{> Template.contentBlock}}
+    {{else}}
+        {{#if Template.elseBlock}}
+            {{> Template.elseBlock}}
+        {{/if}}
+    {{/if}}
+</template>

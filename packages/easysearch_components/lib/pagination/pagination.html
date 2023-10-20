@@ -1,0 +1,15 @@
+<template name="EasySearch.Pagination">
+    {{#if moreDocuments}}
+        {{#if customRenderPagination}}
+            {{> Template.dynamic template=customRenderPagination}}
+        {{else}}
+            <ul class="pagination">
+                {{#each page}}
+                    <li class="page {{pageClasses this}}">
+                        {{content}}
+                    </li>
+                {{/each}}
+            </ul>
+        {{/if}}
+    {{/if}}
+</template>

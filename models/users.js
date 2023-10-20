@@ -3,13 +3,13 @@ import { ReactiveCache } from '/imports/reactiveCache';
 //import { SyncedCron } from 'meteor/percolate:synced-cron';
 import { TAPi18n } from '/imports/i18n';
 import ImpersonatedUsers from './impersonatedUsers';
-import { Index, MongoDBEngine } from 'meteor/easy:search';
+import { Index, MongoDBEngine } from 'meteor/wekan-easy-search';
 
 // Sandstorm context is detected using the METEOR_SETTINGS environment variable
 // in the package definition.
 const isSandstorm =
   Meteor.settings && Meteor.settings.public && Meteor.settings.public.sandstorm;
-Users = Meteor.users;
+let Users = Meteor.users;
 
 const allowedSortValues = [
   '-modifiedAt',

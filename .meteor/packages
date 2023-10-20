@@ -39,3 +39,7 @@ wekan-collection2
 wekan-schema-deny
 accounts-base@3.0.0-alpha300.15
 tracker
+coffeescript@2.7.0!
+spacebars
+blaze@3.0.0-alpha300.15!
+wekan-easy-search
