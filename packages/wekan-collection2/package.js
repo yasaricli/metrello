@@ -15,19 +15,19 @@ Npm.depends({
 })
 
 Package.onUse(function (api) {
-  api.versionsFrom(['1.12.1', '2.3', '3.0-alpha.15'])
-  api.use('mongo')
-  api.imply('mongo')
-  api.use('minimongo')
-  api.use('ejson')
-  api.use('raix:eventemitter')
-  api.use('ecmascript')
-  api.use('tmeasday:check-npm-versions')
+  api.versionsFrom(['1.12.1', '2.3', '3.0-alpha.16']);
+  api.use('mongo');
+  api.imply('mongo');
+  api.use('minimongo');
+  api.use('ejson');
+  api.use('raix:eventemitter');
+  api.use('ecmascript');
+  api.use('tmeasday:check-npm-versions');
 
   // Allow us to detect 'insecure'.
-  api.use('insecure', { weak: true })
+  api.use('insecure', { weak: true });
 
-  api.mainModule('collection2.js')
+  api.mainModule('collection2.js');
 
-  api.export('Collection2')
+  api.export('Collection2');
 })

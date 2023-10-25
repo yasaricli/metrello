@@ -4,21 +4,25 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-base@1.5.2-alpha300.15             # Packages every Meteor app needs to have
-mobile-experience@1.1.1-alpha300.15       # Packages for a great mobile UX
-mongo@2.0.0-alpha300.15!                   # The database Meteor supports right now
+meteor-base@1.5.2-alpha300.16!            # Packages every Meteor app needs to have
+meteor@2.0.0-alpha300.16!
+mobile-experience@1.1.1-alpha300.16       # Packages for a great mobile UX
+mongo@2.0.0-alpha300.16!                   # The database Meteor supports right now
+promise@1.0.0-alpha300.16!
 reactive-var            # Reactive variable for tracker
+caching-compiler@2.0.0-alpha300.16!
+mongo-decimal@0.1.4-alpha300.16!
 
-standard-minifier-css@1.9.3-alpha300.15   # CSS minifier run for production mode
-standard-minifier-js@3.0.0-alpha300.15    # JS minifier run for production mode
+standard-minifier-css@1.9.3-alpha300.16   # CSS minifier run for production mode
+standard-minifier-js@3.0.0-alpha300.16    # JS minifier run for production mode
 es5-shim                # ECMAScript 5 compatibility for older browsers
-ecmascript@0.16.8-alpha300.15              # Enable ECMAScript2015+ syntax in app code
-typescript@4.9.5-alpha300.15              # Enable TypeScript syntax in .ts and .tsx modules
-shell-server@0.6.0-alpha300.15            # Server-side component of the `meteor shell` command
-hot-module-replacement@0.5.4-alpha300.15  # Update client in development without reloading the page
+ecmascript@0.16.8-alpha300.16              # Enable ECMAScript2015+ syntax in app code
+typescript@4.9.5-alpha300.16              # Enable TypeScript syntax in .ts and .tsx modules
+shell-server@0.6.0-alpha300.16            # Server-side component of the `meteor shell` command
+hot-module-replacement@0.5.4-alpha300.16  # Update client in development without reloading the page
 
 
-static-html@1.3.3-alpha300.15             # Define static page content in .html files
+static-html@1.3.3-alpha300.16             # Define static page content in .html files
 react-meteor-data       # React higher-order component for reactively tracking Meteor data
 accounts-password
 wekan-markdown
@@ -37,11 +41,11 @@ oauth
 aldeed:simple-schema
 wekan-collection2
 wekan-schema-deny
-accounts-base@3.0.0-alpha300.15
+accounts-base@3.0.0-alpha300.16
 tracker
 coffeescript@2.7.0!
 spacebars
-blaze@3.0.0-alpha300.15!
+blaze@3.0.0-alpha300.16!
 wekan-easy-search
 dburles:collection-helpers
 cottz:publish-relations
@@ -64,7 +68,7 @@ ostrio:cookies
 meteorhacks:subs-manager
 ejson
 logging
-webapp@2.0.0-alpha300.15!
+webapp@2.0.0-alpha300.16!
 ostrio:files
 konecty:mongo-counter
 tunguska:reactive-aggregate
