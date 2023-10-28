@@ -10,7 +10,7 @@ Package.onUse(function(api) {
   api.use('accounts-base', ['client', 'server']);
   // Export Accounts (etc) to packages using this one.
   api.imply('accounts-base', ['client', 'server']);
-  api.use('oauth@~3.0.0-alpha300.15', ['client', 'server']);
+  api.use('oauth@~3.0.0-alpha300.17', ['client', 'server']);
   api.use('wekan-oidc', ['client', 'server']);
 
   api.addFiles('oidc_login_button.css', 'client');
