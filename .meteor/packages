@@ -67,3 +67,4 @@ logging
 webapp@2.0.0-alpha300.17!
 konecty:mongo-counter
 tunguska:reactive-aggregate
+coffeescript@2.7.0!
