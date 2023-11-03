@@ -20,9 +20,33 @@ Note:
 
 [How to upgrade WeKan](https://github.com/wekan/wekan/issues/4585)
 
-# Upcoming WeKan ® release
+# v7.12 2023-11-02 WeKan ® release
 
-This release adds the following new features:
+This release adds the following updates:
+
+- [Updated Snap Candidate MongoDB to 6.0.11](https://github.com/wekan/wekan/commit/ff4c8a5d23d9315ad12970c35cf2928b204b073b).
+  Thanks to MongoDB developers.
+
+and fixes the following bugs:
+
+- [Fix Add List button too wide at themes: Clearblue, Modern, Exodark](https://github.com/wekan/wekan/commit/b756150f76c711cf93aa486a55d0e3340f558c01).
+  Thanks to xet7.
+- [Fix Windows build bundle script](https://github.com/wekan/wekan/commit/720d4223e21da7fa6651dcb51def81a8e081750d).
+  Thanks to xet7.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.11 2023-11-02 WeKan ® release
+
+Known issues: At some non-amd64 platforms, Node.js 14.x may show segmentation fault.
+This will be fixed when upgrading to Node.js 18.x or newer works.
+
+This release fixes the following CRITICAL SECURITY ISSUES:
+
+- [Fix Security issue: Hyperlink injection](https://github.com/wekan/wekan/commit/4fe168b03b1f4303c2b117d24ad63ca9f40a02d2).
+  Thanks to mc-marcy and xet7.
+
+and adds the following new features:
 
 - [Feature: Convert to Markdown button at editor of Card Description and Comment. Useful when there is no WYSIWYG editor](https://github.com/wekan/wekan/commit/069e2c69b2e00e402628a3123164af257533ddc6).
   Thanks to BabyFnord and xet7.
@@ -45,6 +69,7 @@ and adds the following updates:
   [Part 3](https://github.com/wekan/wekan/commit/fe985e219a9e467973e9449762fc17c6a94e9031),
   [Part 4](https://github.com/wekan/wekan/commit/90da40fde0b2c68d3f751fe8ff2a06f3180cf6d9),
   [Part 5](https://github.com/wekan/wekan/commit/2c74240bcb9d24e206ffe4e59bc8242a6abd07d9).
+<<<<<<< HEAD
 - Upgrade to Meteor 3.0-alpha.15.
   [Part 1](https://github.com/wekan/wekan/commit/f838438f0060ad51a28395972929a2fadf235456),
   [Part 2](https://github.com/wekan/wekan/commit/4fcaadb11b972170174caa33a14b4e2c76cd9703).
@@ -53,6 +78,20 @@ and adds the following updates:
   Thanks to Node.js and Meteor developers and xet7.
 - [Updated dependencies](https://github.com/wekan/wekan/commit/36727be7f5731679598ca4c188393a1c40642660).
   Thanks to developers of dependencies and xet7.
+=======
+- Updated dependencies.
+  [Part 1](https://github.com/wekan/wekan/commit/c45bf4e36882c898055db248bf54a8e7e0add3c4),
+  [Part 1](https://github.com/wekan/wekan/commit/b08876327237c549783a2ee7d07db7f2dd0904a7),
+  [Part 1](https://github.com/wekan/wekan/commit/75de7b119d868e0e1ef650d7d795b7349b1c9281),
+  [Part 1](https://github.com/wekan/wekan/commit/974c17723705d58b660154bb2fd8997c018ddddc).
+  Thanks to developers of dependencies.
+- [Docker base image to Ubuntu 23.10](https://github.com/wekan/wekan/commit/0f99f22fa5bfc7d3764de2a7f34165f699571449).
+  Thanks to Ubuntu developers.
+- [Updated dependencies](https://github.com/wekan/wekan/commit/8323649cf098388684ea5e690dcb233171440345).
+  Thanks to zodern.
+- [Updated dependencies](https://github.com/wekan/wekan/commit/b54d17467cd2868091c52240594630923875946c).
+  Thanks to exceljs developers.
+>>>>>>> main
 
 and fixed the following bugs:
 
