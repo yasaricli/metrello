@@ -65,3 +65,18 @@ const analyze = ({ name, fn, location, type }) => {
     console.warn(`Deprecated (${type}): ${name} is not async, consider migrating now.`);
   }
 }
+
+// ...continueing in migration-helper.js
+
+const originalMethods = Meteor.methods;
+
+Meteor.methods = options => {
+  const location = getLocation();
+  const entries = Object.entries(options);
+  const type = 'Method';
+  entries.forEach(([name, fn]) => {
+    analyze({ name, fn, location, type });
+  })
+
+  return originalMethods(options);
+}
