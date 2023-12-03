@@ -7,7 +7,7 @@
 jkuester:migration-helper
 meteor-base@1.5.2-alpha300.19             # Packages every Meteor app needs to have
 meteor@2.0.0-alpha300.19!
-mobile-experience@1.1.1-alpha300.19       # Packages for a great mobile UX
+mobile-experience@1.1.1-alpha300.19!      # Packages for a great mobile UX
 mongo@2.0.0-alpha300.19!                  # The database Meteor supports right now
 promise@1.0.0-alpha300.19!
 reactive-var                              # Reactive variable for tracker

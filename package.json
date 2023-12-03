@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.4",
-    "@mapbox/node-pre-gyp": "^1.0.10",
     "@rwap/jquery-ui-touch-punch": "^1.0.11",
     "@wekanteam/html-to-markdown": "^1.0.2",
     "@wekanteam/meteor-globals": "^1.1.4",
@@ -30,7 +29,6 @@
     "es6-promise": "^4.2.4",
     "escape-string-regexp": "^5.0.0",
     "exceljs": "git+https://github.com/exceljs/exceljs.git",
-    "fibers": "^5.0.3",
     "file-type": "^16.5.4",
     "filesize": "^8.0.7",
     "i18next": "^21.10.0",
