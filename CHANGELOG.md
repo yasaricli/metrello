@@ -1,24 +1,170 @@
 [Mac ChangeLog](https://github.com/wekan/wekan/wiki/Mac)
 
-Newest Node.js is at https://github.com/wekan/node-v14-esm/releases/tag/v14.21.4
+Newest WeKan at these amd64 platforms:
 
-Required versions of Node.js, MongoDB etc are listed at https://wekan.github.io
-Download section.
+- Linux bundle
+- Snap Candidate
+- Docker
+- Kubernetes
 
-Newest WeKan is on platforms: Snap Candidate, Docker, Kubernetes, Source/Bundle. Download section at https://wekan.github.io
+Fixing other platforms In Progress.
 
-In Progress is:
-- Getting newest WeKan to all platforms, fixing any migration and upgrade issues
-- Adding more platforms
-- Developing all paid features and fixes https://wekan.team/commercial-support/
-- More info and news at https://github.com/wekan/wekan/issues/4578#issuecomment-1505909376
-
-Note:
-- Snap Candidate has newest WeKan with MongoDB 6 https://github.com/wekan/wekan/issues/4824#issuecomment-1425753485
-- Snap Beta has old WeKan with MongoDB 5 https://github.com/wekan/wekan/issues/4780#issuecomment-1427625571
-- Snap Stable has old WeKan 6.09 with MongoDB 3.2.2 
+- Install info at Server part of webpage https://wekan.github.io
+- Newest Node.js is at https://github.com/wekan/node-v14-esm/releases/tag/v14.21.4
+- MongoDB 6.x
 
 [How to upgrade WeKan](https://github.com/wekan/wekan/issues/4585)
+
+# v7.22 2023-12-01 WeKan ® release
+
+This release adds the following new features:
+
+- [At right sidebar, moved Minicard Settings to Card Settings popup](https://github.com/wekan/wekan/commit/2f2a039e3c1957b8921f3800315508d4f51c21b7).
+  Thanks to Roemer and xet7.
+- [New feature: Sidebar / Card Settings / Creator at minicard](https://github.com/wekan/wekan/commit/f3242869110738210b712761dda67fec34932307).
+  Thanks to Roemer and xet7.
+
+and adds the following updates:
+
+- [Upgraded to MongoDB 6.0.12 at Snap Candidate](https://github.com/wekan/wekan/commit/31ca78c17b0c734087cef99d481b939ac9533612).
+  Thanks to MongoDB developers.
+
+and fixes the following bugs:
+
+- [Fixed Markdown and copy buttons on top of text](https://github.com/wekan/wekan/commit/3cc10c77f99db344d0af3d6d862eb05c909fbf2c).
+  Thanks to mueller-ma and xet7.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.21 2023-11-27 WeKan ® release
+
+This release adds the following updates:
+
+- [Updated dependencies](https://github.com/wekan/wekan/commit/fef0c0e490ef0d90b6504074312bf827ff5f2d61).
+  Thanks to developers of dependencies.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.20 2023-11-26 WeKan ® release
+
+This release adds the following updates:
+
+- [Added standard for public code assessment](https://github.com/wekan/wekan/commit/a307bfa1ec82b66d97714bff32d4201aa8e6e6f7).
+  Thanks to those that participated to making of assessment.
+- [Upgraded to Meteor 2.14-beta.2](https://github.com/wekan/wekan/commit/126ddda45d07769f9fef67aa74241c9afa04b6a8).
+  Thanks to Meteor developers.
+- [Upgraded to Meteor 2.14-beta.4](https://github.com/wekan/wekan/commit/d90ab03bbe9f13d211aaca2e72542386fdf2a6ba).
+  Thanks to Meteor developers.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.19 2023-11-20 WeKan ® release
+
+This release adds the following new features:
+
+- [Updated swimlane (restore and changed title) and board (changed title) webhooks](https://github.com/wekan/wekan/pull/5205).
+  Thanks to gustavengstrom.
+- When user logins, "Automatically add user with the domain name" (at Admin Panel / Organizations) to Organization. In Progress.
+  [Part 1](https://github.com/wekan/wekan/commit/6e2f84673e98abec07a10c843ab83bed50774b35),
+  [Part 2](https://github.com/wekan/wekan/commit/9bc63669933bd763930add22ad7d05d89566d3ee).
+  Thanks to xet7.
+- [Permissions for default board after OIDC/OAuth2 login](https://github.com/wekan/wekan/pull/5213).
+  Thanks to diegosteiner.
+
+and adds the following updates:
+
+- [Added governance.md](https://github.com/wekan/wekan/commit/2b1d2222cc900e8c815c30a4d07c897e30ba3636).
+  Thanks to xet7.
+- Updated contributing.md.
+  [Part 1](https://github.com/wekan/wekan/commit/d840cb3be7b1788a4dbdd09ef45690afcf6b3dd4),
+  [Part 2](https://github.com/wekan/wekan/commit/e91e68c48c6392814fbc1362b7ae15ead34e7e47),
+  [Part 3](https://github.com/wekan/wekan/commit/026236edc962a8fc3863b9a4f7dc1d1f5dec3b5c),
+  [Part 4](https://github.com/wekan/wekan/commit/59874d16b9cf95ff05d92dd4d3bbdcb42fd37a94).
+- [Updated security.md](https://github.com/wekan/wekan/commit/f047c6da295c4ab5ddc6d4d0a8137f419d8704d5).
+- Updated code of conduct.md.
+  [Part 1](https://github.com/wekan/wekan/commit/c4293ecd95b9faec846060bcbcb8362cb58a54e6),
+  [Part 2](https://github.com/wekan/wekan/commit/f512047ac6439e53f92359f45ab907c629d225a9).
+
+and fixes the following bugs:
+
+- [Removed console.log](https://github.com/wekan/wekan/commit/0c54c1540c494bb7ffeb61a89cbc9a79c8f05d19).
+  Thanks to xet7.
+- [Fix typos at oidc_server.js](https://github.com/wekan/wekan/commit/cd51ad75086950f29adf245b6d6c0b43e69da171).
+  Thanks to xet7.
+- [Fix to not anymore show confusing Organization Id and Team Id fields at Admin Panel / People / People / Edit user](https://github.com/wekan/wekan/commit/6405c35bc08fc73657a4111c6fd72a8bd72ded70).
+  Thanks to xet7.
+- [Fix to not anymore require website for Organization and Team](https://github.com/wekan/wekan/commit/d4d6a5f96d88a89eb47ee56ba9857e859203a53c).
+  Thanks to xet7.
+- [Snap: Disable apparmor="DENIED" in syslog](https://github.com/wekan/wekan/commit/2048975e92152bb1c397b61fc2fd0a8124fade58).
+  Thanks to diegargon, webenefits and xet7.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.18 2023-11-14 WeKan ® release
+
+This release adds the following new features:
+
+- [Added restore list and changing list title to outgoing webhooks](https://github.com/wekan/wekan/pull/5198).
+  Thanks to gustavengstrom.
+
+and adds the following updates:
+
+- [Updated release scripts](https://github.com/wekan/wekan/commit/d4252f30567665897c6314b578dff1fe294265de).
+  Thanks to xet7.
+
+and fixes the following bugs:
+
+- [Add Docker label org.opencontainers.image.source](https://github.com/wekan/wekan/pull/5196).
+  Thanks to mueller-ma.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.17 2023-11-09 WeKan ® release
+
+This release fixes the following bugs:
+
+- [Fix move card rule on checklist complete doesn't work, with ReactiveMiniMongoIndex for Server-Side](https://github.com/wekan/wekan/pull/5194).
+  Thanks to mfilser.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.16 2023-11-09 WeKan ® release
+
+This release fixes the following bugs:
+
+- [Fix users.save is not a function](https://github.com/wekan/wekan/commit/42ece21fa14113a28792bf97dfd899a064f0ea56).
+  Thanks to xet7.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.15 2023-11-09 WeKan ® release
+
+This release fixes the following bugs:
+
+- [Fix missing profile/avatar pictures](https://github.com/wekan/wekan/commit/4e97a5351a4ac715d21503a129f12fe5bf3f4016).
+  Thanks to kovacs-andras and xet7.
+- [Commented out links at My Cards Table, because they unexpectly caused to go elsewhere from current view](https://github.com/wekan/wekan/commit/2c36fe3d45a0f95f8ba18526ffd1dc230f6f46a8).
+  Thanks to xet7.
+- [Add more Docker Labels to Dockerfile](https://github.com/wekan/wekan/commit/52e76c5496b6621916b61f35d5b68687685e0809).
+  Thanks to mueller-ma and xet7.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.14 2023-11-09 WeKan ® release
+
+This release adds the following updates:
+
+- [Upgraded to Meteor 2.14-beta.0](https://github.com/wekan/wekan/commit/55903472aae0032a49f03529cc9013007a20475e).
+  Thanks to Meteor developers.
+
+and fixes the following bugs:
+
+- [Removed double edit text from card description](https://github.com/wekan/wekan/commit/972981a57997fdaeb5202a3c588cd9eb83516360).
+  Thanks to derbolle and xet7.
+- [Fix Notifications are identical until one is marked read](https://github.com/wekan/wekan/pull/5189).
+  Thanks to mfilser.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
 
 # v7.12 2023-11-02 WeKan ® release
 

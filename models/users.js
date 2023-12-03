@@ -907,11 +907,13 @@ Users.helpers({
       const notification = notifications[index];
       // this preserves their db sort order for editing
       notification.dbIndex = index;
-      notification.activity = ReactiveCache.getActivity(notification.activity);
+      if (!notification.activityObj && typeof(notification.activity) === 'string') {
+        notification.activityObj = ReactiveMiniMongoIndex.getActivityWithId(notification.activity);
+      }
     }
-    // this sorts them newest to oldest to match Trello's behavior
-    notifications.reverse();
-    return notifications;
+    // newest first. don't use reverse() because it changes the array inplace, so sometimes the array is reversed twice and oldest items at top again
+    const ret = notifications.toReversed();
+    return ret;
   },
 
   hasShowDesktopDragHandles() {
@@ -1943,6 +1945,19 @@ if (Meteor.isServer) {
     Users._collection.createIndex({
       modifiedAt: -1,
     });
+    // Avatar URLs from CollectionFS to Meteor-Files, at users collection avatarUrl field:
+    Users.find({ "profile.avatarUrl": { $regex: "/cfs/files/avatars/" } }).forEach(function (doc) {
+        doc.profile.avatarUrl = doc.profile.avatarUrl.replace("/cfs/files/avatars/", "/cdn/storage/avatars/");
+      // Try to fix Users.save is not a fuction, by commenting it out:
+      //Users.save(doc);
+    });
+    /* TODO: Optionally, for additional complexity:
+       a) Support SubURLs with parthname from ROOT_URL
+       b) Remove beginning or avatar URL, replace it with pathname and new avatar URL
+       c) Does all avatar and attachment URLs need to be fixed every time when starting or restarting?
+       d) What if avatar URL is at some other server? In that case, links would point incorrectly to this instance, if ROOT_URL and path part is removed.
+       doc.profile.avatarUrl = process.env.ROOT_URL.pathname + doc.profile.avatarUrl.replace("/cfs/files/avatars/", "/cdn/storage/avatars/").substring(str.indexOf("/cdn/storage/avatars"));
+    */
     /* Commented out extra index because of IndexOptionsConflict.
     Users._collection.createIndex(
       {
