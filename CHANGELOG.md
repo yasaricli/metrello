@@ -15,6 +15,28 @@ Fixing other platforms In Progress.
 
 [How to upgrade WeKan](https://github.com/wekan/wekan/issues/4585)
 
+# Upcoming WeKan ® release
+
+This release adds the following updates:
+
+- [Upgrade to Meteor 2.14](https://github.com/wekan/wekan/commit/75383fe477874a7aaf5caa3b913e2173694efe13).
+  Thanks to Meteor developers.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
+# v7.23 2023-12-11 WeKan ® release
+
+This release adds the following updates:
+
+- [Updated security.md about mitm](https://github.com/wekan/wekan/commit/b4c9c1df9a7e89d263b1864407a7007338ce770d).
+  Thanks to xet7.
+- [Upgraded to Meteor 2.14-rc.3](https://github.com/wekan/wekan/commit/6a3b8a668bc84c89714e44c3865168be81c8e2ed).
+  Thanks to Meteor developers.
+- [Updated dependencies](https://github.com/wekan/wekan/commit/e3a0a480ed960d30fc80f7c7c1a6c7471368d0e8).
+  Thanks to developers of dependencies.
+
+Thanks to above GitHub users for their contributions and translators for their translations.
+
 # v7.22 2023-12-01 WeKan ® release
 
 This release adds the following new features:
