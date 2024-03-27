@@ -1,4 +1,3 @@
-import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
 import escapeForRegex from 'escape-string-regexp';
 import { TAPi18n } from '/imports/i18n';

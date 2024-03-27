@@ -1,8 +1,6 @@
-import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 Rules = new Mongo.Collection('rules');
 

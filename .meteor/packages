@@ -13,7 +13,6 @@ promise
 reactive-var               # Reactive variable for tracker
 caching-compiler
 mongo-decimal
-spacebars-compiler
 htmljs
 
 standard-minifier-css      # CSS minifier run for production mode
@@ -42,7 +41,7 @@ easy:search
 mquandalle:collection-mutations
 
 # Account system
-accounts-password
+accounts-password@3.0.0-beta300.7!
 useraccounts:core
 useraccounts:flow-routing
 useraccounts:unstyled
@@ -64,8 +63,8 @@ wekan-collection2
 wekan-schema-deny
 accounts-base@3.0.0-alpha300.19
 tracker
-spacebars
-blaze
+spacebars@2.0.0-alpha300.17!
+blaze@3.0.0-alpha300.17!
 wekan-easy-search
 check
 random
@@ -83,7 +82,7 @@ ostrio:cookies
 meteorhacks:subs-manager
 ejson
 logging
-webapp
+webapp@2.0.0-beta300.7!
 konecty:mongo-counter
 tunguska:reactive-aggregate
 coffeescript@2.7.0!

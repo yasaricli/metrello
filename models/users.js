@@ -1,4 +1,3 @@
-import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
 //import { SyncedCron } from 'meteor/percolate:synced-cron';
 import { TAPi18n } from '/imports/i18n';
@@ -2077,7 +2076,7 @@ if (Meteor.isServer) {
         */
 
         // Insert Template Container
-        const Future = require('fibers/future');
+        //const Future = require('fibers/future');
         const future1 = new Future();
         const future2 = new Future();
         const future3 = new Future();

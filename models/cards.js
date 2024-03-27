@@ -1,4 +1,3 @@
-import SimpleSchema from 'simpl-schema';
 import { ReactiveCache, ReactiveMiniMongoIndex } from '/imports/reactiveCache';
 import moment from 'moment/min/moment-with-locales';
 import {
