@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 Announcements = new Mongo.Collection('announcements');
 
@@ -19,7 +21,6 @@ Announcements.attachSchema(
     },
     sort: {
       type: Number,
-      decimal: true,
     },
     createdAt: {
       type: Date,
@@ -59,7 +60,7 @@ Announcements.allow({
 
 if (Meteor.isServer) {
   Meteor.startup(() => {
-    Announcements._collection.createIndex({ modifiedAt: -1 });
+    Announcements.createIndex({ modifiedAt: -1 });
     const announcements = Announcements.findOne({});
     if (!announcements) {
       Announcements.insert({ enabled: false, sort: 0 });

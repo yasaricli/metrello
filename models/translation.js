@@ -123,7 +123,7 @@ if (Meteor.isServer) {
 if (Meteor.isServer) {
   // Index for Organization User.
   Meteor.startup(() => {
-    Translation._collection.createIndex({ modifiedAt: -1 });
+    Translation.createIndex({ modifiedAt: -1 });
   });
 }
 

@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 TableVisibilityModeSettings = new Mongo.Collection('tableVisibilityModeSettings');
 
@@ -14,7 +16,6 @@ TableVisibilityModeSettings.attachSchema(
     },
     sort: {
       type: Number,
-      decimal: true,
     },
     createdAt: {
       type: Date,

@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 AccountSettings = new Mongo.Collection('accountSettings');
 
@@ -14,7 +16,6 @@ AccountSettings.attachSchema(
     },
     sort: {
       type: Number,
-      decimal: true,
     },
     createdAt: {
       type: Date,
@@ -54,7 +55,7 @@ AccountSettings.allow({
 
 if (Meteor.isServer) {
   Meteor.startup(() => {
-    AccountSettings._collection.createIndex({ modifiedAt: -1 });
+    AccountSettings.createIndex({ modifiedAt: -1 });
     AccountSettings.upsert(
       { _id: 'accounts-allowEmailChange' },
       {

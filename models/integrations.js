@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 Integrations = new Mongo.Collection('integrations');
 
@@ -33,8 +35,11 @@ Integrations.attachSchema(
       /**
        * activities the integration gets triggered (list)
        */
-      type: [String],
+      type: Array,
       defaultValue: ['all'],
+    },
+    'activities.$': {
+      type: String,
     },
     url: {
       // URL validation regex (https://mathiasbynens.be/demo/url-regex)

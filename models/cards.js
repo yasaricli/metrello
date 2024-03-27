@@ -9,6 +9,8 @@ import {
 } from '../config/const';
 import Attachments, { fileStoreStrategyFactory } from "./attachments";
 import { copyFile } from './lib/fileStoreStrategy.js';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 Cards = new Mongo.Collection('cards');
 
@@ -123,7 +125,7 @@ Cards.attachSchema(
       /**
        * list of custom fields
        */
-      type: [Object],
+      type: Array,
       optional: true,
       defaultValue: [],
     },
@@ -188,26 +190,35 @@ Cards.attachSchema(
       /**
        * list of labels ID the card has
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'labelIds.$': {
+      type: String,
     },
     members: {
       /**
        * list of members (user IDs)
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'members.$': {
+      type: String,
     },
     assignees: {
       /**
        * who is assignee of the card (user ID),
        * maximum one ID of assignee in array.
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'assignees.$': {
+      type: String,
     },
     receivedAt: {
       /**
@@ -242,7 +253,6 @@ Cards.attachSchema(
        * How much time has been spent on this
        */
       type: Number,
-      decimal: true,
       optional: true,
       defaultValue: 0,
     },
@@ -274,7 +284,6 @@ Cards.attachSchema(
        * Sort value
        */
       type: Number,
-      decimal: true,
       defaultValue: 0,
       optional: true,
     },
@@ -283,7 +292,6 @@ Cards.attachSchema(
        * subtask sort value
        */
       type: Number,
-      decimal: true,
       defaultValue: -1,
       optional: true,
     },
@@ -318,17 +326,23 @@ Cards.attachSchema(
       /**
        * list of members (user IDs)
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'vote.positive.$': {
+      type: String,
     },
     'vote.negative': {
       /**
        * list of members (user IDs)
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'vote.negative.$': {
+      type: String,
     },
     'vote.end': {
       type: Date,
@@ -358,81 +372,111 @@ Cards.attachSchema(
       /**
        * poker card one
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.one.$': {
+      type: String,
     },
     'poker.two': {
       /**
        * poker card two
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.two.$': {
+      type: String,
     },
     'poker.three': {
       /**
        * poker card three
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.three.$': {
+      type: String,
     },
     'poker.five': {
       /**
        * poker card five
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.five.$': {
+      type: String,
     },
     'poker.eight': {
       /**
        * poker card eight
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.eight.$': {
+      type: String,
     },
     'poker.thirteen': {
       /**
        * poker card thirteen
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.thirteen.$': {
+      type: String,
     },
     'poker.twenty': {
       /**
        * poker card twenty
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.twenty.$': {
+      type: String,
     },
     'poker.forty': {
       /**
        * poker card forty
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.forty.$': {
+      type: String,
     },
     'poker.oneHundred': {
       /**
        * poker card oneHundred
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.oneHundred.$': {
+      type: String,
     },
     'poker.unsure': {
       /**
        * poker card unsure
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'poker.unsure.$': {
+      type: String,
     },
     'poker.end': {
       type: Date,
@@ -454,26 +498,34 @@ Cards.attachSchema(
       /**
        * ID of card which is the child link in gantt view
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'targetId_gantt.$': {
+      type: String,
     },
     linkType_gantt: {
       /**
        * ID of card which is the parent link in gantt view
        */
-      type: [Number],
-      decimal: false,
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'linkType_gantt.$': {
+      type: SimpleSchema.Integer,
     },
     linkId_gantt: {
       /**
        * ID of card which is the parent link in gantt view
        */
-      type: [String],
+      type: Array,
       optional: true,
       defaultValue: [],
+    },
+    'linkId_gantt.$': {
+      type: String,
     },
     cardNumber: {
       /**
@@ -481,7 +533,6 @@ Cards.attachSchema(
        * to every newly created card
        */
       type: Number,
-      decimal: true,
       optional: true,
       defaultValue: 0,
     },

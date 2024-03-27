@@ -30,6 +30,29 @@ accounts-password
 wekan-markdown
 kadira:dochead
 wekan-autofocus
+
+# Polyfills
+es5-shim@4.8.0
+
+# Collections
+aldeed:collection2
+aldeed:schema-deny
+cottz:publish-relations
+dburles:collection-helpers
+idmontie:migrations
+easy:search
+mongo@1.16.8
+mquandalle:collection-mutations
+
+# Account system
+accounts-password@2.4.0
+useraccounts:core
+useraccounts:flow-routing
+useraccounts:unstyled
+simple:rest-accounts-password
+wekan-ldap
+wekan-accounts-cas
+wekan-accounts-sandstorm
 wekan-accounts-lockout
 wekan-oidc
 wekan-autosize

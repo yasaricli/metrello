@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 CustomFields = new Mongo.Collection('customFields');
 
@@ -12,7 +14,10 @@ CustomFields.attachSchema(
       /**
        * the ID of the board
        */
-      type: [String],
+      type: Array,
+    },
+    'boardIds.$': {
+      type: String,
     },
     name: {
       /**
@@ -49,7 +54,7 @@ CustomFields.attachSchema(
       /**
        * list of drop down items objects
        */
-      type: [Object],
+      type: Array,
       optional: true,
     },
     'settings.dropdownItems.$': {

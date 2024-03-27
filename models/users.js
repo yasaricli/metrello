@@ -53,6 +53,7 @@ Users.attachSchema(
       type: String,
       optional: true,
     },
+    'orgs.$': Object,
     'orgs.$.orgId': {
       /**
        * The uniq ID of the organization
@@ -99,6 +100,7 @@ Users.attachSchema(
       type: String,
       optional: true,
     },
+    'emails.$': Object,
     'emails.$.address': {
       /**
        * The email address
@@ -180,6 +182,9 @@ Users.attachSchema(
       type: String,
       optional: true,
     },
+    'profile.emailBuffer.$': {
+      type: String
+    },
     'profile.fullname': {
       /**
        * full name of the user
@@ -246,6 +251,9 @@ Users.attachSchema(
     'profile.invitedBoards.$': {
       type: String,
       optional: true,
+    },
+    'profile.invitedBoards.$': {
+      type: String
     },
     'profile.language': {
       /**
@@ -372,6 +380,7 @@ Users.attachSchema(
       type: String,
       optional: true,
     },
+    'profile.notifications.$': Object,
     'profile.notifications.$.activity': {
       /**
        * The id of the activity this notification references
@@ -416,6 +425,9 @@ Users.attachSchema(
     'profile.starredBoards.$': {
       type: String,
       optional: true,
+    },
+    'profile.starredBoards.$': {
+      type: String
     },
     'profile.icode': {
       /**
@@ -566,6 +578,9 @@ Users.attachSchema(
     'importUsernames.$': {
       type: String,
       optional: true,
+    },
+    'importUsernames.$': {
+      type: String
     },
     lastConnectionDate: {
       type: Date,

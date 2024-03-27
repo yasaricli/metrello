@@ -1,5 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 const commentReactionSchema = new SimpleSchema({
   reactionCodepoint: {
@@ -12,7 +14,13 @@ const commentReactionSchema = new SimpleSchema({
       }
     },
   },
-  userIds: { type: [String], defaultValue: [] }
+  userIds: {
+    type: Array,
+    defaultValue: []
+  },
+  'userIds.$': {
+    type: String,
+  }
 });
 
 CardCommentReactions = new Mongo.Collection('card_comment_reactions');
@@ -44,8 +52,11 @@ CardCommentReactions.attachSchema(
       optional: false
     },
     reactions: {
-      type: [commentReactionSchema],
+      type: Array,
       defaultValue: []
+    },
+    'reactions.$': {
+      type: commentReactionSchema
     }
   }),
 );
