@@ -1,5 +1,5 @@
 name: wekan
-version: '7.23'
+version: '7.41'
 base: core20
 summary: Open Source kanban
 description: |
@@ -65,7 +65,7 @@ apps:
 
 parts:
     mongodb:
-        source: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-6.0.12.tgz
+        source: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-6.0.14.tgz
         plugin: dump
         stage-packages:
             - libssl1.1
@@ -90,13 +90,13 @@ parts:
         prime:
             - $mongo
 
-#    mongosh:
-#        source: https://downloads.mongodb.com/compass/mongodb-mongosh_1.6.2_amd64.deb
-#        plugin: dump
+    mongosh:
+        source: https://downloads.mongodb.com/compass/mongodb-mongosh_2.1.1_amd64.deb
+        plugin: dump
 
-#    mongotools:
-#        source: https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2004-x86_64-100.6.1.tgz
-#        plugin: dump
+    mongotools:
+        source: https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2004-x86_64-100.9.4.tgz
+        plugin: dump
 
 #    mongodb44:
 #        source: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-4.4.18.tgz
@@ -170,9 +170,9 @@ parts:
             # Cleanup
             mkdir .build
             cd .build
-            wget https://github.com/wekan/wekan/releases/download/v7.23/wekan-7.23-amd64.zip
-            unzip wekan-7.23-amd64.zip
-            rm wekan-7.23-amd64.zip
+            wget https://github.com/wekan/wekan/releases/download/v7.41/wekan-7.41-amd64.zip
+            unzip wekan-7.41-amd64.zip
+            rm wekan-7.41-amd64.zip
             cd ..
             ##cd .build/bundle
             ##find . -type d -name '*-garbage*' | xargs rm -rf
@@ -196,6 +196,13 @@ parts:
             cp -r .build/bundle/* $SNAPCRAFT_PART_INSTALL/
             cp .build/bundle/.node_version.txt $SNAPCRAFT_PART_INSTALL/
             rm -f $SNAPCRAFT_PART_INSTALL/lib/node_modules/wekan
+            # Migrate MongoDB 3 to 6
+            wget https://github.com/wekan/migratemongo/archive/refs/heads/main.zip
+            unzip main.zip
+            mv migratemongo-main migratemongo
+            cp -pR migratemongo $SNAPCRAFT_PART_INSTALL/
+            rm -rf migratemongo
+            rm main.zip
             #rm -f $SNAPCRAFT_PART_INSTALL/programs/server/npm/node_modules/meteor/rajit_bootstrap3-datepicker/lib/bootstrap-datepicker/node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs
             # Delete phantomjs that is in accounts-lockout
             #rm -rf $SNAPCRAFT_PART_INSTALL/programs/server/npm/node_modules/meteor/lucasantoniassi_accounts-lockout/node_modules/phantomjs-prebuilt
@@ -233,9 +240,9 @@ parts:
         source-type: 7z
         organize:
           caddy: bin/caddy
-          CHANGES.txt: CADDY_CHANGES.txt
-          EULA.txt: CADDY_EULA.txt
-          LICENSES.txt: CADDY_LICENSES.txt
-          README.txt: CADDY_README.txt
+          CHANGES.txt: license/CADDY_CHANGES.txt
+          EULA.txt: license/CADDY_EULA.txt
+          LICENSES.txt: license/CADDY_LICENSES.txt
+          README.txt: license/CADDY_README.txt
         stage:
           - -init

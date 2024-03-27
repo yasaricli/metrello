@@ -3209,7 +3209,8 @@ if (Meteor.isServer) {
           boardId: paramBoardId,
           swimlaneId: paramSwimlaneId,
           archived: false,
-        }).map(function(doc) {
+        },
+        { sort: ['sort'] }).map(function(doc) {
           return {
             _id: doc._id,
             title: doc.title,
@@ -3220,6 +3221,7 @@ if (Meteor.isServer) {
             dueAt: doc.dueAt,
             endAt: doc.endAt,
             assignees: doc.assignees,
+            sort: doc.sort,
           };
         }),
       });
@@ -3251,16 +3253,19 @@ if (Meteor.isServer) {
         boardId: paramBoardId,
         listId: paramListId,
         archived: false,
-      }).map(function(doc) {
+      },
+      { sort: ['sort'] }).map(function(doc) {
         return {
           _id: doc._id,
           title: doc.title,
           description: doc.description,
+          swimlaneId: doc.swimlaneId,
           receivedAt: doc.receivedAt,
           startAt: doc.startAt,
           dueAt: doc.dueAt,
           endAt: doc.endAt,
           assignees: doc.assignees,
+          sort: doc.sort,
         };
       }),
     });
@@ -3505,6 +3510,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
       const newBoardId = req.body.newBoardId;
       const newSwimlaneId = req.body.newSwimlaneId;
       const newListId = req.body.newListId;
+      let updated = false;
       Authentication.checkBoardAccess(req.userId, paramBoardId);
 
       if (req.body.title) {
@@ -3522,6 +3528,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
             },
           },
         );
+        updated = true;
       }
       if (req.body.sort) {
         const newSort = req.body.sort;
@@ -3538,6 +3545,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
             },
           },
         );
+        updated = true;
       }
       if (req.body.parentId) {
         const newParentId = req.body.parentId;
@@ -3554,6 +3562,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
             },
           },
         );
+        updated = true;
       }
       if (req.body.description) {
         const newDescription = req.body.description;
@@ -3570,6 +3579,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
             },
           },
         );
+        updated = true;
       }
       if (req.body.color) {
         const newColor = req.body.color;
@@ -3582,6 +3592,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { color: newColor } },
         );
+        updated = true;
       }
       if (req.body.vote) {
         const newVote = req.body.vote;
@@ -3600,6 +3611,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { vote: newVote } },
         );
+        updated = true;
       }
       if (req.body.poker) {
         const newPoker = req.body.poker;
@@ -3625,6 +3637,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { poker: newPoker } },
         );
+        updated = true;
       }
       if (req.body.labelIds) {
         let newlabelIds = req.body.labelIds;
@@ -3648,6 +3661,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
             },
           },
         );
+        updated = true;
       }
       if (req.body.requestedBy) {
         const newrequestedBy = req.body.requestedBy;
@@ -3660,6 +3674,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { requestedBy: newrequestedBy } },
         );
+        updated = true;
       }
       if (req.body.assignedBy) {
         const newassignedBy = req.body.assignedBy;
@@ -3672,6 +3687,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { assignedBy: newassignedBy } },
         );
+        updated = true;
       }
       if (req.body.receivedAt) {
         const newreceivedAt = req.body.receivedAt;
@@ -3684,6 +3700,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { receivedAt: newreceivedAt } },
         );
+        updated = true;
       }
       if (req.body.startAt) {
         const newstartAt = req.body.startAt;
@@ -3696,6 +3713,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { startAt: newstartAt } },
         );
+        updated = true;
       }
       if (req.body.dueAt) {
         const newdueAt = req.body.dueAt;
@@ -3708,6 +3726,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { dueAt: newdueAt } },
         );
+        updated = true;
       }
       if (req.body.endAt) {
         const newendAt = req.body.endAt;
@@ -3720,6 +3739,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { endAt: newendAt } },
         );
+        updated = true;
       }
       if (req.body.spentTime) {
         const newspentTime = req.body.spentTime;
@@ -3732,6 +3752,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { spentTime: newspentTime } },
         );
+        updated = true;
       }
       if (req.body.isOverTime) {
         const newisOverTime = req.body.isOverTime;
@@ -3744,6 +3765,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { isOverTime: newisOverTime } },
         );
+        updated = true;
       }
       if (req.body.customFields) {
         const newcustomFields = req.body.customFields;
@@ -3756,6 +3778,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { customFields: newcustomFields } },
         );
+        updated = true;
       }
       if (req.body.members) {
         let newmembers = req.body.members;
@@ -3775,6 +3798,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { members: newmembers } },
         );
+        updated = true;
       }
       if (req.body.assignees) {
         let newassignees = req.body.assignees;
@@ -3794,6 +3818,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { assignees: newassignees } },
         );
+        updated = true;
       }
       if (req.body.swimlaneId) {
         const newParamSwimlaneId = req.body.swimlaneId;
@@ -3806,6 +3831,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           },
           { $set: { swimlaneId: newParamSwimlaneId } },
         );
+        updated = true;
       }
       if (req.body.listId) {
         const newParamListId = req.body.listId;
@@ -3822,6 +3848,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
             },
           },
         );
+        updated = true;
 
         const card = ReactiveCache.getCard(paramCardId);
         cardMove(
@@ -3850,6 +3877,7 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
             },
           },
         );
+        updated = true;
 
         const card = ReactiveCache.getCard(paramCardId);
         cardMove(
@@ -3861,6 +3889,36 @@ JsonRoutes.add('GET', '/api/boards/:boardId/cards_count', function(
           newBoardId,
         );
       }
+      if (req.body.archive) {
+        function isTrue(data) {
+          return String(data).toLowerCase() === 'true';
+        }
+        var archive = isTrue(req.body.archive);
+        Cards.direct.update(
+          {
+            _id: paramCardId,
+            listId: paramListId,
+            boardId: paramBoardId,
+            archived: !archive,
+          },
+          {
+            $set: {
+              archived: archive,
+            },
+          },
+        );
+        updated = true;
+      }
+    // Check if update is true or false
+    if (!updated) {
+      JsonRoutes.sendResult(res, {
+        code: 404,
+        data: {
+          message: 'Error',
+        },
+      });
+      return;
+    }
       JsonRoutes.sendResult(res, {
         code: 200,
         data: {
