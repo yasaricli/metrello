@@ -1,9 +1,14 @@
+import SimpleSchema from 'meteor/aldeed:simple-schema';
+
 // simple version, only toggle watch / unwatch
 const simpleWatchable = collection => {
   collection.attachSchema({
     watchers: {
-      type: [String],
+      type: Array,
       optional: true,
+    },
+    'watchers.$': {
+      type: String,
     },
   });
 
@@ -36,6 +41,11 @@ const complexWatchDefault = 'muted';
 
 const complexWatchable = collection => {
   collection.attachSchema({
+    watchers: {
+      type: Array,
+      optional: true,
+    },
+    'watchers.$': Object,
     'watchers.$.userId': {
       type: String,
     },

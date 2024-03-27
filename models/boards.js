@@ -9,6 +9,8 @@ import {
   TYPE_TEMPLATE_CONTAINER,
 } from '/config/const';
 import Users from "./users";
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 // const escapeForRegex = require('escape-string-regexp');
 
@@ -113,7 +115,7 @@ Boards.attachSchema(
       /**
        * List of labels attached to a board
        */
-      type: [Object],
+      type: Array,
       optional: true,
       /* Commented out, so does not create labels to new boards.
       // eslint-disable-next-line consistent-return
@@ -131,6 +133,7 @@ Boards.attachSchema(
       },
       */
     },
+    'labels.$': Object,
     'labels.$._id': {
       /**
        * Unique id of a label
@@ -169,7 +172,7 @@ Boards.attachSchema(
       /**
        * List of members of a board
        */
-      type: [Object],
+      type: Array,
       // eslint-disable-next-line consistent-return
       autoValue() {
         if (this.isInsert && !this.isSet) {
@@ -186,6 +189,7 @@ Boards.attachSchema(
         }
       },
     },
+    'members.$': Object,
     'members.$.userId': {
       /**
        * The uniq ID of the member
@@ -213,7 +217,7 @@ Boards.attachSchema(
     },
     'members.$.isCommentOnly': {
       /**
-       * Is the member only allowed to comment on the board
+       * Is the member only allowed to make comments
        */
       type: Boolean,
       optional: true,
@@ -236,20 +240,21 @@ Boards.attachSchema(
       /**
        * the list of organizations that a board belongs to
        */
-       type: [Object],
+       type: Array,
        optional: true,
     },
-    'orgs.$.orgId':{
+    'orgs.$': Object,
+    'orgs.$.orgId': {
       /**
        * The uniq ID of the organization
        */
-       type: String,
+      type: String,
     },
-    'orgs.$.orgDisplayName':{
+    'orgs.$.orgDisplayName': {
       /**
        * The display name of the organization
        */
-       type: String,
+      type: String,
     },
     'orgs.$.isActive': {
       /**
@@ -261,20 +266,21 @@ Boards.attachSchema(
       /**
        * the list of teams that a board belongs to
        */
-       type: [Object],
+       type: Array,
        optional: true,
     },
-    'teams.$.teamId':{
+    'teams.$': Object,
+    'teams.$.teamId': {
       /**
        * The uniq ID of the team
        */
-       type: String,
+      type: String,
     },
-    'teams.$.teamDisplayName':{
+    'teams.$.teamDisplayName': {
       /**
        * The display name of the team
        */
-       type: String,
+      type: String,
     },
     'teams.$.isActive': {
       /**
@@ -606,7 +612,6 @@ Boards.attachSchema(
        * Time spent in the board.
        */
       type: Number,
-      decimal: true,
       optional: true,
     },
     isOvertime: {
@@ -631,7 +636,6 @@ Boards.attachSchema(
        * Sort value
        */
       type: Number,
-      decimal: true,
       defaultValue: -1,
     },
   }),
@@ -1789,15 +1793,15 @@ Boards.before.insert((userId, doc) => {
 if (Meteor.isServer) {
   // Let MongoDB ensure that a member is not included twice in the same board
   Meteor.startup(() => {
-    Boards._collection.createIndex({ modifiedAt: -1 });
-    Boards._collection.createIndex(
+    Boards.createIndex({ modifiedAt: -1 });
+    Boards.createIndex(
       {
         _id: 1,
         'members.userId': 1,
       },
       { unique: true },
     );
-    Boards._collection.createIndex({ 'members.userId': 1 });
+    Boards.createIndex({ 'members.userId': 1 });
   });
 
   // Genesis: the first activity of the newly created board
@@ -2194,7 +2198,7 @@ if (Meteor.isServer) {
       });
     }
   });
-  
+
   /**
    * @operation add_board_label
    * @summary Add a label to a board

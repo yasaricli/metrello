@@ -1,4 +1,5 @@
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
 
 // Activities don't need a schema because they are always set from the a trusted
 // environment - the server - and there is no risk that a user change the logic
@@ -84,19 +85,19 @@ if (Meteor.isServer) {
   // creation in conjunction with the card or board id, as corresponding views
   // are largely used in the App. See #524.
   Meteor.startup(() => {
-    Activities._collection.createIndex({ createdAt: -1 });
-    Activities._collection.createIndex({ modifiedAt: -1 });
-    Activities._collection.createIndex({ cardId: 1, createdAt: -1 });
-    Activities._collection.createIndex({ boardId: 1, createdAt: -1 });
-    Activities._collection.createIndex(
+    Activities.createIndex({ createdAt: -1 });
+    Activities.createIndex({ modifiedAt: -1 });
+    Activities.createIndex({ cardId: 1, createdAt: -1 });
+    Activities.createIndex({ boardId: 1, createdAt: -1 });
+    Activities.createIndex(
       { commentId: 1 },
       { partialFilterExpression: { commentId: { $exists: true } } },
     );
-    Activities._collection.createIndex(
+    Activities.createIndex(
       { attachmentId: 1 },
       { partialFilterExpression: { attachmentId: { $exists: true } } },
     );
-    Activities._collection.createIndex(
+    Activities.createIndex(
       { customFieldId: 1 },
       { partialFilterExpression: { customFieldId: { $exists: true } } },
     );
@@ -131,7 +132,7 @@ if (Meteor.isServer) {
         }
       }
     }
-    if (activity.boardId) {
+    if (activity.boardId && activity.boardId !== 'false') {
       if (board.title) {
         if (board.title.length > 0) {
           params.board = board.title;
@@ -343,7 +344,7 @@ if (Meteor.isServer) {
     });
 
     const integrations = ReactiveCache.getIntegrations({
-      boardId: { $in: [board._id, Integrations.Const.GLOBAL_WEBHOOK_ID] },
+      boardId: { $in: [board?._id, Integrations.Const.GLOBAL_WEBHOOK_ID] },
       // type: 'outgoing-webhooks', // all types
       enabled: true,
       activities: { $in: [description, 'all'] },

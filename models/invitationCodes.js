@@ -1,4 +1,6 @@
 import { ReactiveCache } from '/imports/reactiveCache';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 InvitationCodes = new Mongo.Collection('invitation_codes');
 
@@ -9,7 +11,6 @@ InvitationCodes.attachSchema(
     },
     email: {
       type: String,
-      unique: true,
       regEx: SimpleSchema.RegEx.Email,
     },
     createdAt: {
@@ -44,8 +45,11 @@ InvitationCodes.attachSchema(
       type: String,
     },
     boardsToBeInvited: {
-      type: [String],
+      type: Array,
       optional: true,
+    },
+    'boardsToBeInvited.$': {
+      type: String,
     },
     valid: {
       type: Boolean,
@@ -67,7 +71,8 @@ InvitationCodes.helpers({
 
 if (Meteor.isServer) {
   Meteor.startup(() => {
-    InvitationCodes._collection.createIndex({ modifiedAt: -1 });
+    InvitationCodes.createIndex({ modifiedAt: -1 });
+    InvitationCodes.createIndex({ email: 1 }, { unique: true })
   });
   Boards.deny({
     fetch: ['members'],

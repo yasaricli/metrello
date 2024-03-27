@@ -3,6 +3,7 @@ import { SyncedCron } from 'meteor/percolate:synced-cron';
 import { TAPi18n } from '/imports/i18n';
 import ImpersonatedUsers from './impersonatedUsers';
 import { Index, MongoDBEngine } from 'meteor/easy:search';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 // Sandstorm context is detected using the METEOR_SETTINGS environment variable
 // in the package definition.
@@ -45,9 +46,10 @@ Users.attachSchema(
       /**
        * the list of organizations that a user belongs to
        */
-      type: [Object],
+      type: Array,
       optional: true,
     },
+    'orgs.$': Object,
     'orgs.$.orgId': {
       /**
        * The uniq ID of the organization
@@ -64,9 +66,10 @@ Users.attachSchema(
       /**
        * the list of teams that a user belongs to
        */
-      type: [Object],
+      type: Array,
       optional: true,
     },
+    'teams.$': Object,
     'teams.$.teamId': {
       /**
        * The uniq ID of the team
@@ -83,9 +86,10 @@ Users.attachSchema(
       /**
        * the list of emails attached to a user
        */
-      type: [Object],
+      type: Array,
       optional: true,
     },
+    'emails.$': Object,
     'emails.$.address': {
       /**
        * The email address
@@ -155,8 +159,11 @@ Users.attachSchema(
       /**
        * list of email buffers of the user
        */
-      type: [String],
+      type: Array,
       optional: true,
+    },
+    'profile.emailBuffer.$': {
+      type: String
     },
     'profile.fullname': {
       /**
@@ -218,8 +225,11 @@ Users.attachSchema(
       /**
        * board IDs the user has been invited to
        */
-      type: [String],
+      type: Array,
       optional: true,
+    },
+    'profile.invitedBoards.$': {
+      type: String
     },
     'profile.language': {
       /**
@@ -236,6 +246,7 @@ Users.attachSchema(
       optional: true,
       blackbox: true,
     },
+    'profile.moveAndCopyDialog.$': Object,
     'profile.moveAndCopyDialog.$.boardId': {
       /**
        * last selected board id
@@ -262,6 +273,7 @@ Users.attachSchema(
       optional: true,
       blackbox: true,
     },
+    'profile.moveChecklistDialog.$': Object,
     'profile.moveChecklistDialog.$.boardId': {
       /**
        * last selected board id
@@ -294,6 +306,7 @@ Users.attachSchema(
       optional: true,
       blackbox: true,
     },
+    'profile.copyChecklistDialog.$': Object,
     'profile.copyChecklistDialog.$.boardId': {
       /**
        * last selected board id
@@ -322,9 +335,10 @@ Users.attachSchema(
       /**
        * enabled notifications for the user
        */
-      type: [Object],
+      type: Array,
       optional: true,
     },
+    'profile.notifications.$': Object,
     'profile.notifications.$.activity': {
       /**
        * The id of the activity this notification references
@@ -363,8 +377,11 @@ Users.attachSchema(
       /**
        * list of starred board IDs
        */
-      type: [String],
+      type: Array,
       optional: true,
+    },
+    'profile.starredBoards.$': {
+      type: String
     },
     'profile.icode': {
       /**
@@ -509,8 +526,11 @@ Users.attachSchema(
       /**
        * username for imported
        */
-      type: [String],
+      type: Array,
       optional: true,
+    },
+    'importUsernames.$': {
+      type: String
     },
     lastConnectionDate: {
       type: Date,

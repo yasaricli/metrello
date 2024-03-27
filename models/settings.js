@@ -1,5 +1,7 @@
 import { ReactiveCache } from '/imports/reactiveCache';
 import { TAPi18n } from '/imports/i18n';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 //var nodemailer = require('nodemailer');
 
 // Sandstorm context is detected using the METEOR_SETTINGS environment variable
@@ -20,6 +22,10 @@ Settings.attachSchema(
       type: Boolean,
       optional: true,
       defaultValue: false,
+    },
+    mailServer: {
+      type: Object,
+      optional: true
     },
     'mailServer.username': {
       type: String,
