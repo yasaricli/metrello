@@ -9,9 +9,9 @@ meteor-base                # Packages every Meteor app needs to have
 meteor@2.0.0-beta300.7!
 mobile-experience          # Packages for a great mobile UX
 mongo@2.0.0-beta300.7!     # The database Meteor supports right now
-promise
+promise@1.0.0-beta300.7!
 reactive-var               # Reactive variable for tracker
-caching-compiler
+caching-compiler@2.0.0-beta300.7!
 mongo-decimal
 htmljs
 
