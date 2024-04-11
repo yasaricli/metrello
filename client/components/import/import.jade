@@ -12,10 +12,40 @@ template(name="import")
 
 template(name="importTextarea")
   form
-    p: label(for='import-textarea') {{_ instruction}} {{_ 'import-board-instruction-about-errors'}}
-    textarea.js-import-json(id='import-textarea' placeholder="{{_ importPlaceHolder}}" autofocus)
-      | {{jsonText}}
-    input.primary.wide(type="submit" value="{{_ 'import'}}")
+    // p: label(for='import-textarea') {{_ instruction}} {{_ 'import-board-instruction-about-errors'}}
+    //textarea.js-import-json(id='import-textarea' placeholder="{{_ importPlaceHolder}}" autofocus)
+    //   | {{jsonText}}
+    p
+      {{_ 'import-board-zip'}}
+    a.attachment-item.add-attachment.js-add-attachment
+      i.fa.fa-plus.icon
+    //input.js-attach-file.hide(type="file" name="file")
+    //a.attachment-item.add-attachment.js-computer-upload
+    //  i.fa.fa-plus.icon
+    //input.primary.wide(type="submit" value="{{_ 'import'}}")
+
+template(name="importAttachmentsPopup")
+  if $gt uploads.length 0
+    .attachment-upload {{_ 'uploading'}}
+      table
+        tr
+          th.upload-file-name-descr {{_ 'name'}}
+          th.upload-progress-descr {{_ 'progress'}}
+          th.upload-remaining-descr {{_ 'remaining_time'}}
+          th.upload-speed-descr {{_ 'speed'}}
+        each upload in uploads
+          tr
+            td.upload-file-name-value {{upload.file.name}}
+            td.upload-progress-value {{upload.progress.get}}%
+            td.upload-remaining-value {{getEstimateTime upload}}
+            td.upload-speed-value {{getEstimateSpeed upload}}
+  else
+    ul.pop-over-list
+      li
+        input.js-attach-file.hide(type="file" name="file" multiple)
+        a.js-computer-upload {{_ 'computer'}}
+      li
+        a.js-upload-clipboard-image {{_ 'clipboard'}}
 
 template(name="importMapMembers")
   h2 {{_ 'import-map-members'}}
