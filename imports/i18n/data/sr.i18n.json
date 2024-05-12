@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "Прекини издвајање",
   "shortcut-close-dialog": "Затвори прозорче",
   "shortcut-filter-my-cards": "Издвој задатке",
+  "shortcut-filter-my-assigned-cards": "Filter my assigned cards",
   "shortcut-show-shortcuts": "Прикажи овај списак пречица",
   "shortcut-toggle-filterbar": "Укључи/искључи бочни мени за издвајање",
   "shortcut-toggle-searchbar": "Укључи/искључи бочни мени за претрагу",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "Покажи на мини картици",
   "show-checklist-at-minicard": "Прикажи списак на мини картици",
   "show-subtasks-field": "Прикажи поље за подзадатке",
-  "convert-to-markdown": "Претвори у маркдаун"
+  "convert-to-markdown": "Претвори у маркдаун",
+  "import-board-zip": "Add .zip file that has board JSON files, and board name subdirectories with attachments",
+  "collapse": "Сажми",
+  "uncollapse": "Uncollapse"
 }

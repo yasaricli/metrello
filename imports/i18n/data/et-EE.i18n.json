@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "Tühjenda kõik filtrid",
   "shortcut-close-dialog": "Lähedane dialoog",
   "shortcut-filter-my-cards": "Filtreeri oma kaardid",
+  "shortcut-filter-my-assigned-cards": "Filter my assigned cards",
   "shortcut-show-shortcuts": "Tooge üles see otseteede nimekiri",
   "shortcut-toggle-filterbar": "Filtri külgriba lülitamine",
   "shortcut-toggle-searchbar": "Otsingu külgriba lülitamine",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "Show at minicard",
   "show-checklist-at-minicard": "Show checklist at minicard",
   "show-subtasks-field": "Show subtasks field",
-  "convert-to-markdown": "Convert to markdown"
+  "convert-to-markdown": "Convert to markdown",
+  "import-board-zip": "Add .zip file that has board JSON files, and board name subdirectories with attachments",
+  "collapse": "Kokkupõrge",
+  "uncollapse": "Uncollapse"
 }

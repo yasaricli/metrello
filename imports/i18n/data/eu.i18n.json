@@ -1,5 +1,5 @@
 {
-  "accept": "Onartu",
+  "accept": "Ados",
   "act-activity-notify": "Jardueraren jakinarazpena",
   "act-addAttachment": "added attachment __attachment__ to card __card__ at list __list__ at swimlane __swimlane__ at board __board__",
   "act-deleteAttachment": "deleted attachment __attachment__ at card __card__ at list __list__ at swimlane __swimlane__ at board __board__",
@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "Garbitu iragazki guztiak",
   "shortcut-close-dialog": "Itxi elkarrizketa-koadroa",
   "shortcut-filter-my-cards": "Iragazi nire txartelak",
+  "shortcut-filter-my-assigned-cards": "Iragazi esleitutako txartelak",
   "shortcut-show-shortcuts": "Erakutsi lasterbideen zerrenda hau",
   "shortcut-toggle-filterbar": "Txandakatu iragazkiaren albo-barra",
   "shortcut-toggle-searchbar": "Toggle Search Sidebar",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "Erakutsi minitxartelean",
   "show-checklist-at-minicard": "Erakutsi kontrol-zerrenda minitxartelean",
   "show-subtasks-field": "azpi-zereginen eremua bezala",
-  "convert-to-markdown": "Bihurtu markdown-era"
+  "convert-to-markdown": "Bihurtu markdown-era",
+  "import-board-zip": "Add .zip file that has board JSON files, and board name subdirectories with attachments",
+  "collapse": "Tolestu",
+  "uncollapse": "Uncollapse"
 }

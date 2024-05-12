@@ -7,7 +7,7 @@
   border-left: 1px solid #ccc;
   padding: 0;
   float: left;
-  min-width: 100px; /* TODO(mark-i-m): hardcoded? */
+  /* min-width: 100px; TODO(mark-i-m): hardcoded? */
   /*max-width: 270px;*/
   /* Reverted incomplete change list width: */
   /* https://github.com/wekan/wekan/issues/4558 */
@@ -82,6 +82,16 @@
   text-overflow: ellipsis;
   word-wrap: break-word;
 }
+.list-rotated {
+  width: 10px;
+  margin-top: 10px;
+  margin-left: 0;
+  margin-right: 0;
+  transform: rotate(90deg);
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .list-header .list-header-watch-icon {
   padding-left: 10px;
   color: #a6a6a6;
@@ -96,6 +106,23 @@
   }
 }
 .list-header .list-header-plus-top {
+  color: #a6a6a6;
+  margin-right: 15px;
+}
+.list-header .list-header-collapse-right {
+  color: #a6a6a6;
+}
+.list-header .list-header-collapse-left {
+  color: #a6a6a6;
+  margin-right: 15px;
+}
+.list-header .list-header-uncollapse-left {
+  color: #a6a6a6;
+}
+.list-header .list-header-uncollapse-right {
+  color: #a6a6a6;
+}
+.list-header .list-header-collapse {
   color: #a6a6a6;
   margin-right: 15px;
 }
@@ -297,7 +324,6 @@
 }
 .list-header-white {
   border-bottom: 6px solid #fff;
-  border: 1px solid #eee;
 }
 .list-header-green {
   border-bottom: 6px solid #3cb500;
@@ -330,7 +356,7 @@
   border-bottom: 6px solid #51e898;
 }
 .list-header-silver {
-  border-bottom: 6px solid unset;
+  border-bottom: 6px solid #e4e4e4;
 }
 .list-header-peachpuff {
   border-bottom: 6px solid #ffdab9;

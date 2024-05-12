@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "Elimina tots els filtres",
   "shortcut-close-dialog": "Tanca el diàleg",
   "shortcut-filter-my-cards": "Filtra les meves fitxes",
+  "shortcut-filter-my-assigned-cards": "Filter my assigned cards",
   "shortcut-show-shortcuts": "Mostra aquesta llista d'accessoris directes",
   "shortcut-toggle-filterbar": "Canvia la barra lateral del tauler",
   "shortcut-toggle-searchbar": "Commuta la barra lateral de cerca",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "Show at minicard",
   "show-checklist-at-minicard": "Show checklist at minicard",
   "show-subtasks-field": "Show subtasks field",
-  "convert-to-markdown": "Convert to markdown"
+  "convert-to-markdown": "Convert to markdown",
+  "import-board-zip": "Add .zip file that has board JSON files, and board name subdirectories with attachments",
+  "collapse": "Contraure",
+  "uncollapse": "Uncollapse"
 }

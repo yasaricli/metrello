@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "Limpar todos os filtros",
   "shortcut-close-dialog": "Fechar Caixa de Dialogo",
   "shortcut-filter-my-cards": "Filtrar os meus cartões",
+  "shortcut-filter-my-assigned-cards": "Filter my assigned cards",
   "shortcut-show-shortcuts": "Mostrar esta lista de atalhos",
   "shortcut-toggle-filterbar": "Alternar a Barra Lateral de Filtros",
   "shortcut-toggle-searchbar": "Alternar a Barra Lateral de Pesquisa",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "Show at minicard",
   "show-checklist-at-minicard": "Show checklist at minicard",
   "show-subtasks-field": "Show subtasks field",
-  "convert-to-markdown": "Convert to markdown"
+  "convert-to-markdown": "Convert to markdown",
+  "import-board-zip": "Add .zip file that has board JSON files, and board name subdirectories with attachments",
+  "collapse": "Colapsar",
+  "uncollapse": "Uncollapse"
 }

@@ -146,7 +146,7 @@ Lists.attachSchema(
        */
       type: String,
       optional: true,
-      // silver is the default, so it is left out
+      // silver is the default
       allowedValues: ALLOWED_COLORS,
     },
     type: {
@@ -155,6 +155,13 @@ Lists.attachSchema(
        */
       type: String,
       defaultValue: 'list',
+    },
+    collapsed: {
+      /**
+       * is the list collapsed
+       */
+      type: Boolean,
+      defaultValue: false,
     },
   }),
 );
@@ -286,6 +293,10 @@ Lists.helpers({
     return this.starred === true;
   },
 
+  isCollapsed() {
+    return this.collapsed === true;
+  },
+
   absoluteUrl() {
     const card = ReactiveCache.getCard({ listId: this._id });
     return card && card.absoluteUrl();
@@ -305,6 +316,9 @@ Lists.mutations({
   },
   star(enable = true) {
     return { $set: { starred: !!enable } };
+  },
+  collapse(enable = true) {
+    return { $set: { collapsed: !!enable } };
   },
 
   archive() {
@@ -338,9 +352,6 @@ Lists.mutations({
   },
 
   setColor(newColor) {
-    if (newColor === 'silver') {
-      newColor = null;
-    }
     return {
       $set: {
         color: newColor,

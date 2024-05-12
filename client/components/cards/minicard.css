@@ -56,10 +56,12 @@
   float: right;
   font-size: 18px;
   padding-right: 30px;
+  padding-left: 5px;
 }
 .minicard-details-menu {
   float: right;
   font-size: 18px;
+  padding-left: 5px;
 }
 @media print {
   .minicard-details-menu,
@@ -99,7 +101,7 @@
   background-size: contain;
   height: 145px;
   user-select: none;
-  margin: -6px -8px 6px -8px;
+  margin: 6px -8px 6px -8px;
   border-radius: top 2px;
 }
 .minicard .minicard-labels {
@@ -173,7 +175,6 @@
   .minicard .minicard-title .viewer {
     display: block;
     word-wrap: break-word;
-    max-width: 230px;
   }
 }
 .minicard .dates {

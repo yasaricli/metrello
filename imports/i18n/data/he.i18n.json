@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "ביטול כל המסננים",
   "shortcut-close-dialog": "סגירת החלון",
   "shortcut-filter-my-cards": "סינון הכרטיסים שלי",
+  "shortcut-filter-my-assigned-cards": "סינון הכרטיסים שלי שהוקצו",
   "shortcut-show-shortcuts": "העלאת רשימת קיצורים זו",
   "shortcut-toggle-filterbar": "הצגה או הסתרה של סרגל צד הסינון",
   "shortcut-toggle-searchbar": "הצגה או הסתרה של סרגל הצד",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "הצגה בכרטיסון",
   "show-checklist-at-minicard": "הצגת רשימת מטלות על הכרטיסון",
   "show-subtasks-field": "הצגת שדה תת־משימות",
-  "convert-to-markdown": "המרה ל־Markdown"
+  "convert-to-markdown": "המרה ל־Markdown",
+  "import-board-zip": "הוספת קובץ ‎.zip עם קובצי JSON של לוח, ותת־תיקיות בשם הלוח עם קבצים מצורפים",
+  "collapse": "צמצום",
+  "uncollapse": "ביטול צמצום"
 }

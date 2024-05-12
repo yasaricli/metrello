@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "Vyčistit všechny filtry",
   "shortcut-close-dialog": "Zavřít dialog",
   "shortcut-filter-my-cards": "Filtrovat mé karty",
+  "shortcut-filter-my-assigned-cards": "Filter my assigned cards",
   "shortcut-show-shortcuts": "Otevřít tento seznam odkazů",
   "shortcut-toggle-filterbar": "Přepnout lištu filtrování",
   "shortcut-toggle-searchbar": "Přepnout lištu vyhledávání",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "Show at minicard",
   "show-checklist-at-minicard": "Show checklist at minicard",
   "show-subtasks-field": "Show subtasks field",
-  "convert-to-markdown": "Convert to markdown"
+  "convert-to-markdown": "Convert to markdown",
+  "import-board-zip": "Add .zip file that has board JSON files, and board name subdirectories with attachments",
+  "collapse": "Sbalit",
+  "uncollapse": "Uncollapse"
 }

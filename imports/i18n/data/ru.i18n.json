@@ -578,6 +578,7 @@
   "shortcut-clear-filters": "Сбросить все фильтры",
   "shortcut-close-dialog": "Закрыть диалог",
   "shortcut-filter-my-cards": "Показать мои карточки",
+  "shortcut-filter-my-assigned-cards": "Filter my assigned cards",
   "shortcut-show-shortcuts": "Поднять список ярлыков",
   "shortcut-toggle-filterbar": "Переместить фильтр на бововую панель",
   "shortcut-toggle-searchbar": "Включить/выключить боковую панель поиска",
@@ -1244,5 +1245,8 @@
   "show-at-minicard": "Показать на миникарточке",
   "show-checklist-at-minicard": "Показать Чек-лист на миникарточке",
   "show-subtasks-field": "Show subtasks field",
-  "convert-to-markdown": "Convert to markdown"
+  "convert-to-markdown": "Convert to markdown",
+  "import-board-zip": "Add .zip file that has board JSON files, and board name subdirectories with attachments",
+  "collapse": "Свернуть",
+  "uncollapse": "Uncollapse"
 }
