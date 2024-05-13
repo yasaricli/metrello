@@ -231,6 +231,7 @@ const CreateBoard = BlazeComponent.extendComponent({
             title: title,
             permission: 'private',
             type: 'template-container',
+            slug: getSlug(title),
           }),
        );
 
@@ -265,24 +266,32 @@ const CreateBoard = BlazeComponent.extendComponent({
         },
       );
 
-      Utils.goBoardId(this.boardId.get());
+      Utils.goBoardId(this.boardId.get(), this.boardId.slug);
 
     } else {
       const visibility = this.visibility.get();
+      const slug = getSlug(title);
+      const currentUser = ReactiveCache.getCurrentUser();
 
       this.boardId.set(
         Boards.insert({
-          title,
+          title: title,
           permission: visibility,
+          slug: slug,
+          'members.userId': Meteor.userId(),
         }),
       );
+
+      console.log('title: ' + title);
+      console.log('boardId: ' + this.boardId.get());
+      console.log('slug: ' + slug);
 
       Swimlanes.insert({
         title: 'Default',
         boardId: this.boardId.get(),
       });
 
-      Utils.goBoardId(this.boardId.get());
+      Utils.goBoardId(this.boardId.get(), this.boardId.slug);
     }
   },
 

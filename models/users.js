@@ -95,7 +95,7 @@ Users.attachSchema(
        * The email address
        */
       type: String,
-      regEx: SimpleSchema.RegEx.Email,
+      /* regEx: SimpleSchema.RegEx.Email, */
     },
     'emails.$.verified': {
       /**
