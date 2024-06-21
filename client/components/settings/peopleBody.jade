@@ -73,7 +73,7 @@ template(name="people")
 
 template(name="orgGeneral")
   table
-    tbody
+    thead
       tr
         th {{_ 'displayName'}}
         th {{_ 'description'}}
@@ -84,12 +84,14 @@ template(name="orgGeneral")
         th {{_ 'active'}}
         th
           +newOrgRow
+    tbody
+      tr
       each org in orgList
         +orgRow(orgId=org._id)
 
 template(name="teamGeneral")
   table
-    tbody
+    thead
       tr
         th {{_ 'displayName'}}
         th {{_ 'description'}}
@@ -99,6 +101,8 @@ template(name="teamGeneral")
         th {{_ 'active'}}
         th
           +newTeamRow
+    tbody
+      tr
       each team in teamList
         +teamRow(teamId=team._id)
 
@@ -106,7 +110,7 @@ template(name="peopleGeneral")
   #divAddOrRemoveTeamContainer
     +modifyTeamsUsers
   table
-    tbody
+    thead
       tr
         th
           +selectAllUser
@@ -124,6 +128,8 @@ template(name="peopleGeneral")
         th {{_ 'teams'}}
         th
           +newUserRow
+    tbody
+      tr
       each user in peopleList
         +peopleRow(userId=user._id)
 

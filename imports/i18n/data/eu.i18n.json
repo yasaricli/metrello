@@ -1245,5 +1245,8 @@
   "show-at-minicard": "Erakutsi minitxartelean",
   "show-checklist-at-minicard": "Erakutsi kontrol-zerrenda minitxartelean",
   "show-subtasks-field": "azpi-zereginen eremua bezala",
-  "convert-to-markdown": "Bihurtu markdown-era"
+  "convert-to-markdown": "Bihurtu markdown-era",
+  "import-board-zip": "Gehitu taula JSON fitxategiak dituen .zip fitxategia eta eranskinak dituzten taularen izenen azpidirektorioak",
+  "collapse": "Tolestu",
+  "uncollapse": "Zabaldu"
 }

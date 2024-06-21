@@ -10,7 +10,8 @@ InvitationCodes.attachSchema(
     },
     email: {
       type: String,
-      regEx: SimpleSchema.RegEx.Email,
+      unique: true,
+      /* regEx: SimpleSchema.RegEx.Email, */
     },
     createdAt: {
       type: Date,

@@ -1,6 +1,6 @@
 {
   "name": "wekan",
-  "version": "v7.41.0",
+  "version": "v7.49.0",
   "description": "Open-Source kanban",
   "private": true,
   "repository": {
@@ -21,7 +21,7 @@
     "sinon-chai": "^3.7.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.9",
+    "@babel/runtime": "^7.24.7",
     "@mapbox/node-pre-gyp": "^1.0.10",
     "@rwap/jquery-ui-touch-punch": "^1.0.11",
     "@wekanteam/html-to-markdown": "^1.0.2",
@@ -30,7 +30,7 @@
     "ajv": "^6.12.6",
     "bcryptjs": "^2.4.3",
     "bson": "^4.5.2",
-    "dompurify": "^2.4.1",
+    "dompurify": "^2.5.5",
     "es6-promise": "^4.2.4",
     "escape-string-regexp": "^5.0.0",
     "exceljs": "git+https://github.com/exceljs/exceljs.git",
@@ -39,7 +39,7 @@
     "i18next": "^21.6.16",
     "i18next-sprintf-postprocessor": "^0.2.2",
     "jquery": "^3.7.1",
-    "jquery-ui": "^1.13.0",
+    "jquery-ui": "^1.13.3",
     "jszip": "^3.7.1",
     "ldapjs": "^2.3.3",
     "markdown-it": "^12.3.2",
@@ -53,8 +53,8 @@
     "page": "^1.11.6",
     "papaparse": "^5.3.1",
     "pretty-ms": "^7.0.1",
-    "qs": "^6.10.1",
-    "simpl-schema": "^1.13.1",
+    "qs": "^6.12.1",
+    "simpl-schema": "^3.4.6",
     "source-map-support": "^0.5.20",
     "uuid": "^8.3.2"
   }

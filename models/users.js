@@ -109,8 +109,12 @@ Users.attachSchema(
     },
     'emails.$.address.$': {
       type: String,
+<<<<<<< HEAD
       //type: SimpleSchema.RequiredEmail,
       optional: true,
+=======
+      /* regEx: SimpleSchema.RegEx.Email, */
+>>>>>>> meteor2.4-collection2
     },
     'emails.$.verified': {
       /**

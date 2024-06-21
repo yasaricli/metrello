@@ -1245,5 +1245,8 @@
   "show-at-minicard": "ミニカードで表示",
   "show-checklist-at-minicard": "ミニカードでチェックリストを表示",
   "show-subtasks-field": "サブタスクフィールドを表示",
-  "convert-to-markdown": "マークダウンに変換"
+  "convert-to-markdown": "マークダウンに変換",
+  "import-board-zip": "ボードJSONファイルを含む zip ファイルと、添付ファイルを含むボード名サブディレクトリを追加する",
+  "collapse": "折りたたむ",
+  "uncollapse": "展開"
 }

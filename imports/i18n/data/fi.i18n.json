@@ -242,8 +242,8 @@
   "cardMembersPopup-title": "Jäsenet",
   "cardMorePopup-title": "Lisää",
   "cardTemplatePopup-title": "Luo malli",
-  "cards": "Kortit",
-  "cards-count": "Kortit",
+  "cards": "Korttia",
+  "cards-count": "Korttia",
   "cards-count-one": "Kortti",
   "casSignIn": "CAS-kirjautuminen",
   "cardType-card": "Kortti",
@@ -1245,5 +1245,8 @@
   "show-at-minicard": "Näytä minikortilla",
   "show-checklist-at-minicard": "Näytä tarkistuslista minikortilla",
   "show-subtasks-field": "Näytä alitehtävät kenttä",
-  "convert-to-markdown": "Muuta markdowniksi"
+  "convert-to-markdown": "Muuta markdowniksi",
+  "import-board-zip": "Lisää .zip tiedosto jossa on taulu JSON tiedostot, ja taulu nimi alihakemistot liitteineen",
+  "collapse": "Pienennä",
+  "uncollapse": "Suurenna"
 }
