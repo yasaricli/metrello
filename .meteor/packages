@@ -6,14 +6,15 @@
 
 jkuester:migration-helper
 meteor-base                # Packages every Meteor app needs to have
-meteor@2.0.0-beta300.7!
+meteor@2.0.0-rc300.4!
 mobile-experience          # Packages for a great mobile UX
-mongo@2.0.0-beta300.7!     # The database Meteor supports right now
-promise@1.0.0-beta300.7!
+mongo@2.0.0-rc300.4!     # The database Meteor supports right now
+promise@1.0.0-rc300.4!
 reactive-var               # Reactive variable for tracker
-caching-compiler@2.0.0-beta300.7!
+caching-compiler@2.0.0-rc300.4!
 mongo-decimal
 htmljs
+blaze@3.0.0-rc300.2!
 
 standard-minifier-css      # CSS minifier run for production mode
 standard-minifier-js       # JS minifier run for production mode
@@ -41,7 +42,7 @@ easy:search
 mquandalle:collection-mutations
 
 # Account system
-accounts-password@3.0.0-beta300.7!
+accounts-password@3.0.0-rc300.4!
 useraccounts:core
 useraccounts:flow-routing
 useraccounts:unstyled
@@ -61,10 +62,9 @@ oauth
 aldeed:simple-schema
 wekan-collection2
 wekan-schema-deny
-accounts-base@3.0.0-alpha300.19
+accounts-base@3.0.0-rc300.4!
 tracker
-spacebars@2.0.0-alpha300.17!
-blaze@3.0.0-alpha300.17!
+spacebars@2.0.0-rc300.2!
 wekan-easy-search
 check
 random
@@ -82,6 +82,6 @@ ostrio:cookies
 meteorhacks:subs-manager
 ejson
 logging
-webapp@2.0.0-beta300.7!
+webapp@2.0.0-rc300.4!
 konecty:mongo-counter
 coffeescript
