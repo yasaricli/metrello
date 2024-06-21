@@ -84,5 +84,4 @@ ejson
 logging
 webapp@2.0.0-beta300.7!
 konecty:mongo-counter
-tunguska:reactive-aggregate
 coffeescript
