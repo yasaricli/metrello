@@ -1999,10 +1999,12 @@ if (Meteor.isServer) {
         */
 
         // Insert Template Container
+        /*
         const Future = require('fibers/future');
         const future1 = new Future();
         const future2 = new Future();
         const future3 = new Future();
+        */
         Boards.insert(
           {
             title: TAPi18n.__('templates'),
