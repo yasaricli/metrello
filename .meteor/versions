@@ -56,9 +56,6 @@ mdg:validation-error@0.5.1
 meteor@2.0.1
 meteor-autosize@5.0.1
 meteor-base@1.5.2
-meteorhacks:aggregate@1.3.0
-meteorhacks:collection-utils@1.2.0
-meteorhacks:subs-manager@1.6.4
 meteortesting:browser-tests@1.4.2
 meteortesting:mocha@2.1.0
 meteortesting:mocha-core@8.0.1

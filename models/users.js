@@ -1,14 +1,14 @@
 import { ReactiveCache, ReactiveMiniMongoIndex } from '/imports/reactiveCache';
-import { SyncedCron } from 'meteor/percolate:synced-cron';
+import { SyncedCron } from 'meteor/quave:synced-cron';
 import { TAPi18n } from '/imports/i18n';
 import ImpersonatedUsers from './impersonatedUsers';
-import { Index, MongoDBEngine } from 'meteor/easy:search';
+//import { Index, MongoDBEngine } from 'meteor/easy:search';
 
 // Sandstorm context is detected using the METEOR_SETTINGS environment variable
 // in the package definition.
 const isSandstorm =
   Meteor.settings && Meteor.settings.public && Meteor.settings.public.sandstorm;
-Users = Meteor.users;
+Users = Mongo.Collection('users');
 
 const allowedSortValues = [
   '-modifiedAt',

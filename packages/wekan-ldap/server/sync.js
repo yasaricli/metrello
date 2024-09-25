@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import SyncedCron from 'meteor/percolate:synced-cron';
+import SyncedCron from 'meteor/quave:synced-cron';
 import LDAP from './ldap';
 import { log_debug, log_info, log_warn, log_error } from './logger';
 
