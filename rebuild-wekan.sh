@@ -42,23 +42,27 @@ do
 			# - Custom source: https://github.com/tj/n#custom-source
 			# - sudo -E uses existing environment variables, so that this can be used in build script:
 			#   https://github.com/tj/n/issues/584#issuecomment-523640742
-			export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			sudo -E n 14.21.4
-			sudo npm -g uninstall node-pre-gyp
+			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
+			#sudo -E n 14.21.4
+			#sudo npm -g uninstall node-pre-gyp
+			sudo n 20.17.0
 			# Latest fibers for Meteor sudo mkdir -p /usr/local/lib/node_modules/fibers/.node-gyp sudo npm -g install fibers
-			sudo npm -g install @mapbox/node-pre-gyp
+			#sudo npm -g install @mapbox/node-pre-gyp
 			# Install Meteor, if it's not yet installed
-			sudo npm -g install meteor --unsafe-perm
+			#sudo npm -g install meteor --unsafe-perm
+			npx meteor
 			#sudo chown -R $(id -u):$(id -g) $HOME/.npm $HOME/.meteor
 		elif [[ "$OSTYPE" == "darwin"* ]]; then
 		        echo "macOS";
 			brew install npm
 			npm -g install n
-			export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			n 14.21.4
-			npm -g uninstall node-pre-gyp
-			npm -g install @mapbox/node-pre-gyp
-			npm -g install meteor
+			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
+			#n 14.21.4
+			n 20.17.0
+			#npm -g uninstall node-pre-gyp
+			#npm -g install @mapbox/node-pre-gyp
+			#npm -g install meteor
+			npx meteor
 		elif [[ "$OSTYPE" == "cygwin" ]]; then
 		        # POSIX compatibility layer and Linux environment emulation for Windows
 		        echo "TODO: Add Cygwin";
