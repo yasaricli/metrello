@@ -15,6 +15,8 @@ Meteor.publish('people', function(query, limit) {
         username: 1,
         'profile.fullname': 1,
         'profile.initials': 1,
+        'profile.collapsedLists': 1,
+        'profile.collapsedSwimlanes': 1,
         isAdmin: 1,
         emails: 1,
         createdAt: 1,

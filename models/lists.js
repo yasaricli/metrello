@@ -156,13 +156,13 @@ Lists.attachSchema(
       type: String,
       defaultValue: 'list',
     },
+    /**
     collapsed: {
-      /**
        * is the list collapsed
-       */
       type: Boolean,
       defaultValue: false,
     },
+    */
   }),
 );
 
@@ -294,7 +294,8 @@ Lists.helpers({
   },
 
   isCollapsed() {
-    return this.collapsed === true;
+    const collapsed = ReactiveCache.getUser({ 'profile.collapsedLists': this._id });
+    return collapsed === true;
   },
 
   absoluteUrl() {
@@ -317,8 +318,9 @@ Lists.mutations({
   star(enable = true) {
     return { $set: { starred: !!enable } };
   },
+
   collapse(enable = true) {
-    return { $set: { collapsed: !!enable } };
+    return Users.toggleCollapsedList(this._id);
   },
 
   archive() {

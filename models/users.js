@@ -440,6 +440,20 @@ Users.attachSchema(
       defaultValue: {},
       blackbox: true,
     },
+    'profile.collapsedLists': {
+      /**
+       * list of collapsed list IDs
+       */
+      type: [String],
+      optional: true,
+    },
+    'profile.collapsedSwimlanes': {
+      /**
+       * list of collapsed list IDs
+       */
+      type: [String],
+      optional: true,
+    },
     services: {
       /**
        * services field of the user
@@ -723,6 +737,38 @@ Users.helpers({
       { _id: { $in: starredBoards } },
       { sort: { sort: 1 } },
     );
+  },
+
+  toggleCollapsedList(listId) {
+    const queryKind = this.hasCollapsedList(listId) ? '$pull' : '$addToSet';
+    return {
+      [queryKind]: {
+        'profile.collapsedLists': listId,
+      },
+    };
+  },
+
+  toggleCollapsedSwimlane(swimlaneId) {
+    const queryKind = this.hasCollapsedSwimlanme(swimlaneId) ? '$pull' : '$addToSet';
+    return {
+      [queryKind]: {
+        'profile.collapsedSwimlane': swimlaneId,
+      },
+    };
+  },
+
+  collapsedLists() {
+    return this.profile.collapsedLists || {};
+  },
+
+  hasCollapsedList(listId) {
+    const { collapsedLists = [] } = this.profile || {};
+    return _.contains(collapsedLists, listId);
+  },
+
+  hasCollapsedSwimlane(swimlaneId) {
+    const { collapsedSwimlanes = [] } = this.profile || {};
+    return _.contains(collapsedSwimlanes, swimlanesId);
   },
 
   hasStarred(boardId) {

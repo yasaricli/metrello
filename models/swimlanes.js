@@ -107,13 +107,13 @@ Swimlanes.attachSchema(
       type: String,
       defaultValue: 'swimlane',
     },
+   /**
     collapsed: {
-      /**
        * is the swimlane collapsed
-       */
       type: Boolean,
       defaultValue: false,
     },
+    */
   }),
 );
 
@@ -239,8 +239,9 @@ Swimlanes.helpers({
     return ret;
   },
 
-  isCollapsed() {
-    return this.collapsed === true;
+ isCollapsed() {
+    const collapsed = ReactiveCache.getUser({ 'profile.collapsedLists': this._id });
+    return collapsed === true;
   },
 
   board() {
@@ -286,7 +287,7 @@ Swimlanes.mutations({
   },
 
   collapse(enable = true) {
-    return { $set: { collapsed: !!enable } };
+    return Users.toggleCollapsedSwimlane(this._id);
   },
 
   archive() {
