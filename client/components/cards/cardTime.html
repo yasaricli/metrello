@@ -1,0 +1,33 @@
+
+<template name="editCardSpentTime">
+  <div class="edit-card-time">
+    <form class="edit-time">
+      <div class="fields">
+        <label for="time">{{_ 'time'}}</label>
+        <input class="js-time-field" id="time" type="number" step="0.01" name="time" value="{{card.getSpentTime}}" placeholder="{{timeFormat}}" autofocus>
+        <label for="overtime">{{_ 'overtime'}}</label>
+        <a class="js-toggle-overtime">
+          <div class="materialCheckBox {{#if getIsOvertime}}is-checked{{/if}}" id="overtime" name="overtime"></div>
+        </a>
+      </div>
+
+      {{#if error.get}}
+        <div class="warning">{{_ error.get}}</div>
+      {{/if}}
+      <button class="primary wide left js-submit-time" type="submit">{{_ 'save'}}</button>
+      <button class="js-delete-time negate wide right">{{_ 'delete'}}</button>
+    </form>
+  </div>
+</template>
+
+<template name="timeBadge">
+  {{#if canModifyCard}}
+    <a class="js-edit-time card-time {{#if getIsOvertime}}card-label-red{{else}}card-label-green{{/if}}" title="{{showTitle}}">
+      {{showTime}}
+    </a>
+  {{else}}
+    <a class="card-time {{#if getIsOvertime}}card-label-red{{else}}card-label-green{{/if}}" title="{{showTitle}}">
+      {{showTime}}
+    </a>
+  {{/if}}
+</template>

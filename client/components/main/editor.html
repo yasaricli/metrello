@@ -1,0 +1,23 @@
+
+<template name="editor">
+  <a class="fa fa-brands fa-markdown" title="{{_ 'convert-to-markdown'}}"></a>
+  <a class="fa fa-copy" title="{{_ 'copy-text-to-clipboard'}}"></a>
+  <span class="copied-tooltip">{{_ 'copied'}}</span>
+  <textarea class="editor {{class}}"
+            dir="auto"
+            id="{{id}}"
+            {{#if autofocus}}autofocus{{/if}}
+            placeholder="{{_ 'comment-placeholder'}}">
+    {{> Template.contentBlock}}
+  </textarea>
+</template>
+
+<template name="viewer">
+  <div class="viewer" dir="auto">
+    {{#mentions}}
+      {{#markdown}}
+        {{> UI.contentBlock}}
+      {{/markdown}}
+    {{/mentions}}
+  </div>
+</template>

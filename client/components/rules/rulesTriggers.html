@@ -1,0 +1,39 @@
+
+<template name="rulesTriggers">
+  <h2>
+    <i class="fa fa-magic"></i>
+    {{_ 'r-rule' }} "{{data.ruleName.get}}" - {{_ 'r-add-trigger'}}
+  </h2>
+  <div class="triggers-content">
+    <div class="triggers-body">
+      <div class="triggers-side-menu">
+        <ul>
+          <li class="active js-set-board-triggers">
+            <i class="fa fa-columns"></i>
+          </li>
+          <li class="js-set-card-triggers">
+            <i class="fa fa-sticky-note"></i>
+          </li>
+          <li class="js-set-checklist-triggers">
+            <i class="fa fa-check"></i>
+          </li>
+        </ul>
+      </div>
+      <div class="triggers-main-body">
+        {{#if showBoardTrigger.get}}
+          {{> boardTriggers}}
+        {{else}}{{#if showCardTrigger.get}}
+          {{> cardTriggers}}
+        {{else}}{{#if showChecklistTrigger.get}}
+          {{> checklistTriggers}}
+        {{/if}}{{/if}}{{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="rules-back">
+    <button class="js-goback">
+      <i class="fa fa-chevron-left"></i>
+      {{_ 'back'}}
+    </button>
+  </div>
+</template>

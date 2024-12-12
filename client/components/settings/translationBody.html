@@ -1,0 +1,153 @@
+
+<template name="translation">
+  <div class="setting-content">
+    {{#unless currentUser.isAdmin}}
+      {{_ 'error-notAuthorized'}}
+    {{else}}
+      <div class="content-title ext-box">
+        <div class="ext-box-left">
+          {{#if loading.get}}
+            {{> spinner}}
+          {{else}}{{#if translationSetting.get}}
+            <span>
+              <i class="fa fa-font"></i>
+              {{#unless isMiniScreen}}
+                {{_ 'translation'}}
+              {{/unless}}
+            </span>
+            <input id="searchTranslationInput" placeholder="{{_ 'search'}}">
+            <button id="searchTranslationButton">
+              <i class="fa fa-search"></i>
+              {{_ 'search'}}
+            </button>
+            <div class="ext-box-right">
+              <span>{{#unless isMiniScreen}}{{_ 'translation-number'}}{{/unless}} #{translationNumber}</span>
+            </div>
+          {{/if}}{{/if}}
+        </div>
+      </div>
+
+      <div class="content-body">
+        <div class="side-menu">
+          <ul>
+            <li class="active">
+              <a class="js-translation-menu" data-id="translation-setting">
+                <i class="fa fa-font"></i>
+                {{_ 'translation'}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="main-body">
+          {{#if loading.get}}
+            {{> spinner}}
+          {{else}}{{#if translationSetting.get}}
+            {{> translationGeneral}}
+          {{/if}}{{/if}}
+        </div>
+      </div>
+    {{/unless}}
+  </div>
+</template>
+
+<template name="translationGeneral">
+  <table>
+    <thead>
+      <tr>
+        <th>{{_ 'language'}}</th>
+        <th>{{_ 'text'}}</th>
+        <th>{{_ 'translation-text'}}</th>
+        <th>{{> newTranslationRow}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each translation in translationList}}
+        {{> translationRow translationId=translation._id}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="newTranslationRow">
+  <a class="new-translation">
+    <i class="fa fa-plus-square"></i>
+    {{_ 'new'}}
+  </a>
+</template>
+
+<template name="translationRow">
+  <tr>
+    <td>{{translationData.language}}</td>
+    <td>{{translationData.text}}</td>
+    <td>{{translationData.translationText}}</td>
+    <td>
+      <a class="edit-translation">
+        <i class="fa fa-edit"></i>
+        {{_ 'edit'}}
+      </a>
+      <a class="more-settings-translation">
+        <i class="fa fa-ellipsis-h"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="editTranslationPopup">
+  <form>
+    <label>
+      {{_ 'language'}}
+      <input class="js-translation-language" type="text" value="{{translation.language}}" required readonly>
+    </label>
+    <label>
+      {{_ 'text'}}
+      <input class="js-translation-text" type="text" value="{{translation.text}}" required readonly>
+    </label>
+    <label>
+      {{_ 'translation-text'}}
+      <input class="js-translation-translation-text" type="text" value="{{translation.translationText}}">
+    </label>
+    <hr>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="newTranslationPopup">
+  <form>
+    <label>
+      {{_ 'language'}}
+      <input class="js-translation-language" type="text" value="en" required>
+    </label>
+    <label>
+      {{_ 'text'}}
+      <span class="error hide text-taken">{{_ 'error-text-taken'}}</span>
+      <input class="js-translation-text" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'translation-text'}}
+      <input class="js-translation-translation-text" type="text" value="">
+    </label>
+    <hr>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="settingsTranslationPopup">
+  <ul class="pop-over-list">
+    <li>
+      <form>
+        <label>
+          {{_ 'delete-translation-confirm-popup'}}
+        </label>
+        <br>
+        <label class="hide orgId" type="text" value="{{org._id}}"></label>
+        <div class="buttonsContainer">
+          <input id="deleteButton" class="card-details-red right wide" type="button" value="{{_ 'delete'}}">
+        </div>
+      </form>
+    </li>
+  </ul>
+</template>

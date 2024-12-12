@@ -1,0 +1,30 @@
+
+<template name="brokenCardsHeaderBar">
+  <h1>
+    {{_ 'broken-cards'}}
+  </h1>
+</template>
+
+<template name="brokenCards">
+  {{#if currentUser}}
+    {{#if searching.get}}
+      {{> spinner}}
+    {{else}}
+      {{#if hasResults.get}}
+        <div class="global-search-results-list-wrapper">
+          {{#if hasQueryErrors.get}}
+            <div>
+              {{#each msg in errorMessages}}
+                <span class="global-search-error-messages">
+                  {{msg}}
+                </span>
+              {{/each}}
+            </div>
+          {{else}}
+            {{> resultsPaged this}}
+          {{/if}}
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+</template>

@@ -1,0 +1,151 @@
+<head>
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  {{-- XXX We should use pathFor in the following `href` to support the case
+    where the application is deployed with a path prefix, but it seems to be
+    difficult to do that cleanly with Blaze -- at least without adding extra
+    packages. --}}
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" crossorigin="use-credentials" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="apple-mobile-web-app-title" content="Wekan">
+  <meta name="application-name" content="Wekan">
+  <meta name="msapplication-TileColor" content="#00aba9">
+  <meta name="theme-color" content="#ffffff">
+  {{-- <link rel="stylesheet" type="text/css" class="__meteor-css__" href="css/html5-default-theme.css"> --}}
+</head>
+
+<template name="userFormsLayout">
+  <section class="auth-layout">
+    {{#if currentSetting.hideLogo}}
+      <h1 class="at-form-landing-logo">
+        <br>
+        <br>
+      </h1>
+    {{/if}}
+    {{#unless currentSetting.hideLogo}}
+      <h1 class="at-form-landing-logo">
+        {{#if currentSetting.customLoginLogoImageUrl}}
+          {{#if currentSetting.customLoginLogoLinkUrl}}
+            <a href="{{currentSetting.customLoginLogoLinkUrl}}">
+              <img src="{{currentSetting.customLoginLogoImageUrl}}" width="300" height="auto">
+            </a>
+            <br>
+          {{/if}}
+          {{#unless currentSetting.customLoginLogoLinkUrl}}
+            <img src="{{currentSetting.customLoginLogoImageUrl}}" width="300" height="auto">
+            <br>
+          {{/unless}}
+        {{else}}
+          <img src="{{pathFor '/wekan-logo.svg'}}" alt="" width="300" height="auto">
+          <br>
+        {{/if}}
+      </h1>
+    {{/unless}}
+  </section>
+  {{#if currentSetting.textBelowCustomLoginLogo}}
+    <hr>
+    <section class="textBelowCustomLoginLogo">
+      {{> viewer}}
+        {{{currentSetting.textBelowCustomLoginLogo}}}
+    </section>
+    <hr>
+  {{/if}}
+  <section class="auth-layout">
+    <section class="auth-dialog">
+      {{#if isLoading}}
+        {{> loader}}
+      {{else}}
+        {{> Template.dynamic template=content}}
+        {{#if currentSetting.displayAuthenticationMethod}}
+          {{> connectionMethod authenticationMethod=currentSetting.defaultAuthenticationMethod}}
+        {{/if}}
+        {{#if isLegalNoticeLinkExist}}
+          <div id="legalNoticeDiv">
+            <span id="legalNoticeSpan">{{_ 'acceptance_of_our_legalNotice'}}</span>
+            <a id="legalNoticeAtLink" class="at-link" href="{{currentSetting.legalNotice}}" target="_blank" rel="noopener noreferrer">
+              {{_ 'legalNotice'}}
+            </a>
+          </div>
+          {{#if getLegalNoticeWithWritTraduction}}
+            <div></div>
+          {{/if}}
+        {{/if}}
+        <div class="at-form-lang">
+          <select class="select-lang js-userform-set-language">
+            {{#each languages}}
+              {{#if isCurrentLanguage}}
+                <option value="{{tag}}" selected="selected">{{name}}</option>
+              {{else}}
+                <option value="{{tag}}">{{name}}</option>
+              {{/if}}
+            {{/each}}
+          </select>
+        </div>
+      {{/if}}
+    </section>
+  </section>
+</template>
+
+<template name="defaultLayout">
+  {{> header}}
+  <div id="content">
+    {{{afterBodyStart}}}
+    {{> Template.dynamic template=content}}
+    {{{beforeBodyEnd}}}
+  </div>
+  {{#if Modal.isOpen}}
+    <div id="modal">
+      <div class="overlay"></div>
+      {{#if Modal.isWide}}
+        <div class="modal-content-wide modal-container">
+          <a class="modal-close-btn js-close-modal">
+            <i class="fa fa-times-thin"></i>
+          </a>
+          {{> Template.dynamic template=Modal.getHeaderName}}
+          {{> Template.dynamic template=Modal.getTemplateName}}
+        </div>
+      {{else}}
+        <div class="modal-content modal-container">
+          <a class="modal-close-btn js-close-modal">
+            <i class="fa fa-times-thin"></i>
+          </a>
+          {{> Template.dynamic template=Modal.getHeaderName}}
+          {{> Template.dynamic template=Modal.getTemplateName}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+</template>
+
+<template name="notFound">
+  {{> message label='page-not-found'}}
+</template>
+
+<template name="message">
+  <div class="big-message quiet {{color}}">
+    <h1>{{_ label}}</h1>
+    {{#unless currentUser}}
+      {{#with pathFor route='atSignIn'}}
+        <p>{{{_ 'page-maybe-private' this}}}</p>
+      {{/with}}
+    {{/unless}}
+  </div>
+</template>
+
+<template name="loader">
+  <h1 class="loadingText">{{_ 'loading'}}</h1>
+  <div class="lds-roller">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</template>

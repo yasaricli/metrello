@@ -1,0 +1,298 @@
+
+<template name="listHeader">
+  <div class="list-header js-list-header nodragscroll {{#if limitToShowCardsCount}}list-header-card-count{{/if}} {{colorClass}}">
+    {{#if inlinedForm}}
+      {{> editListTitleForm}}
+    {{else}}
+      {{#if isMiniScreen}}
+        {{#if currentList}}
+          <a class="list-header-left-icon fa fa-angle-left js-unselect-list"></a>
+        {{/if}}
+      {{else}}
+        {{#if collapsed}}
+          <a class="js-collapse" title="{{_ 'uncollapse'}}">
+            <i class="fa fa-arrow-left list-header-uncollapse-left"></i>
+            <i class="fa fa-arrow-right list-header-uncollapse-right"></i>
+          </a>
+          {{#if showCardsCountForList cards.length}}
+            <br>
+            <span class="cardCount">{{cardsCount}}</span>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+
+      {{#if isMiniScreen}}
+        <h2 class="list-header-name {{#if currentUser.isBoardMember}}{{#unless currentUser.isCommentOnly}}{{#unless currentUser.isWorker}}js-open-inlined-form is-editable{{/unless}}{{/unless}}{{/if}}" title="{{ moment modifiedAt 'LLL' }}">
+          {{#viewer}}{{title}}{{/viewer}}
+          {{#if wipLimit.enabled}}
+            &nbsp;(<span class="{{#if exceededWipLimit}}highlight{{/if}}">{{cards.length}}</span>/{{wipLimit.value}})
+          {{/if}}
+        </h2>
+        {{#if showCardsCountForList cards.length}}
+          <span class="cardCount">{{cardsCount}} {{cardsCountForListIsOne cards.length}}</span>
+        {{/if}}
+      {{else}}
+        <div class="{{#if collapsed}}list-rotated{{/if}}">
+          <h2 class="list-header-name {{#if currentUser.isBoardMember}}{{#unless currentUser.isCommentOnly}}{{#unless currentUser.isWorker}}js-open-inlined-form is-editable{{/unless}}{{/unless}}{{/if}}" title="{{ moment modifiedAt 'LLL' }}">
+            {{#viewer}}{{title}}{{/viewer}}
+            {{#if wipLimit.enabled}}
+              &nbsp;(<span class="{{#if exceededWipLimit}}highlight{{/if}}">{{cards.length}}</span>/{{wipLimit.value}})
+            {{/if}}
+          </h2>
+        </div>
+        {{#unless collapsed}}
+          {{#if showCardsCountForList cards.length}}
+            <span class="cardCount">{{cardsCount}} {{cardsCountForListIsOne cards.length}}</span>
+          {{/if}}
+        {{/unless}}
+      {{/if}}
+
+      {{#if isMiniScreen}}
+        {{#if currentList}}
+          {{#if isWatching}}
+            <i class="list-header-watch-icon fa fa-eye"></i>
+          {{/if}}
+          <div class="list-header-menu">
+            {{#unless currentUser.isCommentOnly}}
+              {{#if canSeeAddCard}}
+                <a class="js-add-card fa fa-plus list-header-plus-top" title="{{_ 'add-card-to-top-of-list'}}"></a>
+              {{/if}}
+              <a class="fa fa-navicon js-open-list-menu" title="{{_ 'listActionPopup-title'}}"></a>
+            {{/unless}}
+          </div>
+        {{else}}
+          <a class="list-header-menu-icon fa fa-angle-right js-select-list"></a>
+          <a class="list-header-handle handle fa fa-arrows js-list-handle"></a>
+        {{/if}}
+      {{else}}
+        {{#if currentUser.isBoardMember}}
+          {{#if isWatching}}
+            <i class="list-header-watch-icon fa fa-eye"></i>
+          {{/if}}
+          {{#unless collapsed}}
+            <div class="list-header-menu">
+              {{#unless currentUser.isCommentOnly}}
+                {{#if canSeeAddCard}}
+                  <a class="js-add-card fa fa-plus list-header-plus-top" title="{{_ 'add-card-to-top-of-list'}}"></a>
+                  <a class="js-collapse" title="{{_ 'collapse'}}">
+                    <i class="fa fa-arrow-right list-header-collapse-right"></i>
+                    <i class="fa fa-arrow-left list-header-collapse-left"></i>
+                  </a>
+                  <a class="fa fa-navicon js-open-list-menu" title="{{_ 'listActionPopup-title'}}"></a>
+                {{/if}}
+              {{/unless}}
+              {{#if currentUser.isBoardAdmin}}
+                {{#if isTouchScreenOrShowDesktopDragHandles}}
+                  <a class="list-header-handle handle fa fa-arrows js-list-handle"></a>
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/unless}}
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="editListTitleForm">
+  <div class="list-composer">
+    <input class="list-name-input full-line" type="text" value="{{title}}" autofocus>
+    <div class="edit-controls clearfix">
+      <button class="primary confirm" type="submit">{{_ 'save'}}</button>
+      <a class="fa fa-times-thin js-close-inlined-form"></a>
+    </div>
+  </div>
+</template>
+
+<template name="listActionPopup">
+  <ul class="pop-over-list">
+    <li>
+      <a class="js-add-card list-header-plus-bottom">
+        <i class="fa fa-plus"></i>
+        <i class="fa fa-arrow-down"></i>
+        {{_ 'add-card-to-bottom-of-list'}}
+      </a>
+    </li>
+  </ul>
+  <hr>
+  <ul class="pop-over-list">
+    <li>
+      <a class="js-set-list-width">
+        <i class="fa fa-arrows-h"></i>
+        {{_ 'set-list-width'}}
+      </a>
+    </li>
+  </ul>
+  <ul class="pop-over-list">
+    <li>
+      <a class="js-toggle-watch-list">
+        {{#if isWatching}}
+          <i class="fa fa-eye"></i>
+          {{_ 'unwatch'}}
+        {{else}}
+          <i class="fa fa-eye-slash"></i>
+          {{_ 'watch'}}
+        {{/if}}
+      </a>
+    </li>
+  </ul>
+  {{#unless currentUser.isCommentOnly}}
+    {{#unless currentUser.isWorker}}
+      <ul class="pop-over-list">
+        <li>
+          <a class="js-set-color-list">
+            <i class="fa fa-paint-brush"></i>
+            {{_ 'set-color-list'}}
+          </a>
+        </li>
+      </ul>
+    {{/unless}}
+    <ul class="pop-over-list">
+      {{#if cards.length}}
+        <li>
+          <a class="js-select-cards">
+            <i class="fa fa-check-square"></i>
+            {{_ 'list-select-cards'}}
+          </a>
+        </li>
+      {{/if}}
+    </ul>
+    {{#if currentUser.isBoardAdmin}}
+      <ul class="pop-over-list">
+        <li>
+          <a class="js-set-wip-limit">
+            <i class="fa fa-ban"></i>
+            {{#if isWipLimitEnabled}}{{_ 'edit-wip-limit'}}{{else}}{{_ 'setWipLimitPopup-title'}}{{/if}}
+          </a>
+        </li>
+      </ul>
+    {{/if}}
+    {{#unless currentUser.isWorker}}
+      <hr>
+      <ul class="pop-over-list">
+        <li>
+          <a class="js-close-list">
+            <i class="fa fa-arrow-right"></i>
+            <i class="fa fa-archive"></i>
+            {{_ 'archive-list'}}
+          </a>
+        </li>
+      </ul>
+    {{/unless}}
+    <hr>
+    <ul class="pop-over-list">
+      <li>
+        <a class="js-more">
+          <i class="fa fa-link"></i>
+          {{_ 'listMorePopup-title'}}
+        </a>
+      </li>
+    </ul>
+  {{/unless}}
+</template>
+
+<template name="boardLists">
+  <ul class="pop-over-list">
+    {{#each currentBoard.lists}}
+      <li>
+        {{#if $eq ../_id _id}}
+          <a class="disabled">{{title}} ({{_ 'current'}})</a>
+        {{else}}
+          <a class="js-select-list">{{title}}</a>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="listMorePopup">
+  <p class="quiet">
+    <span class="clearfix">
+      <span>{{_ 'link-list'}}</span>
+      {{rootUrl}}
+      <i class="fa colorful {{#if board.isPublic}}fa-globe{{else}}fa-lock{{/if}}"></i>
+      <input class="inline-input" type="text" readonly value="{{rootUrl}}">
+    </span>
+    {{_ 'added'}}
+    <span class="date" title="{{list.createdAt}}">{{moment createdAt 'LLL'}}</span>
+  </p>
+</template>
+
+<template name="listDeletePopup">
+  <p>{{_ "list-delete-pop"}}</p>
+  {{#unless archived}}
+    <p>{{_ "list-delete-suggest-archive"}}</p>
+  {{/unless}}
+  <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+</template>
+
+<template name="setWipLimitPopup">
+  <div id="js-wip-limit-edit">
+    <label>{{_ 'set-wip-limit-value'}}</label>
+    <ul class="pop-over-list">
+      <li>
+        <a class="js-enable-wip-limit">{{_ 'enable-wip-limit'}}
+          {{#if isWipLimitEnabled}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+      </li>
+    </ul>
+    {{#if isWipLimitEnabled}}
+      <p>
+        <input class="wip-limit-value" type="number" value="{{wipLimitValue}}" min="1" max="99">
+        <input class="wip-limit-apply" type="submit" value="{{_ 'apply'}}">
+        <input class="wip-limit-error">
+      </p>
+      <p>
+        <div class="soft-wip-limit">
+          <div class="materialCheckBox {{#if isWipLimitSoft}}is-checked{{/if}}"></div>
+          <label>{{_ 'soft-wip-limit'}}</label>
+        </div>
+      </p>
+    {{/if}}
+  </div>
+</template>
+
+<template name="wipLimitErrorPopup">
+  <div class="wip-limit-invalid">
+    <p>{{_ 'wipLimitErrorPopup-dialog-pt1'}}</p>
+    <p>{{_ 'wipLimitErrorPopup-dialog-pt2'}}</p>
+    <button class="full js-back-view" type="submit">{{_ 'cancel'}}</button>
+  </div>
+</template>
+
+<template name="setListWidthPopup">
+  <div id="js-list-width-edit">
+    <label>{{_ 'set-list-width-value'}}</label>
+    <p>
+      <input class="list-width-value" type="number" value="{{listWidthValue}}" min="100">
+      <input class="list-constraint-value" type="number" value="{{listConstraintValue}}" min="100">
+      <input class="list-width-apply" type="submit" value="{{_ 'apply'}}">
+      <input class="list-width-error">
+    </p>
+  </div>
+</template>
+
+<template name="listWidthErrorPopup">
+  <div class="list-width-invalid">
+    <p>{{_ 'list-width-error-message'}} &gt;=100</p>
+    <button class="full js-back-view" type="submit">{{_ 'cancel'}}</button>
+  </div>
+</template>
+
+<template name="setListColorPopup">
+  <form class="edit-label">
+    <div class="palette-colors">
+      {{#each colors}}
+        <span class="card-label palette-color js-palette-color card-details-{{color}}">
+          {{#if isSelected color}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </span>
+      {{/each}}
+    </div>
+    <button class="primary confirm js-submit">{{_ 'save'}}</button>
+    <button class="js-remove-color negate wide right">{{_ 'unset-color'}}</button>
+  </form>
+</template>

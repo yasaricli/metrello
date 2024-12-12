@@ -1,0 +1,46 @@
+
+<template name="settingHeaderBar">
+  <h1 class="header-setting-menu">
+    <span>{{_ 'admin-panel'}}</span>
+  </h1>
+
+  <div class="setting-header-btns left">
+    {{#if currentUser}}
+      <a class="setting-header-btn settings" href="{{pathFor 'setting'}}">
+        <i class="fa fa-cog"></i>
+        <span>{{_ 'settings'}}</span>
+      </a>
+
+      <a class="setting-header-btn people" href="{{pathFor 'people'}}">
+        <i class="fa fa-users"></i>
+        <span>{{_ 'people'}}</span>
+      </a>
+
+      <a class="setting-header-btn informations" href="{{pathFor 'admin-reports'}}">
+        <i class="fa fa-list"></i>
+        <span>{{_ 'reports'}}</span>
+      </a>
+
+      <a class="setting-header-btn informations" href="{{pathFor 'attachments'}}">
+        <i class="fa fa-paperclip"></i>
+        <span>{{_ 'attachments'}}</span>
+      </a>
+
+      <a class="setting-header-btn informations" href="{{pathFor 'translation'}}">
+        <i class="fa fa-font"></i>
+        <span>{{_ 'translation'}}</span>
+      </a>
+
+      <a class="setting-header-btn informations" href="{{pathFor 'information'}}">
+        <i class="fa fa-info-circle"></i>
+        <span>{{_ 'info'}}</span>
+      </a>
+
+    {{else}}
+      <a class="setting-header-btn js-log-in" title="{{_ 'log-in'}}">
+        <i class="fa fa-sign-in"></i>
+        <span>{{_ 'log-in'}}</span>
+      </a>
+    {{/if}}
+  </div>
+</template>

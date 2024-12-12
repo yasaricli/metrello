@@ -1,0 +1,58 @@
+
+<template name="notificationIcon">
+  {{#if $in activityType 'deleteAttachment' 'addAttachment'}}
+    <i class="fa fa-paperclip activity-type" title="attachment"></i>
+  {{else if $in activityType 'createBoard' 'importBoard'}}
+    <i class="fa fa-chalkboard activity-type" title="board"></i>
+  {{else if $in activityType 'createCard' 'importCard' 'moveCard'}}
+    {{> cardNotificationIcon}}
+  {{else if $in activityType 'moveCardBoard' 'archivedCard' 'restoredCard'}}
+    {{> cardNotificationIcon}}
+    {{!-- $in can only handle up to 3 cases so we have to break this case over 2 cases... use a simple template to keep it --}}
+    {{!-- DRY and consistant --}}
+  {{else if $in activityType 'addChecklist' 'removedChecklist' 'completeChecklist'}}
+    {{> checklistNotificationIcon}}
+  {{else if $in activityType 'uncompleteChecklist'}}
+    {{> checklistNotificationIcon}}
+    {{!-- $in can only handle up to 3 cases so we have to break this case over 2 cases... use a simple template to keep it --}}
+    {{!-- DRY and consistant --}}
+  {{else if $in activityType 'checkedItem' 'uncheckedItem' 'addChecklistItem' 'removedChecklistItem'}}
+    <i class="fa fa-check-square activity-type" title="checklist item"></i>
+  {{else if $in activityType 'addComment'}}
+    <i class="fa fa-comment-o activity-type" title="comment"></i>
+  {{else if $in activityType 'createCustomField' 'setCustomField' 'unsetCustomField'}}
+    <i class="fa fa-code activity-type" title="custom field"></i>
+  {{else if $in activityType 'addedLabel' 'removedLabel'}}
+    <i class="fa fa-tag activity-type" title="label"></i>
+  {{else if $in activityType 'a-startAt' 'a-receivedAt'}}
+    <i class="fa fa-clock-o activity-type" title="date"></i>
+  {{else if $in activityType 'a-dueAt' 'a-endAt'}}
+    <i class="fa fa-clock-o activity-type" title="date"></i>
+  {{else if $in activityType 'createList' 'removeList' 'archivedList'}}
+    {{> listNotificationIcon}}
+  {{else if $in activityType 'importList'}}
+    {{> listNotificationIcon}}
+    {{!-- $in can only handle up to 3 cases so we have to break this case over 2 cases... use a simple template to keep it --}}
+    {{!-- DRY and consistant --}}
+    {{!-- elswhere in the app we use fa-trello to indicate lists... --}}
+    {{!-- i personally like fa-columns a bit better --}}
+  {{else if $in activityType 'unjoinMember' 'addBoardMember' 'joinMember' 'removeBoardMember'}}
+    <i class="fa fa-user activity-type" title="member"></i>
+  {{else if $in activityType 'createSwimlane' 'archivedSwimlane'}}
+    <i class="fa fa-th-large activity-type" title="swimlane"></i>
+  {{else}}
+    <i class="fa fa-bug activity-type" title="can't find icon for {{activityType}}"></i>
+  {{/if}}
+</template>
+
+<template name="cardNotificationIcon">
+  <i class="fa fa-clone activity-type" title="card"></i>
+</template>
+
+<template name="checklistNotificationIcon">
+  <i class="fa fa-list activity-type" title="checklist"></i>
+</template>
+
+<template name="listNotificationIcon">
+  <i class="fa fa-columns activity-type" title="list"></i>
+</template>

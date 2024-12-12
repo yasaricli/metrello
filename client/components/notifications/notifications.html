@@ -1,0 +1,9 @@
+
+<template name="notifications">
+  <div id="notifications" class="board-header-btns right">
+    <a class="notifications-drawer-toggle fa fa-bell {{#if $gt unreadNotifications 0}}alert{{/if}}" title="{{_ 'notifications'}}"></a>
+    {{#if $.Session.get 'showNotificationsDrawer'}}
+      {{> notificationsDrawer unreadNotifications=unreadNotifications}}
+    {{/if}}
+  </div>
+</template>

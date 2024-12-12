@@ -1,0 +1,138 @@
+
+<template name="swimlane">
+  <div class="swimlane nodragscroll">
+    {{> swimlaneHeader}}
+  </div>
+  {{#unless collapseSwimlane}}
+    <div class="swimlane js-lists js-swimlane dragscroll" id="swimlane-{{_id}}" style="height:{{swimlaneHeight}};">
+      {{#if isMiniScreen}}
+        {{#if currentListIsInThisSwimlane _id}}
+          {{> list currentList}}
+        {{/if}}
+        {{#unless currentList}}
+          {{#if currentUser.isBoardMember}}
+            {{#unless currentUser.isCommentOnly}}
+              {{> addListForm}}
+            {{/unless}}
+          {{/if}}
+          {{#each lists}}
+            {{> miniList this}}
+          {{/each}}
+        {{/unless}}
+      {{else}}
+        {{#if currentUser.isBoardMember}}
+          {{#unless currentUser.isCommentOnly}}
+            {{> addListForm}}
+          {{/unless}}
+        {{/if}}
+        {{#each lists}}
+          {{#if visible this}}
+            {{> list this}}
+          {{/if}}
+          {{#if currentCardIsInThisList _id ../_id}}
+            {{> cardDetails currentCard}}
+          {{/if}}
+        {{/each}}
+      {{/if}}
+    </div>
+  {{/unless}}
+</template>
+
+<template name="listsGroup">
+  <div class="swimlane list-group js-lists">
+    {{#if isMiniScreen}}
+      {{#if currentList}}
+        {{> list currentList}}
+      {{else}}
+        {{#if currentUser.isBoardMember}}
+          {{#unless currentUser.isCommentOnly}}
+            {{> addListForm}}
+          {{/unless}}
+        {{/if}}
+        {{#each lists}}
+          {{> miniList this}}
+        {{/each}}
+      {{/if}}
+    {{else}}
+      {{#if currentUser.isBoardMember}}
+        {{#unless currentUser.isCommentOnly}}
+          {{> addListForm}}
+        {{/unless}}
+      {{/if}}
+      {{#each lists}}
+        {{#if visible this}}
+          {{> list this}}
+        {{/if}}
+        {{#if currentCardIsInThisList _id null}}
+          {{> cardDetails currentCard}}
+        {{/if}}
+      {{/each}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="addListForm">
+  {{#unless currentUser.isWorker}}
+    {{#unless currentUser.isCommentOnly}}
+      <div class="list list-composer js-list-composer {{#if isMiniScreen}}mini-list{{/if}}">
+        <div class="list-header-add">
+          {{> inlinedForm autoclose=false}}
+            <input class="list-name-input full-line" type="text" placeholder="{{_ 'add-list'}}" autocomplete="off" autofocus>
+            {{#if currentBoard.getLastList}}
+              {{_ 'add-after-list'}}
+              <select class="list-position-input full-line">
+                {{#each currentBoard.lists}}
+                  <option value="{{_id}}" selected="{{currentBoard.getLastList.title}}">{{title}}</option>
+                {{/each}}
+              </select>
+            {{/if}}
+            <div class="edit-controls clearfix">
+              <button class="primary confirm" type="submit">{{_ 'save'}}</button>
+              <i class="fa fa-times-thin js-close-inlined-form"></i>
+              {{#unless currentBoard.isTemplatesBoard}}
+                {{#unless currentBoard.isTemplateBoard}}
+                  <span class="quiet">
+                    {{_ 'or'}}
+                    <a class="js-list-template">{{_ 'template'}}</a>
+                  </span>
+                {{/unless}}
+              {{/unless}}
+            </div>
+          {{/inlinedForm}}
+        </div>
+      </div>
+    {{else}}
+      <a class="open-list-composer js-open-inlined-form" title="{{_ 'add-list'}}">
+        <i class="fa fa-plus"></i>
+      </a>
+    {{/unless}}
+  {{/unless}}
+</template>
+
+<template name="moveSwimlanePopup">
+  {{#unless currentUser.isWorker}}
+    <label>{{_ 'boards'}}:</label>
+    <select class="js-select-boards" autofocus>
+      {{#each toBoard in toBoards}}
+        <option value="{{toBoard._id}}">{{toBoard.title}}</option>
+      {{/each}}
+    </select>
+  {{/unless}}
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-done">{{_ 'done'}}</button>
+  </div>
+</template>
+
+<template name="copySwimlanePopup">
+  {{#unless currentUser.isWorker}}
+    <label>{{_ 'boards'}}:</label>
+    <select class="js-select-boards" autofocus>
+      {{#each toBoard in toBoards}}
+        <option value="{{toBoard._id}}" selected="{{#if $eq toBoard.title board.title}}1{{/if}}">{{toBoard.title}}</option>
+      {{/each}}
+    </select>
+  {{/unless}}
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-done">{{_ 'done'}}</button>
+  </div>
+</template>

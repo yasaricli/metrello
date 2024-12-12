@@ -1,0 +1,134 @@
+
+<template name="cardActions">
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-dropdown">
+        <select id="setdate-action">
+          <option value="setDate">{{_'r-set'}}</option>
+          <option value="updateDate">{{_'r-update'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_'r-datefield'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="setdate-datefield">
+          <option value="startAt">{{_'r-df-start-at'}}</option>
+          <option value="dueAt">{{_'r-df-due-at'}}</option>
+          <option value="endAt">{{_'r-df-end-at'}}</option>
+          <option value="receivedAt">{{_'r-df-received-at'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_'r-to-current-datetime'}}
+      </div>
+    </div>
+    <div class="trigger-button js-set-date-action js-goto-rules">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_'r-remove-value-from'}}
+        {{_'r-datefield'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="setdate-removedatefieldvalue">
+          <option value="startAt">{{_'r-df-start-at'}}</option>
+          <option value="dueAt">{{_'r-df-due-at'}}</option>
+          <option value="endAt">{{_'r-df-end-at'}}</option>
+          <option value="receivedAt">{{_'r-df-received-at'}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="trigger-button js-remove-datevalue-action js-goto-rules">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-dropdown">
+        <select id="label-action">
+          <option value="add">{{_'r-add'}}</option>
+          <option value="remove">{{_'r-remove'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_'r-label'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="label-id">
+          {{#each labels}}
+            <option value="{{_id}}">{{name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="trigger-button js-add-label-action js-goto-rules">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-dropdown">
+        <select id="member-action">
+          <option value="add">{{_'r-add'}}</option>
+          <option value="remove">{{_'r-remove'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_'r-member'}}
+      </div>
+      <div class="trigger-dropdown">
+        <input id="member-name" type="text" placeholder="{{_'r-name'}}">
+      </div>
+    </div>
+    <div class="trigger-button js-add-member-action js-goto-rules">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_'r-remove-all'}}
+      </div>
+    </div>
+    <div class="trigger-button js-add-removeall-action js-goto-rules">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_'r-set-color'}}
+        <button class="trigger-button trigger-button-color js-show-color-palette card-details-{{cardColorButton}}" id="color-action">
+          {{_ cardColorButtonText}}
+        </button>
+      </div>
+    </div>
+    <div class="trigger-button js-set-color-action js-goto-rules">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+</template>
+
+<template name="setCardActionsColorPopup">
+  <form class="edit-label">
+    <div class="palette-colors">
+      {{#each colors}}
+        <span class="card-label palette-color js-palette-color card-details-{{color}}">
+          {{#if isSelected color}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </span>
+      {{/each}}
+    </div>
+    <button class="primary confirm js-submit">{{_ 'save'}}</button>
+  </form>
+</template>

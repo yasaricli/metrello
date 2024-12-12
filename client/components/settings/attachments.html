@@ -1,0 +1,136 @@
+
+<template name="attachments">
+  <div class="setting-content attachments-content">
+    {{#unless currentUser.isAdmin}}
+      {{_ 'error-notAuthorized'}}
+    {{else}}
+      <div class="content-body">
+        <div class="side-menu">
+          <ul>
+            <li>
+              <a class="js-move-attachments" data-id="move-attachments">
+                <i class="fa fa-arrow-right"></i>
+                {{_ 'attachment-move'}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="main-body">
+          {{#if loading.get}}
+            {{> spinner}}
+          {{else if showMoveAttachments.get}}
+            {{> moveAttachments}}
+          {{/if}}
+        </div>
+      </div>
+    {{/unless}}
+  </div>
+</template>
+
+<template name="moveAttachments">
+  <div class="move-attachment-buttons">
+    <div class="js-move-attachment">
+      <button class="js-move-all-attachments-to-fs">{{_ 'move-all-attachments-to-fs'}}</button>
+    </div>
+    <div class="js-move-attachment">
+      <button class="js-move-all-attachments-to-gridfs">{{_ 'move-all-attachments-to-gridfs'}}</button>
+    </div>
+    <div class="js-move-attachment">
+      <button class="js-move-all-attachments-to-s3">{{_ 'move-all-attachments-to-s3'}}</button>
+    </div>
+  </div>
+
+  {{#each board in getBoardsWithAttachments}}
+    {{> moveBoardAttachments board}}
+  {{/each}}
+</template>
+
+<template name="moveBoardAttachments">
+  <hr>
+  <div class="board-description">
+    <table>
+      <tr>
+        <th>{{_ 'board'}} ID</th>
+        <th>{{_ 'board-title'}}</th>
+      </tr>
+      <tr>
+        <td>{{_id}}</td>
+        <td>{{title}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="move-attachment-buttons">
+    <div class="js-move-attachment">
+      <button class="js-move-all-attachments-of-board-to-fs">{{_ 'move-all-attachments-of-board-to-fs'}}</button>
+    </div>
+    <div class="js-move-attachment">
+      <button class="js-move-all-attachments-of-board-to-gridfs">{{_ 'move-all-attachments-of-board-to-gridfs'}}</button>
+    </div>
+    <div class="js-move-attachment">
+      <button class="js-move-all-attachments-of-board-to-s3">{{_ 'move-all-attachments-of-board-to-s3'}}</button>
+    </div>
+  </div>
+
+  <div class="board-attachments">
+    <table>
+      <tr>
+        <th>{{_ 'card'}}-Id</th>
+        <th>{{_ 'attachment'}}-Id</th>
+        <th>{{_ 'name'}}</th>
+        <th>{{_ 'path'}}</th>
+        <th>{{_ 'version-name'}}</th>
+        <th>{{_ 'size'}}</th>
+        <th>GridFsFileId</th>
+        <th>S3FileId</th>
+        <th>{{_ 'storage'}}</th>
+        <th>{{_ 'action'}}</th>
+      </tr>
+      {{#each attachment in attachments}}
+        {{> moveAttachment attachment}}
+      {{/each}}
+    </table>
+  </div>
+</template>
+
+<template name="moveAttachment">
+  {{#each version in flatVersion}}
+    <tr>
+      <td>{{meta.cardId}}</td>
+      <td>{{_id}}</td>
+      <td>{{name}}</td>
+      <td>{{version.path}}</td>
+      <td>{{version.versionName}}</td>
+      <td>{{fileSize version.size}}</td>
+      <td>{{version.meta.gridFsFileId}}</td>
+      <td>{{version.meta.s3FileId}}</td>
+      <td>{{version.storageName}}</td>
+      <td>
+        {{#if $neq version.storageName "fs"}}
+          <button class="js-move-storage-fs">
+            <i class="fa fa-arrow-right"></i>
+            {{_ 'attachment-move-storage-fs'}}
+          </button>
+        {{/if}}
+
+        {{#if $neq version.storageName "gridfs"}}
+          {{#if version.storageName}}
+            <button class="js-move-storage-gridfs">
+              <i class="fa fa-arrow-right"></i>
+              {{_ 'attachment-move-storage-gridfs'}}
+            </button>
+          {{/if}}
+        {{/if}}
+
+        {{#if $neq version.storageName "s3"}}
+          {{#if version.storageName}}
+            <button class="js-move-storage-s3">
+              <i class="fa fa-arrow-right"></i>
+              {{_ 'attachment-move-storage-s3'}}
+            </button>
+          {{/if}}
+        {{/if}}
+      </td>
+    </tr>
+  {{/each}}
+</template>

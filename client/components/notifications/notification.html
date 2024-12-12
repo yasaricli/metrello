@@ -1,0 +1,17 @@
+
+<template name="notification">
+  <li class="notification {{#if read}}read{{/if}}">
+    <div class="read-status">
+      <div class="materialCheckBox {{#if read}}is-checked{{/if}}"></div>
+      {{> notificationIcon activityData}}
+    </div>
+    <div class="details">
+      {{> activity activity=activityData mode='none'}}
+    </div>
+    {{#if read}}
+      <div class="remove">
+        <a class="fa fa-trash"></a>
+      </div>
+    {{/if}}
+  </li>
+</template>

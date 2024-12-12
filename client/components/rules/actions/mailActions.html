@@ -1,0 +1,18 @@
+
+<template name="mailActions">
+  <div class="trigger-item trigger-item-mail">
+    <div class="trigger-content trigger-content-mail">
+      <div class="trigger-text trigger-text-email">
+        {{_ 'r-send-email'}}
+      </div>
+      <div class="trigger-dropdown-mail">
+        <input id="email-to" type="text" placeholder="{{_ 'r-to'}}">
+      </div>
+      <input id="email-subject" type="text" placeholder="{{_ 'r-subject'}}">
+      <textarea id="email-msg"></textarea>
+    </div>
+    <div class="trigger-button trigger-button-email js-mail-action js-goto-rules">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+</template>

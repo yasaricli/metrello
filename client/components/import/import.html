@@ -1,0 +1,98 @@
+
+<template name="importHeaderBar">
+  <h1>
+    <a class="back-btn" href="{{pathFor 'home'}}">
+      <i class="fa fa-chevron-left"></i>
+    </a>
+    {{_ title}}
+  </h1>
+</template>
+
+<template name="import">
+  <div class="wrapper">
+    {{#if error.get}}
+      <div class="warning">{{_ error.get}}</div>
+    {{/if}}
+    {{> Template.dynamic template=currentTemplate}}
+  </div>
+</template>
+
+<template name="importTextarea">
+  <form>
+    <p><label for="import-textarea">{{_ instruction}} {{_ 'import-board-instruction-about-errors'}}</label></p>
+    <textarea class="js-import-json" id="import-textarea" placeholder="{{_ importPlaceHolder}}" autofocus>{{jsonText}}</textarea>
+    <input class="primary wide" type="submit" value="{{_ 'import'}}">
+  </form>
+</template>
+
+<template name="importMapMembers">
+  <h2>{{_ 'import-map-members'}}</h2>
+  {{#if usersLoaded.get}}
+    <div class="map-members">
+      <p>{{_ 'import-members-map'}}</p>
+      <p class="import-members-map-note">{{_ 'import-members-map-note'}}</p>
+      <div class="mapping-list">
+        {{#each members}}
+          <a class="mapping-item js-select-member {{#if wekanId}}filled{{/if}}">
+            <div class="profile-source">
+              <div class="full-name">{{fullName}}</div>
+              <div class="username">({{username}})</div>
+            </div>
+            <div class="wekan">
+              {{#if wekanId}}
+                {{> userAvatar userId=wekanId}}
+              {{else}}
+                <a class="member add-member">
+                  <i class="fa fa-plus"></i>
+                </a>
+              {{/if}}
+            </div>
+          </a>
+        {{/each}}
+        {{!-- Due to the way the flewbox layout is working, we need to set some
+             invisible items so that the last row items have a consistent width.
+             See http://jsfiddle.net/Ln4h3c4n/ for an minimal example of the issue. --}}
+        <div class="mapping-item ghost-item"></div>
+        <div class="mapping-item ghost-item"></div>
+        <div class="mapping-item ghost-item"></div>
+        <div class="mapping-item ghost-item"></div>
+        <div class="mapping-item ghost-item"></div>
+      </div>
+      <form>
+        <input class="primary wide" type="submit" value="{{_ 'done'}}">
+      </form>
+    </div>
+  {{else}}
+    {{> spinner}}
+  {{/if}}
+</template>
+
+<template name="importMapMembersAddPopup">
+  <div class="select-member">
+    <p>{{_ 'import-user-select'}}</p>
+    <div class="js-map-member">
+      {{> EasySearch.Input index=searchIndex}}
+    </div>
+    <ul class="pop-over-list">
+      {{#EasySearch.Each index=searchIndex}}
+        <li class="item js-member-item">
+          <a class="name js-select-import" title="{{profile.fullname}} ({{username}})" data-id="{{__originalId}}">
+            {{> userAvatar userId=__originalId}}
+            <span class="full-name">
+              {{profile.fullname}}
+              (<span class="username">{{username}}</span>)
+            </span>
+          </a>
+        </li>
+      {{/EasySearch.Each}}
+      {{#EasySearch.IfSearching index=searchIndex}}
+        {{> spinner}}
+      {{/EasySearch.IfSearching}}
+      {{#EasySearch.IfNoResults index=searchIndex}}
+        <div class="manage-member-section">
+          <p class="quiet">{{_ 'no-results'}}</p>
+        </div>
+      {{/EasySearch.IfNoResults}}
+    </ul>
+  </div>
+</template>

@@ -1,0 +1,391 @@
+<template name="boardHeaderBar">
+  <h1 class="header-board-menu">
+    {{#with currentBoard}}
+      {{#if $eq title 'Templates'}}
+        {{_ 'templates'}}
+      {{else}}
+        {{#viewer}}
+          {{title}}
+        {{/viewer}}
+      {{/if}}
+    {{/with}}
+  </h1>
+
+  <div class="board-header-btns left">
+    {{#unless isMiniScreen}}
+      {{#if currentBoard}}
+        {{#if currentUser}}
+          {{#with currentBoard}}
+            {{#if currentUser.isBoardAdmin}}
+              <a class="board-header-btn {{#if currentUser.isBoardAdmin}}js-edit-board-title{{else}}is-disabled{{/if}}" title="{{_ 'edit'}}" value="{{title}}">
+                <i class="fa fa-pencil-square-o"></i>
+              </a>
+            {{/if}}
+          {{/with}}
+
+          <a class="board-header-btn js-star-board {{#if isStarred}}is-active{{/if}}"
+             title="{{#if isStarred}}{{_ 'click-to-unstar'}}{{else}}{{_ 'click-to-star'}}{{/if}} {{_ 'starred-boards-description'}}">
+            <i class="fa fa-star{{#unless isStarred}}-o{{/unless}}"></i>
+            {{#if showStarCounter}}
+              <span>{{currentBoard.stars}}</span>
+            {{/if}}
+          </a>
+
+          <a class="board-header-btn js-auto-width-board"
+             title="{{#if isAutoWidth}}{{_ 'click-to-disable-auto-width'}}{{else}}{{_ 'click-to-enable-auto-width'}}{{/if}}">
+            <i class="fa fa-solid fa-{{#if isAutoWidth}}compress{{else}}expand{{/if}}"></i>
+          </a>
+
+          <a class="board-header-btn {{#if currentUser.isBoardAdmin}}js-change-visibility{{else}}is-disabled{{/if}}"
+             title="{{_ currentBoard.permission}}">
+            <i class="fa {{#if currentBoard.isPublic}}fa-globe{{else}}fa-lock{{/if}}"></i>
+            <span>{{_ currentBoard.permission}}</span>
+          </a>
+
+          <a class="board-header-btn js-watch-board" title="{{_ watchLevel}}">
+            {{#if $eq watchLevel "watching"}}
+              <i class="fa fa-eye"></i>
+            {{/if}}
+            {{#if $eq watchLevel "tracking"}}
+              <i class="fa fa-bell"></i>
+            {{/if}}
+            {{#if $eq watchLevel "muted"}}
+              <i class="fa fa-bell-slash"></i>
+            {{/if}}
+            <span>{{_ watchLevel}}</span>
+          </a>
+
+          <a class="board-header-btn {{#if isSortActive}}emphasis{{else}}js-sort-cards{{/if}}" title="{{_ 'sort-cards'}}">
+            <i class="fa fa-sort"></i>
+            <span>{{#if isSortActive}}{{_ 'sort-is-on'}}{{else}}{{_ 'sort-cards'}}{{/if}}</span>
+            {{#if isSortActive}}
+              <a class="board-header-btn-close js-sort-reset" title="{{_ 'remove-sort'}}">
+                <i class="fa fa-times-thin"></i>
+              </a>
+            {{/if}}
+          </a>
+
+        {{else}}
+          <a class="board-header-btn js-log-in" title="{{_ 'log-in'}}">
+            <i class="fa fa-sign-in"></i>
+            <span>{{_ 'log-in'}}</span>
+          </a>
+        {{/if}}
+      {{/if}}
+    {{/unless}}
+  </div>
+
+  <div class="board-header-btns right">
+    {{#if currentBoard}}
+      {{#if isMiniScreen}}
+        {{#if currentUser}}
+          {{#with currentBoard}}
+            <a class="board-header-btn {{#if currentUser.isBoardAdmin}}js-edit-board-title{{else}}is-disabled{{/if}}"
+               title="{{_ 'edit'}}" value="{{title}}">
+              <i class="fa fa-pencil-square-o"></i>
+            </a>
+
+            <a class="board-header-btn js-star-board {{#if isStarred}}is-active{{/if}}"
+               title="{{#if isStarred}}{{_ 'click-to-unstar'}}{{else}}{{_ 'click-to-star'}}{{/if}} {{_ 'starred-boards-description'}}">
+              <i class="fa fa-star{{#unless isStarred}}-o{{/unless}}"></i>
+              {{#if showStarCounter}}
+                <span>{{currentBoard.stars}}</span>
+              {{/if}}
+            </a>
+
+            <a class="board-header-btn js-auto-width-board"
+               title="{{#if isAutoWidth}}{{_ 'click-to-disable-auto-width'}}{{else}}{{_ 'click-to-enable-auto-width'}}{{/if}}">
+              <i class="fa fa-solid fa-{{#if isAutoWidth}}compress{{else}}expand{{/if}}"></i>
+            </a>
+
+            <a class="board-header-btn {{#if currentUser.isBoardAdmin}}js-change-visibility{{else}}is-disabled{{/if}}"
+               title="{{_ currentBoard.permission}}">
+              <i class="fa {{#if currentBoard.isPublic}}fa-globe{{else}}fa-lock{{/if}}"></i>
+              <span>{{_ currentBoard.permission}}</span>
+            </a>
+
+            <a class="board-header-btn js-watch-board" title="{{_ watchLevel}}">
+              {{#if $eq watchLevel "watching"}}
+                <i class="fa fa-eye"></i>
+              {{/if}}
+              {{#if $eq watchLevel "tracking"}}
+                <i class="fa fa-bell"></i>
+              {{/if}}
+              {{#if $eq watchLevel "muted"}}
+                <i class="fa fa-bell-slash"></i>
+              {{/if}}
+              <span>{{_ watchLevel}}</span>
+            </a>
+
+            <a class="board-header-btn {{#if isSortActive}}emphasis{{else}}js-sort-cards{{/if}}" title="{{_ 'sort-cards'}}">
+              <i class="fa fa-sort"></i>
+              <span>{{#if isSortActive}}{{_ 'sort-is-on'}}{{else}}{{_ 'sort-cards'}}{{/if}}</span>
+              {{#if isSortActive}}
+                <a class="board-header-btn-close js-sort-reset" title="{{_ 'remove-sort'}}">
+                  <i class="fa fa-times-thin"></i>
+                </a>
+              {{/if}}
+            </a>
+
+          {{/with}}
+        {{else}}
+          <a class="board-header-btn js-log-in" title="{{_ 'log-in'}}">
+            <i class="fa fa-sign-in"></i>
+            <span>{{_ 'log-in'}}</span>
+          </a>
+        {{/if}}
+      {{/if}}
+
+      {{#if isSandstorm}}
+        {{#if currentUser}}
+          <a class="board-header-btn js-open-archived-board">
+            <i class="fa fa-archive"></i>
+            <span>{{_ 'archives'}}</span>
+          </a>
+        {{/if}}
+      {{/if}}
+
+      <a class="board-header-btn js-open-filter-view"
+         title="{{#if Filter.isActive}}{{_ 'filter-on-desc'}}{{else}}{{_ 'filter'}}{{/if}}"
+         class="{{#if Filter.isActive}}emphasis{{/if}}">
+        <i class="fa fa-filter"></i>
+        <span>{{#if Filter.isActive}}{{_ 'filter-on'}}{{else}}{{_ 'filter'}}{{/if}}</span>
+        {{#if Filter.isActive}}
+          <a class="board-header-btn-close js-filter-reset" title="{{_ 'filter-clear'}}">
+            <i class="fa fa-times-thin"></i>
+          </a>
+        {{/if}}
+      </a>
+
+      <a class="board-header-btn js-open-search-view" title="{{_ 'search'}}">
+        <i class="fa fa-search"></i>
+        <span>{{_ 'search'}}</span>
+      </a>
+
+      {{#unless currentBoard.isTemplatesBoard}}
+        <a class="board-header-btn js-toggle-board-view" title="{{_ 'board-view'}}">
+          <i class="fa fa-caret-down"></i>
+          {{#if $eq boardView 'board-view-swimlanes'}}
+            <i class="fa fa-th-large"></i>
+          {{/if}}
+          {{#if $eq boardView 'board-view-lists'}}
+            <i class="fa fa-trello"></i>
+          {{/if}}
+          {{#if $eq boardView 'board-view-cal'}}
+            <i class="fa fa-calendar"></i>
+          {{/if}}
+          <span>{{#if boardView}}{{_ boardView}}{{else}}{{_ 'board-view-swimlanes'}}{{/if}}</span>
+        </a>
+      {{/unless}}
+
+      {{#if canModifyBoard}}
+        <a class="board-header-btn js-multiselection-activate"
+           title="{{#if MultiSelection.isActive}}{{_ 'multi-selection-on'}}{{else}}{{_ 'multi-selection'}}{{/if}}"
+           class="{{#if MultiSelection.isActive}}emphasis{{/if}}">
+          <i class="fa fa-check-square-o"></i>
+          <span>{{#if MultiSelection.isActive}}{{_ 'multi-selection-on'}}{{else}}{{_ 'multi-selection'}}{{/if}}</span>
+          {{#if MultiSelection.isActive}}
+            <a class="board-header-btn-close js-multiselection-reset" title="{{_ 'filter-clear'}}">
+              <i class="fa fa-times-thin"></i>
+            </a>
+          {{/if}}
+        </a>
+      {{/if}}
+
+      <div class="separator"></div>
+      <a class="board-header-btn js-toggle-sidebar" title="{{_ 'sidebar-open'}} {{_ 'or'}} {{_ 'sidebar-close'}}">
+        <i class="fa fa-navicon"></i>
+      </a>
+    {{/if}}
+  </div>
+</template>
+
+<template name="boardVisibilityList">
+  <ul class="pop-over-list">
+    <li>
+      {{#with "private"}}
+        <a class="js-select-visibility">
+          <i class="fa fa-lock colorful"></i>
+          {{_ 'private'}}
+          {{#if visibilityCheck}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+          <span class="sub-name">{{_ 'private-desc'}}</span>
+        </a>
+      {{/with}}
+    </li>
+    {{#if notAllowPrivateVisibilityOnly}}
+      <li>
+        {{#with "public"}}
+          <a class="js-select-visibility">
+            <i class="fa fa-globe colorful"></i>
+            {{_ 'public'}}
+            {{#if visibilityCheck}}
+              <i class="fa fa-check"></i>
+            {{/if}}
+            <span class="sub-name">{{_ 'public-desc'}}</span>
+          </a>
+        {{/with}}
+      </li>
+    {{/if}}
+  </ul>
+</template>
+
+<template name="boardChangeVisibilityPopup">
+  {{> boardVisibilityList}}
+</template>
+
+<template name="boardChangeWatchPopup">
+  <ul class="pop-over-list">
+    <li>
+      {{#with "watching"}}
+        <a class="js-select-watch">
+          <i class="fa fa-eye colorful"></i>
+          {{_ 'watching'}}
+          {{#if watchCheck}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+          <span class="sub-name">{{_ 'watching-info'}}</span>
+        </a>
+      {{/with}}
+    </li>
+    <li>
+      {{#with "tracking"}}
+        <a class="js-select-watch">
+          <i class="fa fa-bell colorful"></i>
+          {{_ 'tracking'}}
+          {{#if watchCheck}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+          <span class="sub-name">{{_ 'tracking-info'}}</span>
+        </a>
+      {{/with}}
+    </li>
+    <li>
+      {{#with "muted"}}
+        <a class="js-select-watch">
+          <i class="fa fa-bell-slash colorful"></i>
+          {{_ 'muted'}}
+          {{#if watchCheck}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+          <span class="sub-name">{{_ 'muted-info'}}</span>
+        </a>
+      {{/with}}
+    </li>
+  </ul>
+</template>
+
+<template name="boardChangeViewPopup">
+  <ul class="pop-over-list">
+    <li>
+      {{#with "board-view-swimlanes"}}
+        <a class="js-open-swimlanes-view">
+          <i class="fa fa-th-large colorful"></i>
+          {{_ 'board-view-swimlanes'}}
+          {{#if $eq Utils.boardView "board-view-swimlanes"}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+      {{/with}}
+    </li>
+    <li>
+      {{#with "board-view-lists"}}
+        <a class="js-open-lists-view">
+          <i class="fa fa-trello colorful"></i>
+          {{_ 'board-view-lists'}}
+          {{#if $eq Utils.boardView "board-view-lists"}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+      {{/with}}
+    </li>
+    <li>
+      {{#with "board-view-cal"}}
+        <a class="js-open-cal-view">
+          <i class="fa fa-calendar colorful"></i>
+          {{_ 'board-view-cal'}}
+          {{#if $eq Utils.boardView "board-view-cal"}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+      {{/with}}
+    </li>
+  </ul>
+</template>
+
+<template name="createBoard">
+  <form>
+    <label>
+      {{_ 'title'}}
+      <input class="js-new-board-title" type="text" placeholder="{{_ 'bucket-example'}}" autofocus required>
+    </label>
+    {{#if visibilityMenuIsOpen.get}}
+      {{> boardVisibilityList}}
+    {{else}}
+      <p class="quiet">
+        {{#if $eq visibility.get 'public'}}
+          <span class="fa fa-globe colorful"></span>
+          {{{_ 'board-public-info'}}}
+        {{else}}
+          <span class="fa fa-lock colorful"></span>
+          {{{_ 'board-private-info'}}}
+        {{/if}}
+        <a class="js-change-visibility">{{_ 'change'}}</a>.
+      </p>
+    {{/if}}
+    <a class="flex js-toggle-add-template-container">
+      <div class="materialCheckBox" id="add-template-container"></div>
+      <span>{{_ 'add-template-container'}}</span>
+    </a>
+    <input class="primary wide" type="submit" value="{{_ 'create'}}">
+    <span class="quiet">
+      {{_ 'or'}}
+      <a class="js-import-board">{{_ 'import'}}</a>
+    </span>
+    <span class="quiet">
+      /
+      <a class="js-board-template">{{_ 'template'}}</a>
+    </span>
+  </form>
+</template>
+
+<template name="boardChangeTitlePopup">
+  <form>
+    <label>
+      {{_ 'title'}}
+      <input class="js-board-name" type="text" value="{{title}}" autofocus dir="auto">
+    </label>
+    <label>
+      {{_ 'description'}}
+      <textarea class="js-board-desc" dir="auto">{{description}}</textarea>
+    </label>
+    <input class="primary wide" type="submit" value="{{_ 'rename'}}">
+  </form>
+</template>
+
+<template name="boardCreateRulePopup">
+  <p>{{_ 'close-board-pop'}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'archive'}}</button>
+</template>
+
+<template name="cardsSortPopup">
+  <ul class="pop-over-list">
+    <li>
+      <a class="js-sort-due">{{_ 'due-date'}}</a>
+      <hr>
+    </li>
+    <li>
+      <a class="js-sort-title">{{_ 'title-alphabetically'}}</a>
+      <hr>
+    </li>
+    <li>
+      <a class="js-sort-created-desc">{{_ 'created-at-newest-first'}}</a>
+      <hr>
+    </li>
+    <li>
+      <a class="js-sort-created-asc">{{_ 'created-at-oldest-first'}}</a>
+      <hr>
+    </li>
+  </ul>
+</template>

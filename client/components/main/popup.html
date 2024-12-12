@@ -1,0 +1,30 @@
+
+<div class="pop-over js-pop-over {{#unless title}}miniprofile{{/unless}} {{currentBoard.colorClass}} {{#unless title}}no-title{{/unless}}" style="left:{{offset.left}}px; top:{{offset.top}}px;">
+  <div class="header">
+    <a class="back-btn js-back-view {{#unless hasPopupParent}}is-hidden{{/unless}}">
+      <i class="fa fa-chevron-left"></i>
+    </a>
+    <span class="header-title">{{title}}</span>
+    <a class="close-btn js-close-pop-over">
+      <i class="fa fa-times-thin"></i>
+    </a>
+  </div>
+  <div class="content-wrapper">
+    <!--
+      We display the all stack of popup content next to each other and move
+      the "window" by translating .content-container inside .content-wrapper.
+    -->
+    <div class="content-container popup-container-depth-{{depth}}">
+      {{#each stack}}
+        <!--
+          XXX We need a better way to express the "is the last element" condition.
+          Hopefully the @last helper will come soon (or at least @index)
+        -->
+        <div class="content {{#unless (eq popupName ../popupName)}}no-height{{/unless}}">
+          {{> Template.dynamic template=popupName data=dataContext}}
+        </div>
+      {{/each}}
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>

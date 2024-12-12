@@ -1,0 +1,197 @@
+
+<template name="adminReports">
+  <div class="setting-content admin-reports-content">
+    {{#unless currentUser.isAdmin}}
+      {{_ 'error-notAuthorized'}}
+    {{else}}
+      <div class="content-body">
+        <div class="side-menu">
+          <ul>
+            <li>
+              <a class="js-report-broken" data-id="report-broken">
+                <i class="fa fa-chain-broken"></i>
+                {{_ 'broken-cards'}}
+              </a>
+            </li>
+            <li>
+              <a class="js-report-files" data-id="report-files">
+                <i class="fa fa-paperclip"></i>
+                {{_ 'filesReportTitle'}}
+              </a>
+            </li>
+            <li>
+              <a class="js-report-rules" data-id="report-rules">
+                <i class="fa fa-magic"></i>
+                {{_ 'rulesReportTitle'}}
+              </a>
+            </li>
+            <li>
+              <a class="js-report-boards" data-id="report-boards">
+                <i class="fa fa-magic"></i>
+                {{_ 'boardsReportTitle'}}
+              </a>
+            </li>
+            <li>
+              <a class="js-report-cards" data-id="report-cards">
+                <i class="fa fa-magic"></i>
+                {{_ 'cardsReportTitle'}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="main-body">
+          {{#if loading.get}}
+            {{> spinner}}
+          {{else if showBrokenCardsReport.get}}
+            {{> brokenCardsReport}}
+          {{else if showFilesReport.get}}
+            {{> filesReport}}
+          {{else if showRulesReport.get}}
+            {{> rulesReport}}
+          {{else if showBoardsReport.get}}
+            {{> boardsReport}}
+          {{else if showCardsReport.get}}
+            {{> cardsReport}}
+          {{/if}}
+        </div>
+      </div>
+    {{/unless}}
+  </div>
+</template>
+
+<template name="brokenCardsReport">
+  <div class="global-search-results-list-wrapper">
+    <h1>{{_ 'broken-cards'}}</h1>
+    {{#if resultsCount}}
+      {{> resultsPaged this}}
+    {{else}}
+      <div>{{_ 'no-results'}}</div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="rulesReport">
+  <h1>{{_ 'rulesReportTitle'}}</h1>
+  {{#if resultsCount}}
+    <table>
+      <thead>
+        <tr>
+          <th>Rule Title</th>
+          <th>Board Title</th>
+          <th>actionType</th>
+          <th>activityType</th>
+        </tr>
+      </thead>
+      {{#each rule in results}}
+        <tbody>
+          <tr>
+            <td>{{ rule.title }}</td>
+            <td>{{ rule.boardTitle }}</td>
+            <td>{{ rule.action.actionType }}</td>
+            <td>{{ rule.trigger.activityType }}</td>
+          </tr>
+        </tbody>
+      {{/each}}
+    </table>
+  {{else}}
+    <div>{{_ 'no-results'}}</div>
+  {{/if}}
+</template>
+
+<template name="filesReport">
+  <h1>{{_ 'filesReportTitle'}}</h1>
+  {{#if resultsCount}}
+    <table>
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th class="right">Size (kB)</th>
+          <th>MIME Type</th>
+          <th>Attachment ID</th>
+          <th>Board ID</th>
+          <th>Card ID</th>
+        </tr>
+      </thead>
+      {{#each att in results}}
+        <tbody>
+          <tr>
+            <td>{{ att.name }}</td>
+            <td class="right">{{ fileSize att.size }}</td>
+            <td>{{ att.type }}</td>
+            <td>{{ att._id }}</td>
+            <td>{{ att.meta.boardId }}</td>
+            <td>{{ att.meta.cardId }}</td>
+          </tr>
+        </tbody>
+      {{/each}}
+    </table>
+  {{else}}
+    <div>{{_ 'no-results'}}</div>
+  {{/if}}
+</template>
+
+<template name="cardsReport">
+  <h1>{{_ 'cardsReportTitle'}}</h1>
+  {{#if resultsCount}}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Card Title</th>
+          <th>Board</th>
+          <th>Swimlane</th>
+          <th>List</th>
+          <th>Members</th>
+          <th>Assignees</th>
+        </tr>
+      </thead>
+      {{#each card in results}}
+        <tbody>
+          <tr>
+            <td>{{abbreviate card.title}}</td>
+            <td>{{abbreviate card.board.title}}</td>
+            <td>{{abbreviate card.swimlane.title}}</td>
+            <td>{{abbreviate card.list.title}}</td>
+            <td>{{userNames card.members}}</td>
+            <td>{{userNames card.assignees}}</td>
+          </tr>
+        </tbody>
+      {{/each}}
+    </table>
+  {{else}}
+    <div>{{_ 'no-results'}}</div>
+  {{/if}}
+</template>
+
+<template name="boardsReport">
+  <h1>{{_ 'boardsReportTitle'}}</h1>
+  {{#if resultsCount}}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Id</th>
+          <th>Permission</th>
+          <th>Archived?</th>
+          <th>Members</th>
+          <th>Organizations</th>
+          <th>Teams</th>
+        </tr>
+      </thead>
+      {{#each board in results}}
+        <tbody>
+          <tr>
+            <td>{{abbreviate board.title}}</td>
+            <td>{{abbreviate board._id}}</td>
+            <td>{{ board.permission }}</td>
+            <td>{{yesOrNo board.archived}}</td>
+            <td>{{userNames board.members}}</td>
+            <td>{{orgs board.orgs}}</td>
+            <td>{{teams board.teams}}</td>
+          </tr>
+        </tbody>
+      {{/each}}
+    </table>
+  {{else}}
+    <div>{{_ 'no-results'}}</div>
+  {{/if}}
+</template>

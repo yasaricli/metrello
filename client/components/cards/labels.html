@@ -1,0 +1,60 @@
+
+<template name="formLabel">
+  <label for="labelName">{{_ 'name'}}</label>
+  <input class="js-label-name" id="labelName" type="text" name="name" value="{{name}}" autofocus>
+
+  <label>{{_ "select-color"}}</label>
+  <div class="palette-colors">
+    {{#each labels}}
+      <span class="card-label palette-color js-palette-color card-label-{{color}}">
+        {{#if isSelected color}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </span>
+    {{/each}}
+  </div>
+</template>
+
+<template name="createLabelPopup">
+  <form class="create-label">
+    {{#with color=defaultColor}}
+      {{> formLabel}}
+    {{/with}}
+    <button class="primary wide" type="submit">{{_ 'create'}}</button>
+  </form>
+</template>
+
+<template name="editLabelPopup">
+  <form class="edit-label">
+    {{> formLabel}}
+    <button class="primary wide left" type="submit">{{_ 'save'}}</button>
+    <button class="js-delete-label negate wide right">{{_ 'delete'}}</button>
+  </form>
+</template>
+
+<template name="deleteLabelPopup">
+  <p>{{_ "label-delete-pop"}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+</template>
+
+<template name="cardLabelsPopup">
+  <ul class="edit-labels-pop-over">
+    {{#each board.labels}}
+      <li class="js-card-label-item">
+        <a class="card-label-edit-button fa fa-pencil js-edit-label"></a>
+        {{#if isTouchScreenOrShowDesktopDragHandles}}
+          <span class="fa fa-arrows label-handle" title="{{_ 'dragLabel'}}"></span>
+        {{/if}}
+        <span class="card-label card-label-selectable js-select-label card-label-wrapper card-label-{{color}} {{#if isLabelSelected ../_id}}active{{/if}}">
+          {{#viewer}}
+            {{name}}
+          {{/viewer}}
+          {{#if isLabelSelected ../_id}}
+            <i class="card-label-selectable-icon fa fa-check"></i>
+          {{/if}}
+        </span>
+      </li>
+    {{/each}}
+  </ul>
+  <a class="quiet-button full js-add-label">{{_ 'label-create'}}</a>
+</template>

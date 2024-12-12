@@ -1,0 +1,33 @@
+
+<template name="archivedBoards">
+  <h2>
+    <i class="fa fa-archive"></i>
+    {{_ 'archived-boards'}}
+  </h2>
+
+  <ul class="archived-lists">
+    {{#each archivedBoards}}
+      <li class="archived-lists-item">
+        <div class="board-header-btns">
+          <button class="board-header-btn js-delete-board">
+            <i class="fa fa-trash-o"></i>
+            {{_ 'delete-board'}}
+          </button>
+          <button class="board-header-btn js-restore-board">
+            <i class="fa fa-undo"></i>
+            {{_ 'restore-board'}}
+          </button>
+          {{title}}
+        </div>
+        <span>{{ moment archivedAt 'LLL' }}</span>
+      </li>
+    {{else}}
+      <li class="no-items-message">{{_ 'no-archived-boards'}}</li>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="boardDeletePopup">
+  <p>{{_ 'delete-board-confirm-popup'}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+</template>

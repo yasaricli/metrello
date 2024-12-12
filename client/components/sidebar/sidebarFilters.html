@@ -1,0 +1,314 @@
+<!--
+  XXX There is a *lot* of code duplication in the below templates and in the
+  corresponding JavaScript components. We will probably need the upcoming #let
+  and #each x in y constructors to fix this.
+-->
+
+<template name="filterSidebar">
+  <h3>
+    <i class="fa fa-trello"></i>
+    {{_ 'list-filter-label'}}
+  </h3>
+  <ul class="sidebar-list">
+    <form class="js-list-filter">
+      <input type="text">
+    </form>
+  </ul>
+  <hr>
+  <h3>
+    <i class="fa fa-list-alt"></i>
+    {{_ 'filter-card-title-label'}}
+  </h3>
+  <input class="js-field-card-filter" type="text">
+  <hr>
+  <h3>
+    <i class="fa fa-tags"></i>
+    {{_ 'filter-labels-label'}}
+  </h3>
+  <ul class="sidebar-list">
+    <li class="{{#if Filter.labelIds.isSelected undefined}}active{{/if}}">
+      <a class="name js-toggle-label-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-no-label'}}</span>
+        {{#if Filter.labelIds.isSelected undefined}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    {{#each currentBoard.labels}}
+      <li>
+        <a class="name js-toggle-label-filter">
+          <span class="card-label square card-label-{{color}}"></span>
+          <span class="sidebar-list-item-description">
+            {{#if name}}
+              {{name}}
+            {{else}}
+              <span class="quiet">{{_ "label-default" (_ (concat "color-" color))}}</span>
+            {{/if}}
+          </span>
+          {{#if Filter.labelIds.isSelected _id}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+  <hr>
+  <h3>
+    <i class="fa fa-users"></i>
+    {{_ 'filter-member-label'}}
+  </h3>
+  <ul class="sidebar-list">
+    <li class="{{#if Filter.members.isSelected undefined}}active{{/if}}">
+      <a class="name js-toggle-member-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-no-member'}}</span>
+        {{#if Filter.members.isSelected undefined}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    {{#each currentBoard.activeMembers}}
+      {{#with getUser userId}}
+        <li class="{{#if Filter.members.isSelected _id}}active{{/if}}">
+          <a class="name js-toggle-member-filter">
+            {{> userAvatar userId=this._id}}
+            <span class="sidebar-list-item-description">
+              {{profile.fullname}}
+              (<span class="username">{{username}}</span>)
+            </span>
+            {{#if Filter.members.isSelected _id}}
+              <i class="fa fa-check"></i>
+            {{/if}}
+          </a>
+        </li>
+      {{/with}}
+    {{/each}}
+  </ul>
+  <hr>
+  <h3>
+    <i class="fa fa-user"></i>
+    {{_ 'filter-assignee-label'}}
+  </h3>
+  <ul class="sidebar-list">
+    <li class="{{#if Filter.assignees.isSelected undefined}}active{{/if}}">
+      <a class="name js-toggle-assignee-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-no-assignee'}}</span>
+        {{#if Filter.assignees.isSelected undefined}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    {{#each currentBoard.activeMembers}}
+      {{#with getUser userId}}
+        <li class="{{#if Filter.assignees.isSelected _id}}active{{/if}}">
+          <a class="name js-toggle-assignee-filter">
+            {{> userAvatar userId=this._id}}
+            <span class="sidebar-list-item-description">
+              {{profile.fullname}}
+              (<span class="username">{{username}}</span>)
+            </span>
+            {{#if Filter.assignees.isSelected _id}}
+              <i class="fa fa-check"></i>
+            {{/if}}
+          </a>
+        </li>
+      {{/with}}
+    {{/each}}
+  </ul>
+  <hr>
+  <h3>
+    <i class="fa fa-list-alt"></i>
+    {{_ 'filter-dates-label'}}
+  </h3>
+  <ul class="sidebar-list">
+    <li class="{{#if Filter.dueAt.isSelected 'noDate'}}active{{/if}}">
+      <a class="name js-toggle-no-due-date-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-no-due-date'}}</span>
+        {{#if Filter.dueAt.isSelected 'noDate'}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    <li class="{{#if Filter.dueAt.isSelected 'past'}}active{{/if}}">
+      <a class="name js-toggle-overdue-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-overdue'}}</span>
+        {{#if Filter.dueAt.isSelected 'past'}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    <li class="{{#if Filter.dueAt.isSelected 'today'}}active{{/if}}">
+      <a class="name js-toggle-due-today-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-due-today'}}</span>
+        {{#if Filter.dueAt.isSelected 'today'}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    <li class="{{#if Filter.dueAt.isSelected 'tomorrow'}}active{{/if}}">
+      <a class="name js-toggle-due-tomorrow-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-due-tomorrow'}}</span>
+        {{#if Filter.dueAt.isSelected 'tomorrow'}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    <li class="{{#if Filter.dueAt.isSelected 'thisweek'}}active{{/if}}">
+      <a class="name js-toggle-due-this-week-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-due-this-week'}}</span>
+        {{#if Filter.dueAt.isSelected 'thisweek'}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    <li class="{{#if Filter.dueAt.isSelected 'nextweek'}}active{{/if}}">
+      <a class="name js-toggle-due-next-week-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-due-next-week'}}</span>
+        {{#if Filter.dueAt.isSelected 'nextweek'}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+  </ul>
+  <hr>
+  <h3>
+    <i class="fa fa-list-alt"></i>
+    {{_ 'filter-custom-fields-label'}}
+  </h3>
+  <ul class="sidebar-list">
+    <li class="{{#if Filter.customFields.isSelected undefined}}active{{/if}}">
+      <a class="name js-toggle-custom-fields-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-no-custom-fields'}}</span>
+        {{#if Filter.customFields.isSelected undefined}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    {{#each currentBoard.customFields}}
+      <li class="{{#if Filter.customFields.isSelected _id}}active{{/if}}">
+        <a class="name js-toggle-custom-fields-filter">
+          <span class="sidebar-list-item-description">{{name}}</span>
+          {{#if Filter.customFields.isSelected _id}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+  <hr>
+  <h3>{{_ 'other-filters-label'}}</h3>
+  <ul class="sidebar-list">
+    <li class="{{#if Filter.archive.isSelected _id}}active{{/if}}">
+      <a class="name js-toggle-archive-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-show-archive'}}</span>
+        {{#if Filter.archive.isSelected _id}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+  </ul>
+  <ul class="sidebar-list">
+    <li class="{{#if Filter.hideEmpty.isSelected _id}}active{{/if}}">
+      <a class="name js-toggle-hideEmpty-filter">
+        <span class="sidebar-list-item-description">{{_ 'filter-hide-empty'}}</span>
+        {{#if Filter.hideEmpty.isSelected _id}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+  </ul>
+  <hr>
+  <h3>{{_ 'advanced-filter-label'}}</h3>
+  <input class="js-field-advanced-filter" type="text">
+  <span>{{_ 'advanced-filter-description'}}</span>
+  {{#if Filter.isActive}}
+    <hr>
+    <a class="sidebar-btn js-clear-all">
+      <i class="fa fa-filter"></i>
+      <span>{{_ 'filter-clear'}}</span>
+    </a>
+    <a class="sidebar-btn js-filter-to-selection">
+      <i class="fa fa-check-square-o"></i>
+      <span>{{_ 'filter-to-selection'}}</span>
+    </a>
+  {{/if}}
+</template>
+
+<template name="multiselectionSidebar">
+  <h3>
+    <i class="fa fa-tags"></i>
+    {{_ 'multi-selection-label'}}
+  </h3>
+  <ul class="sidebar-list">
+    {{#each currentBoard.labels}}
+      <li>
+        <a class="name js-toggle-label-multiselection">
+          <span class="card-label square card-label-{{color}}"></span>
+          <span class="sidebar-list-item-description">
+            {{#if name}}
+              {{name}}
+            {{else}}
+              <span class="quiet">{{_ "label-default" (_ (concat "color-" color))}}</span>
+            {{/if}}
+          </span>
+          {{#if allSelectedElementHave 'label' _id}}
+            <i class="fa fa-check"></i>
+          {{else if someSelectedElementHave 'label' _id}}
+            <i class="fa fa-ellipsis-h"></i>
+          {{/if}}
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+  <hr>
+  <h3>
+    <i class="fa fa-users"></i>
+    {{_ 'multi-selection-member'}}
+  </h3>
+  <ul class="sidebar-list">
+    {{#each currentBoard.activeMembers}}
+      {{#with getUser userId}}
+        <li class="{{#if Filter.members.isSelected _id}}active{{/if}}">
+          <a class="name js-toggle-member-multiselection">
+            {{> userAvatar userId=this._id}}
+            <span class="sidebar-list-item-description">
+              {{profile.fullname}}
+              (<span class="username">{{username}}</span>)
+            </span>
+            {{#if allSelectedElementHave 'member' _id}}
+              <i class="fa fa-check"></i>
+            {{else if someSelectedElementHave 'member' _id}}
+              <i class="fa fa-ellipsis-h"></i>
+            {{/if}}
+          </a>
+        </li>
+      {{/with}}
+    {{/each}}
+  </ul>
+  {{#if currentUser.isBoardAdmin}}
+    <hr>
+    <a class="sidebar-btn js-move-selection">
+      <i class="fa fa-share"></i>
+      <span>{{_ 'move-selection'}}</span>
+    </a>
+    <a class="sidebar-btn js-archive-selection">
+      <i class="fa fa-archive"></i>
+      <span>{{_ 'archive-selection'}}</span>
+    </a>
+  {{/if}}
+</template>
+
+<template name="disambiguateMultiLabelPopup">
+  <p>{{_ 'what-to-do'}}</p>
+  <button class="wide js-remove-label">{{_ 'remove-label'}}</button>
+  <button class="wide js-add-label">{{_ 'add-label'}}</button>
+</template>
+
+<template name="disambiguateMultiMemberPopup">
+  <p>{{_ 'what-to-do'}}</p>
+  <button class="wide js-unassign-member">{{_ 'unassign-member'}}</button>
+  <button class="wide js-assign-member">{{_ 'assign-member'}}</button>
+</template>
+
+<template name="moveSelectionPopup">
+  {{> boardLists}}
+</template>

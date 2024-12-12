@@ -24,7 +24,7 @@ do
 			echo "Linux";
 			# Debian, Ubuntu, Mint
 			sudo apt install -y build-essential gcc g++ make git curl wget p7zip-full zip unzip unp npm p7zip-full
-			#curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+			#curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 			#sudo apt-get install -y nodejs
 			#sudo apt-get install -y npm
 			# Volta Node and NPM install manager, made with Rust https://volta.sh
@@ -42,11 +42,11 @@ do
 			# - Custom source: https://github.com/tj/n#custom-source
 			# - sudo -E uses existing environment variables, so that this can be used in build script:
 			#   https://github.com/tj/n/issues/584#issuecomment-523640742
-			export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			sudo -E n 14.21.4
-			sudo npm -g uninstall node-pre-gyp
+			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
+			sudo -E n 22.11.0
+			#sudo npm -g uninstall node-pre-gyp
 			# Latest fibers for Meteor sudo mkdir -p /usr/local/lib/node_modules/fibers/.node-gyp sudo npm -g install fibers
-			sudo npm -g install @mapbox/node-pre-gyp
+			#sudo npm -g install @mapbox/node-pre-gyp
 			# Install Meteor, if it's not yet installed
 			sudo npm -g install meteor --unsafe-perm
 			#sudo chown -R $(id -u):$(id -g) $HOME/.npm $HOME/.meteor
@@ -54,10 +54,10 @@ do
 		        echo "macOS";
 			brew install npm
 			npm -g install n
-			export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			n 14.21.4
-			npm -g uninstall node-pre-gyp
-			npm -g install @mapbox/node-pre-gyp
+			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
+			n 22.11.0
+			#npm -g uninstall node-pre-gyp
+			#npm -g install @mapbox/node-pre-gyp
 			npm -g install meteor
 		elif [[ "$OSTYPE" == "cygwin" ]]; then
 		        # POSIX compatibility layer and Linux environment emulation for Windows
@@ -95,11 +95,11 @@ do
 		#cd ..
 		#sudo chown -R $(id -u):$(id -g) $HOME/.npm $HOME/.meteor
 		rm -rf .build/bundle node_modules .meteor/local .build
-		meteor npm install --production
+		meteor npm install --omit=dev
 		meteor build .build --directory --platforms=web.browser
 		rm -rf .build/bundle/programs/web.browser.legacy
 		(cd .build/bundle/programs/server && rm -rf node_modules && chmod u+w *.json && meteor npm install --production)
-                (cd .build/bundle/programs/server/node_modules/fibers && node build.js)
+                #(cd .build/bundle/programs/server/node_modules/fibers && node build.js)
 		(cd .build/bundle/programs/server/npm/node_modules/meteor/accounts-password && meteor npm remove bcrypt && meteor npm install bcrypt --production)
 		# Cleanup
 		cd .build/bundle

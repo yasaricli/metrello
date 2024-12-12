@@ -1,0 +1,303 @@
+<template name="headerUserBar">
+  <div id="header-user-bar">
+    <a class="header-user-bar-name js-open-header-member-menu" title="{{_ 'memberMenuPopup-title'}}">
+      <div class="header-user-bar-avatar">
+        {{> userAvatar userId=currentUser._id}}
+      </div>
+      {{#unless isMiniScreen}}
+        {{#unless isSandstorm}}
+          {{#if currentUser.profile.fullname}}
+            {{currentUser.profile.fullname}}
+          {{else}}
+            {{currentUser.username}}
+          {{/if}}
+        {{/unless}}
+      {{/unless}}
+    </a>
+  </div>
+</template>
+
+<template name="memberMenuPopup">
+  <ul class="pop-over-list">
+    {{#with currentUser}}
+      <li>
+        <a class="js-my-cards" href="{{pathFor 'my-cards'}}">
+          <i class="fa fa-list"></i>
+          {{_ 'my-cards'}}
+        </a>
+      </li>
+      <li>
+        <a class="js-due-cards" href="{{pathFor 'due-cards'}}">
+          <i class="fa fa-calendar"></i>
+          {{_ 'dueCards-title'}}
+        </a>
+      </li>
+      <li>
+        <a class="js-global-search" href="{{pathFor 'global-search'}}">
+          <i class="fa fa-search"></i>
+          {{_ 'globalSearch-title'}}
+        </a>
+      </li>
+      <li>
+        <a href="{{pathFor 'home'}}">
+          <span class="fa fa-home"></span>
+          {{_ 'all-boards'}}
+        </a>
+      </li>
+      <li>
+        <a href="{{pathFor 'public'}}">
+          <span class="fa fa-globe"></span>
+          {{_ 'public'}}
+        </a>
+      </li>
+      <li>
+        <a class="board-header-btn js-open-archived-board">
+          <i class="fa fa-archive"></i>
+          <span>{{_ 'archives'}}</span>
+        </a>
+      </li>
+      {{#unless currentUser.isWorker}}
+        <ul class="pop-over-list">
+          <li>
+            <a href="{{pathFor 'board' id=templatesBoardId slug=templatesBoardSlug}}">
+              <i class="fa fa-clone"></i>
+              {{_ 'templates'}}
+            </a>
+          </li>
+        </ul>
+      {{/unless}}
+      {{#if currentUser.isAdmin}}
+        <li>
+          <a class="js-go-setting" href="{{pathFor 'setting'}}">
+            <i class="fa fa-lock"></i>
+            {{_ 'admin-panel'}}
+          </a>
+        </li>
+      {{/if}}
+      <hr>
+      {{#if isSameDomainNameSettingValue}}
+        <li>
+          <a class="js-invite-people">
+            <i class="fa fa-envelope"></i>
+            {{_ 'invite-people'}}
+          </a>
+        </li>
+      {{/if}}
+      {{#if isNotOAuth2AuthenticationMethod}}
+        <li>
+          <a class="js-edit-profile">
+            <i class="fa fa-user"></i>
+            {{_ 'edit-profile'}}
+          </a>
+        </li>
+      {{/if}}
+      <li>
+        <a class="js-change-settings">
+          <i class="fa fa-cog"></i>
+          {{_ 'change-settings'}}
+        </a>
+      </li>
+      <li>
+        <a class="js-change-avatar">
+          <i class="fa fa-picture-o"></i>
+          {{_ 'edit-avatar'}}
+        </a>
+      </li>
+      {{#unless isSandstorm}}
+        {{#if isNotOAuth2AuthenticationMethod}}
+          <li>
+            <a class="js-change-password">
+              <i class="fa fa-key"></i>
+              {{_ 'changePasswordPopup-title'}}
+            </a>
+          </li>
+        {{/if}}
+      {{/unless}}
+      <li>
+        <a class="js-change-language">
+          <i class="fa fa-flag"></i>
+          {{_ 'changeLanguagePopup-title'}}
+        </a>
+      </li>
+      <li>
+        <a class="js-support">
+          <i class="fa fa-question-circle"></i>
+          {{_ 'support'}}
+        </a>
+      </li>
+    {{/with}}
+  </ul>
+  {{#unless isSandstorm}}
+    <hr>
+    <ul class="pop-over-list">
+      <li>
+        <a class="js-logout">
+          <i class="fa fa-sign-out"></i>
+          {{_ 'log-out'}}
+        </a>
+      </li>
+    </ul>
+  {{/unless}}
+</template>
+
+<template name="invitePeoplePopup">
+  <ul id="registration-setting" class="setting-detail">
+    <li>
+      <div id="invite-people-infos"></div>
+    </li>
+    <li>
+      <br>
+    </li>
+    <li>
+      <div class="invite-people {{#if currentSetting.disableRegistration}}{{else}}hide{{/if}}">
+        <ul>
+          <li>
+            <div class="title">{{_ 'invite-people'}}</div>
+            <textarea id="email-to-invite" class="wekan-form-control" rows="5" placeholder="{{_ 'email-addresses'}}"></textarea>
+          </li>
+          <li>
+            <div class="title">{{_ 'to-boards'}}</div>
+            <div class="bg-white">
+              {{#each boards}}
+                <a class="option flex js-toggle-board-choose" id="{{_id}}">
+                  <div class="materialCheckBox" data-id="{{_id}}"></div>
+                  <span>{{title}}</span>
+                </a>
+              {{/each}}
+            </div>
+          </li>
+          <li>
+            <button class="js-email-invite primary">{{_ 'invite'}}</button>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</template>
+
+<template name="editProfilePopup">
+  <form>
+    <label>
+      {{_ 'fullname'}}
+      <input class="js-profile-fullname" type="text" value="{{profile.fullname}}" autofocus>
+    </label>
+    <label>
+      {{_ 'username'}}
+      <span class="error hide username-taken">{{_ 'error-username-taken'}}</span>
+      {{#if allowUserNameChange}}
+        <input class="js-profile-username" type="text" value="{{username}}">
+      {{else}}
+        <input class="js-profile-username" type="text" value="{{username}}" readonly>
+      {{/if}}
+    </label>
+    <label>
+      {{_ 'initials'}}
+      <input class="js-profile-initials" type="text" value="{{profile.initials}}">
+    </label>
+    <label>
+      {{_ 'email'}}
+      <span class="error hide email-taken">{{_ 'error-email-taken'}}</span>
+      {{#if allowEmailChange}}
+        <input class="js-profile-email" type="email" value="{{emails.[0].address}}">
+      {{else}}
+        <input class="js-profile-email" type="email" value="{{emails.[0].address}}" readonly>
+      {{/if}}
+    </label>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+      {{#if allowUserDelete}}
+        <div></div>
+        <input id="deleteButton" class="primary wide" type="button" value="{{_ 'delete'}}">
+      {{/if}}
+    </div>
+  </form>
+</template>
+
+<template name="supportPopup">
+  <ul class="pop-over-list">
+    <li>
+      You get support from name of this app, that has Admin access to help you.
+      <br><br>
+      a) If app name or logo or URL is https://something.yourcompany.com, you get support from https://yourcompany.com.
+      This app may come preinstalled at some devices.
+      <br><br>
+      b) If this app name is WeKan from https://wekan.team/app/ or URL is https://boards.wekan.team,
+      then this is WeKan Open Source kanban software with MIT license https://wekan.github.io with all source code
+      at https://github.com/wekan/wekan, PRs are very welcome at https://github.com/wekan/wekan/pulls.
+      Free public Open Source support is at https://github.com/wekan/wekan/issues for feature requests and bug reports.
+      Optional paid private Commercial Support for Features/Fixes/Support/Hosting is at https://wekan.team from maintainer of WeKan.
+      If possible, please sponsor continuing maintaining of WeKan at https://wekan.github.io/sponsors/
+    </li>
+  </ul>
+</template>
+
+<template name="changePasswordPopup">
+  {{> atForm state='changePwd'}}
+</template>
+
+<template name="changeLanguagePopup">
+  <ul class="pop-over-list">
+    {{#each languages}}
+      <li class="{{#if isCurrentLanguage}}active{{/if}}">
+        <a class="js-set-language">{{name}}</a>
+        {{#if isCurrentLanguage}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="changeSettingsPopup">
+  <ul class="pop-over-list">
+    <!--
+    <li>
+      <a class="js-toggle-desktop-drag-handles">
+        <i class="fa fa-arrows"></i>
+        {{_ 'show-desktop-drag-handles'}}
+        {{#if isShowDesktopDragHandles}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+    </li>
+    -->
+    {{#unless currentUser.isWorker}}
+      <li>
+        <label class="bold clear">
+          <i class="fa fa-sort-numeric-asc"></i>
+          {{_ 'show-cards-minimum-count'}}
+        </label>
+        <input id="show-cards-count-at" class="inline-input left" type="number" value="{{showCardsCountAt}}" min="-1">
+        <label class="bold clear">
+          <i class="fa fa-calendar"></i>
+          {{_ 'start-day-of-week'}}
+        </label>
+        <select id="start-day-of-week" class="inline-input left">
+          {{#each day in weekDays startDayOfWeek}}
+            {{#if day.isSelected}}
+              <option selected="true" value="{{day.value}}">{{day.name}}</option>
+            {{else}}
+              <option value="{{day.value}}">{{day.name}}</option>
+            {{/if}}
+          {{/each}}
+        </select>
+        <label class="bold clear">{{_ 'card-settings'}}</label>
+        <ul id="cards" class="card-description-rescued">
+          <a class="flex js-rescue-card-description" title="{{_ 'rescue-card-description'}}">
+            <b>&nbsp;</b>
+            <div id="rescue-card-description" class="materialCheckBox left {{#if rescueCardDescription}}is-checked{{/if}}" value="{{rescueCardDescription}}"></div>
+            <span>{{_ 'rescue-card-description'}}</span>
+          </a>
+        </ul>
+        <input class="js-apply-user-settings left" type="submit" value="{{_ 'apply'}}">
+      </li>
+    {{/unless}}
+  </ul>
+</template>
+
+<template name="userDeletePopup">
+  {{#unless currentUser.isWorker}}
+    <p>{{_ 'delete-user-confirm-popup'}}</p>
+    <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+  {{/unless}}
+</template>

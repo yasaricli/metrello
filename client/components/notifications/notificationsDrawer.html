@@ -1,0 +1,32 @@
+
+<template name="notificationsDrawer">
+  <section id="notifications-drawer" class="{{#if $.Session.get 'showReadNotifications'}}show-read{{/if}}">
+    <div class="header">
+      {{#if $.Session.get 'showReadNotifications'}}
+        <a class="toggle-read">{{_ 'filter-by-unread'}}</a>
+      {{else}}
+        <a class="toggle-read">{{_ 'view-all'}}</a>
+      {{/if}}
+      <h5>{{_ 'notifications'}}
+        {{#if $gt unreadNotifications 0}}
+          ({{unreadNotifications}})
+        {{/if}}
+      </h5>
+      <a class="fa fa-times-thin close"></a>
+    </div>
+    <ul class="notifications">
+      {{#each transformedProfile.notifications}}
+        {{> notification activityData=activityObj index=dbIndex read=read}}
+      {{/each}}
+    </ul>
+    {{#if $gt unreadNotifications 0}}
+      <a class="all-read">{{_ 'mark-all-as-read'}}</a>
+    {{/if}}
+    {{#if $and ($.Session.get 'showReadNotifications') ($gt readNotifications 0)}}
+      <a class="remove-read">
+        <i class="fa fa-trash"></i>
+        {{_ 'remove-all-read'}}
+      </a>
+    {{/if}}
+  </section>
+</template>

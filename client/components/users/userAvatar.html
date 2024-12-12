@@ -1,0 +1,198 @@
+
+<template name="userAvatar">
+  <a class="member js-{{#if assignee}}assignee{{else}}member{{/if}}" title="{{userData.profile.fullname}} ({{userData.username}}) {{_ memberType}}">
+    {{#if userData.profile.avatarUrl}}
+      <img class="avatar avatar-image" src="{{userData.profile.avatarUrl}}">
+    {{else}}
+      {{> userAvatarInitials userId=userData._id}}
+    {{/if}}
+
+    {{#if showStatus}}
+      <span class="member-presence-status {{presenceStatusClassName}}"></span>
+      <span class="member-type {{memberType}}"></span>
+    {{/if}}
+
+    {{#unless isSandstorm}}
+      {{#if showEdit}}
+        {{#if $eq currentUser._id userData._id}}
+          <a class="edit-avatar js-change-avatar">
+            <i class="fa fa-pencil"></i>
+          </a>
+        {{/if}}
+      {{/if}}
+    {{/unless}}
+  </a>
+</template>
+
+<template name="userAvatarInitials">
+  <svg class="avatar avatar-initials" viewBox="0 0 {{viewPortWidth}} 15">
+    <text x="50%" y="13" text-anchor="middle">{{initials}}</text>
+  </svg>
+</template>
+
+<template name="orgAvatar">
+  <a class="member orgOrTeamMember js-member" title="{{orgData.orgDisplayName}}">
+    {{> boardOrgName orgId=orgData._id}}
+  </a>
+</template>
+
+<template name="boardOrgRow">
+  <tr>
+    {{#if orgData.orgIsActive}}
+      <td>{{orgData.orgDisplayName}}</td>
+    {{else}}
+      <td><s>{{orgData.orgDisplayName}}</s></td>
+    {{/if}}
+    <td>
+      {{#if currentUser.isBoardAdmin}}
+        <a class="member orgOrTeamMember add-member js-manage-board-removeOrg" title="{{_ 'remove-from-board'}}">
+          <i class="removeTeamFaMinus fa fa-minus"></i>
+        </a>
+        <div class="divaddfaplusminus">
+          {{_ 'remove-btn'}}
+        </div>
+      {{/if}}
+    </td>
+  </tr>
+</template>
+
+<template name="boardTeamRow">
+  <tr>
+    {{#if teamData.teamIsActive}}
+      <td>{{teamData.teamDisplayName}}</td>
+    {{else}}
+      <td><s>{{teamData.teamDisplayName}}</s></td>
+    {{/if}}
+    <td>
+      {{#if currentUser.isBoardAdmin}}
+        <a class="member orgOrTeamMember add-member js-manage-board-removeTeam" title="{{_ 'remove-from-board'}}">
+          <i class="removeTeamFaMinus fa fa-minus"></i>
+        </a>
+        <div class="divaddfaplusminus">
+          {{_ 'remove-btn'}}
+        </div>
+      {{/if}}
+    </td>
+  </tr>
+</template>
+
+<template name="boardOrgName">
+  <svg class="avatar avatar-initials" viewBox="0 0 {{orgViewPortWidth}} 15">
+    <text x="50%" y="13" text-anchor="middle">{{orgName}}</text>
+  </svg>
+</template>
+
+<template name="teamAvatar">
+  <a class="member orgOrTeamMember js-member" title="{{teamData.teamDisplayName}}">
+    {{> boardTeamName orgId=orgData._id}}
+  </a>
+</template>
+
+<template name="boardTeamName">
+  <svg class="avatar avatar-initials" viewBox="0 0 {{teamViewPortWidth}} 15">
+    <text x="50%" y="13" text-anchor="middle">{{teamName}}</text>
+  </svg>
+</template>
+
+<template name="userPopup">
+  <div class="board-member-menu">
+    <div class="mini-profile-info">
+      {{> userAvatar userId=user._id}}
+      <div class="info">
+        <h3>{{user.profile.fullname}}</h3>
+        <p class="quiet">@{{user.username}}</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="memberName">
+  {{#if showBoth}}
+    {{user.profile.fullname}} ({{user.username}})
+  {{else if user.profile.fullname}}
+    {{user.profile.fullname}}
+  {{else}}
+    {{user.username}}
+  {{/if}}
+</template>
+
+<template name="changeAvatarPopup">
+  {{#if error.get}}
+    <div class="warning">{{_ error.get}}</div>
+  {{/if}}
+  <ul class="pop-over-list">
+    {{#each uploadedAvatars}}
+      <li>
+        <a class="js-select-avatar">
+          <div class="member">
+            <img class="avatar avatar-image" src="{{link}}?auth=false&brokenIsFine=true">
+          </div>
+          {{_ 'uploaded-avatar'}}
+          {{#if isSelected}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+        <p class="sub-name">
+          {{#unless isSelected}}
+            <a class="js-delete-avatar">{{_ 'delete'}}</a> -
+          {{/unless}}
+          {{name}}
+        </p>
+      </li>
+    {{/each}}
+    <li>
+      <a class="js-select-initials">
+        <div class="member">
+          {{> userAvatarInitials userId=currentUser._id}}
+        </div>
+        {{_ 'initials'}}
+        {{#if noAvatarUrl}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+      </a>
+      <p class="sub-name">{{_ 'default-avatar'}}</p>
+    </li>
+  </ul>
+  <input class="hide js-upload-avatar-input" accept="image/*;capture=camera" type="file">
+  {{#if Meteor.settings.public.avatarsUploadMaxSize}}
+    {{_ 'max-avatar-filesize'}} {{Meteor.settings.public.avatarsUploadMaxSize}}<br>
+  {{/if}}
+  {{#if Meteor.settings.public.avatarsUploadMimeTypes}}
+    {{_ 'allowed-avatar-filetypes'}} {{Meteor.settings.public.avatarsUploadMimeTypes}}<br>
+  {{/if}}
+  {{_ 'invalid-file'}}
+  <button class="full js-upload-avatar">
+    <i class="fa fa-upload"></i>
+    {{_ 'upload-avatar'}}
+  </button>
+</template>
+
+<template name="cardMemberPopup">
+  <div class="board-member-menu">
+    <div class="mini-profile-info">
+      {{> userAvatar userId=user._id showEdit=true}}
+      <div class="info">
+        <h3>{{user.profile.fullname}}</h3>
+        <p class="quiet">@{{user.username}}</p>
+      </div>
+    </div>
+    <ul class="pop-over-list">
+      {{#unless noRemove}}
+        {{#if currentUser.isNotCommentOnly}}
+          {{#if currentUser.isNotWorker}}
+            <li>
+              <a class="js-remove-member">{{_ 'remove-member-from-card'}}</a>
+            </li>
+          {{/if}}
+        {{/if}}
+      {{/unless}}
+      {{#if $eq currentUser._id user._id}}
+        {{#with currentUser}}
+          <li>
+            <a class="js-edit-profile">{{_ 'edit-profile'}}</a>
+          </li>
+        {{/with}}
+      {{/if}}
+    </ul>
+  </div>
+</template>

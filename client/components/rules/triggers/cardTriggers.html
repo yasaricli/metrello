@@ -1,0 +1,178 @@
+
+<template name="cardTriggers">
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_ 'r-when-a-label-is'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="label-action">
+          <option value="added">{{_ 'r-added-to'}}</option>
+          <option value="removed">{{_ 'r-removed-from'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-a-card'}}
+      </div>
+      <div class="trigger-button trigger-button-person js-show-user-field">
+        <i class="fa fa-user"></i>
+      </div>
+      <div class="user-details hide-element">
+        <div class="trigger-text">
+          {{_ 'r-by'}}
+        </div>
+        <div class="trigger-dropdown">
+          <input class="user-name" type="text" placeholder="{{_ 'username'}}">
+        </div>
+      </div>
+    </div>
+    <div class="trigger-button js-add-gen-label-trigger js-goto-action">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_ 'r-when-the-label'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="spec-label">
+          {{#each labels}}
+            <option value="{{_id}}" style="background-color: {{name}}">
+              {{translatedname}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-is'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="spec-label-action">
+          <option value="added">{{_ 'r-added-to'}}</option>
+          <option value="removed">{{_ 'r-removed-from'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-a-card'}}
+      </div>
+      <div class="trigger-button trigger-button-person js-show-user-field">
+        <i class="fa fa-user"></i>
+      </div>
+      <div class="user-details hide-element">
+        <div class="trigger-text">
+          {{_ 'r-by'}}
+        </div>
+        <div class="trigger-dropdown">
+          <input class="user-name" type="text" placeholder="{{_ 'username'}}">
+        </div>
+      </div>
+    </div>
+    <div class="trigger-button js-add-spec-label-trigger js-goto-action">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_ 'r-when-a-member'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="gen-member-action">
+          <option value="added">{{_ 'r-added-to'}}</option>
+          <option value="removed">{{_ 'r-removed-from'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-a-card'}}
+      </div>
+      <div class="trigger-button trigger-button-person js-show-user-field">
+        <i class="fa fa-user"></i>
+      </div>
+      <div class="user-details hide-element">
+        <div class="trigger-text">
+          {{_ 'r-by'}}
+        </div>
+        <div class="trigger-dropdown">
+          <input class="user-name" type="text" placeholder="{{_ 'username'}}">
+        </div>
+      </div>
+    </div>
+    <div class="trigger-button js-add-gen-member-trigger js-goto-action">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_ 'r-when-the-member'}}
+      </div>
+      <div class="trigger-dropdown">
+        <input id="spec-member" type="text" placeholder="{{_ 'r-name'}}">
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-is'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="spec-member-action">
+          <option value="added">{{_ 'r-added-to'}}</option>
+          <option value="removed">{{_ 'r-removed-from'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-a-card'}}
+      </div>
+      <div class="trigger-button trigger-button-person js-show-user-field">
+        <i class="fa fa-user"></i>
+      </div>
+      <div class="user-details hide-element">
+        <div class="trigger-text">
+          {{_ 'r-by'}}
+        </div>
+        <div class="trigger-dropdown">
+          <input class="user-name" type="text" placeholder="{{_ 'username'}}">
+        </div>
+      </div>
+    </div>
+    <div class="trigger-button js-add-spec-member-trigger js-goto-action">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+
+  <div class="trigger-item">
+    <div class="trigger-content">
+      <div class="trigger-text">
+        {{_ 'r-when-a-attach'}}
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-is'}}
+      </div>
+      <div class="trigger-dropdown">
+        <select id="attach-action">
+          <option value="added">{{_ 'r-added-to'}}</option>
+          <option value="removed">{{_ 'r-removed-from'}}</option>
+        </select>
+      </div>
+      <div class="trigger-text">
+        {{_ 'r-a-card'}}
+      </div>
+      <div class="trigger-button trigger-button-person js-show-user-field">
+        <i class="fa fa-user"></i>
+      </div>
+      <div class="user-details hide-element">
+        <div class="trigger-text">
+          {{_ 'r-by'}}
+        </div>
+        <div class="trigger-dropdown">
+          <input class="user-name" type="text" placeholder="{{_ 'username'}}">
+        </div>
+      </div>
+    </div>
+    <div class="trigger-button js-add-attachment-trigger js-goto-action">
+      <i class="fa fa-plus"></i>
+    </div>
+  </div>
+</template>

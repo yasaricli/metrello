@@ -1,0 +1,44 @@
+
+<template name="rulesActions">
+  <h2>
+    <i class="fa fa-magic"></i>
+    {{_ 'r-rule' }} "#{data.ruleName.get}" - {{_ 'r-add-action'}}
+  </h2>
+  <div class="triggers-content">
+    <div class="triggers-body">
+      <div class="triggers-side-menu">
+        <ul>
+          <li class="active js-set-board-actions">
+            <i class="fa fa-columns"></i>
+          </li>
+          <li class="js-set-card-actions">
+            <i class="fa fa-sticky-note"></i>
+          </li>
+          <li class="js-set-checklist-actions">
+            <i class="fa fa-check"></i>
+          </li>
+          <li class="js-set-mail-actions">
+            <i class="fa fa-at"></i>
+          </li>
+        </ul>
+      </div>
+      <div class="triggers-main-body">
+        {{#if ($eq currentActions.get 'board')}}
+          {{> boardActions ruleName=data.ruleName triggerVar=data.triggerVar}}
+        {{else if ($eq currentActions.get 'card')}}
+          {{> cardActions ruleName=data.ruleName triggerVar=data.triggerVar}}
+        {{else if ($eq currentActions.get 'checklist')}}
+          {{> checklistActions ruleName=data.ruleName triggerVar=data.triggerVar}}
+        {{else if ($eq currentActions.get 'mail')}}
+          {{> mailActions ruleName=data.ruleName triggerVar=data.triggerVar}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="rules-back">
+    <button class="js-goback">
+      <i class="fa fa-chevron-left"></i>
+      {{_ 'back'}}
+    </button>
+  </div>
+</template>

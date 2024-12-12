@@ -1,0 +1,15 @@
+
+<template name="rulesMain">
+  {{#if ($eq rulesCurrentTab.get 'rulesList')}}
+    {{> rulesList}}
+  {{/if}}
+  {{#if ($eq rulesCurrentTab.get 'trigger')}}
+    {{> rulesTriggers ruleName=ruleName triggerVar=triggerVar}}
+  {{/if}}
+  {{#if ($eq rulesCurrentTab.get 'action')}}
+    {{> rulesActions ruleName=ruleName triggerVar=triggerVar}}
+  {{/if}}
+  {{#if ($eq rulesCurrentTab.get 'ruleDetails')}}
+    {{> ruleDetails ruleId=ruleId}}
+  {{/if}}
+</template>

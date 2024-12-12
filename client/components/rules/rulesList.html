@@ -1,0 +1,54 @@
+
+<template name="rulesList">
+  <div class="rules">
+    <h2>
+      <i class="fa fa-magic"></i>
+      {{_ 'r-board-rules'}}
+    </h2>
+
+    <ul class="rules-list">
+      {{#each rules}}
+        <li class="rules-lists-item">
+          <p>{{title}}</p>
+          <div class="rules-btns-group">
+            <button class="js-goto-details">
+              <i class="fa fa-eye"></i>
+              {{_ 'r-view-rule'}}
+            </button>
+            {{#if currentUser.isAdmin}}
+              <button class="js-delete-rule">
+                <i class="fa fa-trash-o"></i>
+                {{_ 'r-delete-rule'}}
+              </button>
+            {{else if currentUser.isBoardAdmin}}
+              <button class="js-delete-rule">
+                <i class="fa fa-trash-o"></i>
+                {{_ 'r-delete-rule'}}
+              </button>
+            {{/if}}
+          </div>
+        </li>
+      {{else}}
+        <li class="no-items-message">{{_ 'r-no-rules'}}</li>
+      {{/each}}
+    </ul>
+
+    {{#if currentUser.isAdmin}}
+      <div class="rules-add">
+        <button class="js-goto-trigger">
+          <i class="fa fa-plus"></i>
+          {{_ 'r-add-rule'}}
+        </button>
+        <input type="text" placeholder="{{_ 'r-new-rule-name'}}" id="ruleTitle">
+      </div>
+    {{else if currentUser.isBoardAdmin}}
+      <div class="rules-add">
+        <button class="js-goto-trigger">
+          <i class="fa fa-plus"></i>
+          {{_ 'r-add-rule'}}
+        </button>
+        <input type="text" placeholder="{{_ 'r-new-rule-name'}}" id="ruleTitle">
+      </div>
+    {{/if}}
+  </div>
+</template>

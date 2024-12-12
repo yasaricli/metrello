@@ -1,0 +1,26 @@
+
+<template name="searchSidebar">
+  <form class="js-search-term-form">
+    <input type="text" name="searchTerm" placeholder="{{_ 'search-example'}}" autofocus dir="auto">
+  </form>
+  <div class="list-body">
+    <div class="minilists clearfix js-minilists">
+      <hr>
+      {{_ 'lists' }}
+      {{#each lists}}
+        <a class="minilist-wrapper js-minilist" href="{{originRelativeUrl}}">
+          {{> minilist}}
+        </a>
+      {{/each}}
+    </div>
+    <div class="minicards clearfix js-minicards">
+      <hr>
+      {{_ 'cards' }}
+      {{#each cards}}
+        <a class="minicard-wrapper js-minicard" href="{{originRelativeUrl}}">
+          {{> minicard}}
+        </a>
+      {{/each}}
+    </div>
+  </div>
+</template>

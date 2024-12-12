@@ -1,0 +1,207 @@
+
+<template name="listBody">
+  {{#unless collapsed}}
+    <div class="list-body">
+      <div class="minicards clearfix js-minicards {{#if reachedWipLimit}}js-list-full{{/if}}">
+        {{#if cards.length}}
+          {{> inlinedForm autoclose=false position="top"}}
+            {{> addCardForm listId=_id position="top"}}
+        {{/if}}
+        <ul class="sidebar-list">
+          {{#each customFieldsSum}}
+            <li>
+              {{#viewer}}
+                {{name}}
+              {{/viewer}}
+              {{#if $eq customFieldsSum.type "number"}}
+                {{#viewer}}
+                  {{value}}
+                {{/viewer}}
+              {{/if}}
+              {{#if $eq customFieldsSum.type "currency"}}
+                {{#viewer}}
+                  {{formattedCurrencyCustomFieldValue value}}
+                {{/viewer}}
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+        {{#each (cardsWithLimit (idOrNull ../../_id))}}
+          <a class="minicard-wrapper js-minicard {{#if cardIsSelected}}is-selected{{/if}} {{#if MultiSelection.isSelected _id}}is-checked{{/if}}" href="{{originRelativeUrl}}">
+            {{#if MultiSelection.isActive}}
+              <div class="materialCheckBox multi-selection-checkbox js-toggle-multi-selection {{#if MultiSelection.isSelected _id}}is-checked{{/if}}"></div>
+            {{/if}}
+            {{> minicard this}}
+          </a>
+        {{/each}}
+        {{#if (showSpinner (idOrNull ../../_id))}}
+          {{> spinnerList}}
+        {{/if}}
+
+        {{#if canSeeAddCard}}
+          {{> inlinedForm autoclose=false position="bottom"}}
+            {{> addCardForm listId=_id position="bottom"}}
+        {{else}}
+          <a class="open-minicard-composer js-card-composer js-open-inlined-form" title="{{_ 'add-card-to-bottom-of-list'}}">
+            <i class="fa fa-plus"></i>
+          </a>
+        {{/if}}
+      </div>
+    </div>
+  {{/unless}}
+</template>
+
+<template name="spinnerList">
+  <div class="sk-spinner sk-spinner-list {{currentBoard.colorClass}} {{getSkSpinnerName}}" id="showMoreResults">
+    {{> spinnerRaw}}
+  </div>
+</template>
+
+<template name="addCardForm">
+  <div class="minicard minicard-composer js-composer">
+    {{#if getLabels}}
+      <div class="minicard-labels">
+        {{#each getLabels}}
+          <div class="minicard-label card-label-{{color}}" title="{{name}}"></div>
+        {{/each}}
+      </div>
+    {{/if}}
+    <textarea class="minicard-composer-textarea js-card-title" autofocus dir="auto"></textarea>
+    {{#if members.get}}
+      <div class="minicard-members js-minicard-composer-members">
+        {{#each members.get}}
+          {{> userAvatar userId=this}}
+        {{/each}}
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="add-controls clearfix">
+    <button class="primary confirm" type="submit">{{_ 'add'}}</button>
+    <a class="fa fa-times-thin js-close-inlined-form"></a>
+  </div>
+  <div class="add-controls clearfix">
+    {{#unless currentBoard.isTemplatesBoard}}
+      {{#unless currentBoard.isTemplateBoard}}
+        <span class="quiet">
+          {{_ 'or'}}
+          <a class="js-link">{{_ 'link'}}</a>
+        </span>
+        <span class="quiet">
+          &nbsp;/
+          <a class="js-search">{{_ 'search'}}</a>
+        </span>
+        <span class="quiet">
+          &nbsp;/
+          <a class="js-card-template">{{_ 'template'}}</a>
+        </span>
+      {{/unless}}
+    {{/unless}}
+  </div>
+</template>
+
+<template name="autocompleteLabelLine">
+  <div class="minicard-label card-label-{{colorName}}" title="{{labelName}}"></div>
+  <span class="{{#if hasNoName}}quiet{{/if}}">{{labelName}}</span>
+</template>
+
+<template name="linkCardPopup">
+  <label>{{_ 'boards'}}:</label>
+  <div class="link-board-wrapper">
+    <select class="js-select-boards">
+      <option value=""></option>
+      {{#each boards}}
+        <option value="{{_id}}">{{isTitleDefault title}}</option>
+      {{/each}}
+    </select>
+    <input class="primary confirm js-link-board" type="button" value="{{_ 'link'}}">
+  </div>
+
+  <label>{{_ 'swimlanes'}}:</label>
+  <select class="js-select-swimlanes">
+    {{#each swimlanes}}
+      <option value="{{_id}}">{{isTitleDefault title}}</option>
+    {{/each}}
+  </select>
+
+  <label>{{_ 'lists'}}:</label>
+  <select class="js-select-lists">
+    {{#each lists}}
+      <option value="{{_id}}">{{isTitleDefault title}}</option>
+    {{/each}}
+  </select>
+
+  <label>{{_ 'cards'}}:</label>
+  <select class="js-select-cards">
+    {{#each cards}}
+      <option value="{{getRealId}}">{{getTitle}}</option>
+    </select>
+  </div>
+
+  <div class="edit-controls clearfix">
+    <input class="primary confirm js-done" type="button" value="{{_ 'link'}}">
+  </div>
+</template>
+
+<template name="searchElementPopup">
+  <form>
+    <label>
+      {{_ 'title'}}
+      <input class="js-element-title" type="text" placeholder="{{_ 'title'}}" autofocus required dir="auto">
+    </label>
+  </form>
+  {{#unless isTemplateSearch}}
+    <label>{{_ 'boards'}}:</label>
+    <div class="link-board-wrapper">
+      <select class="js-select-boards">
+        <option value=""></option>
+        {{#each boards}}
+          <option value="{{_id}}">{{title}}</option>
+        {{/each}}
+      </select>
+    </div>
+  {{/unless}}
+  <form class="js-search-term-form">
+    <label>{{_ 'template'}}</label>
+    <input type="text" name="searchTerm" placeholder="{{_ 'search-example'}}" autofocus dir="auto">
+  </form>
+  <div class="list-body search-card-results">
+    <div class="minicards clearfix js-minicards">
+      {{#if isBoardTemplateSearch}}
+        {{#each results}}
+          <a class="minicard-wrapper js-minicard">
+            {{> miniboard this}}
+          </a>
+        {{/each}}
+      {{/if}}
+      {{#if isListTemplateSearch}}
+        {{#each results}}
+          <a class="minicard-wrapper js-minicard">
+            {{> minilist this}}
+          </a>
+        {{/each}}
+      {{/if}}
+      {{#if isSwimlaneTemplateSearch}}
+        {{#each results}}
+          <a class="minicard-wrapper js-minicard">
+            {{> miniswimlane this}}
+          </a>
+        {{/each}}
+      {{/if}}
+      {{#if isCardTemplateSearch}}
+        {{#each results}}
+          <a class="minicard-wrapper js-minicard">
+            {{> minicard this}}
+          </a>
+        {{/each}}
+      {{/if}}
+      {{#unless isTemplateSearch}}
+        {{#each results}}
+          <a class="minicard-wrapper js-minicard">
+            {{> minicard this}}
+          </a>
+        {{/each}}
+      {{/unless}}
+    </div>
+  </div>
+</template>

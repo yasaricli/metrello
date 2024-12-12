@@ -1,0 +1,119 @@
+
+<template name="archivesSidebar">
+  {{#if isArchiveReady.get}}
+    {{> basicTabs tabs=tabs}}
+      {{#tabContent slug="cards"}}
+        {{#unless isWorker}}
+          <p class="quiet">
+            <a class="js-restore-all-cards">{{_ 'restore-all'}}</a>
+            {{#if currentUser.isBoardAdmin}}
+              -
+              <a class="js-delete-all-cards">{{_ 'delete-all'}}</a>
+            {{/if}}
+          </p>
+        {{/unless}}
+        {{#each archivedCards}}
+          <div class="minicard-wrapper js-minicard">
+            {{> minicard this}}
+          </div>
+          {{#if currentUser.isBoardMember}}
+            {{#unless isWorker}}
+              <p class="quiet">
+                {{#if this.archivedAt}}
+                  {{_ 'archived-at'}}
+                  {{moment this.archivedAt 'LLL'}}
+                  <br>
+                {{/if}}
+                <a class="js-restore-card">{{_ 'restore'}}</a>
+                {{#if currentUser.isBoardAdmin}}
+                  -
+                  <a class="js-delete-card">{{_ 'delete'}}</a>
+                {{/if}}
+              </p>
+            {{/unless}}
+            {{#if cardIsInArchivedList}}
+              <p class="quiet small">({{_ 'warn-list-archived'}})</p>
+            {{/if}}
+          {{/if}}
+        {{else}}
+          <p class="no-items-message">{{_ 'no-archived-cards'}}</p>
+        {{/each}}
+      {{/tabContent}}
+
+      {{#tabContent slug="lists"}}
+        {{#unless isWorker}}
+          <p class="quiet">
+            <a class="js-restore-all-lists">{{_ 'restore-all'}}</a>
+            {{#if currentUser.isBoardAdmin}}
+              -
+              <a class="js-delete-all-lists">{{_ 'delete-all'}}</a>
+            {{/if}}
+          </p>
+        {{/unless}}
+        <ul class="archived-lists">
+          {{#each archivedLists}}
+            <li class="archived-lists-item">
+              {{title}}
+              {{#if currentUser.isBoardMember}}
+                {{#unless isWorker}}
+                  <p class="quiet">
+                    {{#if this.archivedAt}}
+                      {{_ 'archived-at'}}
+                      {{moment this.archivedAt 'LLL'}}
+                      <br>
+                    {{/if}}
+                    <a class="js-restore-list">{{_ 'restore'}}</a>
+                    {{#if currentUser.isBoardAdmin}}
+                      -
+                      <a class="js-delete-list">{{_ 'delete'}}</a>
+                    {{/if}}
+                  </p>
+                {{/unless}}
+              {{/if}}
+            </li>
+          {{else}}
+            <li class="no-items-message">{{_ 'no-archived-lists'}}</li>
+          {{/each}}
+        </ul>
+      {{/tabContent}}
+
+      {{#tabContent slug="swimlanes"}}
+        {{#unless isWorker}}
+          <p class="quiet">
+            <a class="js-restore-all-swimlanes">{{_ 'restore-all'}}</a>
+            {{#if currentUser.isBoardAdmin}}
+              -
+              <a class="js-delete-all-swimlanes">{{_ 'delete-all'}}</a>
+            {{/if}}
+          </p>
+        {{/unless}}
+        <ul class="archived-lists">
+          {{#each archivedSwimlanes}}
+            <li class="archived-lists-item">
+              {{title}}
+              {{#if currentUser.isBoardMember}}
+                {{#unless isWorker}}
+                  <p class="quiet">
+                    {{#if this.archivedAt}}
+                      {{_ 'archived-at'}}
+                      {{moment this.archivedAt 'LLL'}}
+                      <br>
+                    {{/if}}
+                    <a class="js-restore-swimlane">{{_ 'restore'}}</a>
+                    {{#if currentUser.isBoardAdmin}}
+                      -
+                      <a class="js-delete-swimlane">{{_ 'delete'}}</a>
+                    {{/if}}
+                  </p>
+                {{/unless}}
+              {{/if}}
+            </li>
+          {{else}}
+            <li class="no-items-message">{{_ 'no-archived-swimlanes'}}</li>
+          {{/each}}
+        </ul>
+      {{/tabContent}}
+  {{else}}
+    {{> spinner}}
+  {{/if}}
+</template>

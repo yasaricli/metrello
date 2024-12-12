@@ -1,0 +1,15 @@
+
+<template name="list">
+  <div class="list js-list {{#if collapsed}}list-collapsed{{/if}} {{#if autoWidth}}list-auto-width{{/if}}"
+       id="js-list-{{_id}}"
+       style="{{#unless collapsed}}min-width:{{listWidth}}px;max-width:{{listConstraint}}px;{{/unless}}">
+    {{> listHeader}}
+    {{> listBody}}
+  </div>
+</template>
+
+<template name="miniList">
+  <a class="mini-list js-select-list js-list" id="js-list-{{_id}}">
+    {{> listHeader}}
+  </a>
+</template>

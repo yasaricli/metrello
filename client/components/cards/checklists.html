@@ -1,0 +1,287 @@
+
+<template name="checklists">
+  <div class="checklists-title">
+    <h3 class="card-details-item-title">
+      <i class="fa fa-check"></i>
+      {{_ 'checklists'}}
+      {{#if canModifyCard}}
+        {{> inlinedForm autoclose=false classNames="js-add-checklist" cardId=cardId position="top"}}
+          {{> addChecklistItemForm}}
+        {{else}}
+          <a class="add-checklist-top js-open-inlined-form" title="{{_ 'add-checklist'}}">
+            <i class="fa fa-plus"></i>
+          </a>
+      {{/if}}
+    </h3>
+    {{#if currentUser.isBoardMember}}
+      <div class="material-toggle-switch" title="{{_ 'hide-finished-checklist'}}">
+        {{#if card.hideFinishedChecklistIfItemsAreHidden}}
+          <input class="toggle-switch" type="checkbox" id="toggleHideFinishedChecklist" checked="checked">
+        {{else}}
+          <input class="toggle-switch" type="checkbox" id="toggleHideFinishedChecklist">
+        {{/if}}
+        <label class="toggle-label" for="toggleHideFinishedChecklist"></label>
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="card-checklist-items">
+    {{#each checklist in checklists}}
+      {{#if checklist.showChecklist card.hideFinishedChecklistIfItemsAreHidden}}
+        {{> checklistDetail checklist=checklist card=card}}
+      {{/if}}
+    {{/each}}
+  </div>
+
+  {{#if canModifyCard}}
+    {{> inlinedForm autoclose=false classNames="js-add-checklist" cardId=cardId}}
+      {{> addChecklistItemForm checklist=checklist showNewlineBecomesNewChecklistItem=false}}
+    {{else}}
+      <a class="add-checklist js-open-inlined-form" title="{{_ 'add-checklist'}}">
+        <i class="fa fa-plus"></i>
+      </a>
+  {{/if}}
+</template>
+
+<template name="checklistDetail">
+  <div class="js-checklist checklist nodragscroll">
+    {{#if inlinedForm classNames="js-edit-checklist-title" checklist=checklist}}
+      {{> editChecklistItemForm checklist=checklist}}
+    {{else}}
+      <div class="checklist-title">
+        <span></span>
+        {{#if canModifyCard}}
+          <a class="fa fa-navicon checklist-details-menu js-open-checklist-details-menu" title="{{_ 'checklistActionsPopup-title'}}"></a>
+        {{/if}}
+
+        {{#if canModifyCard}}
+          <h4 class="title js-open-inlined-form is-editable">
+            {{#if isTouchScreenOrShowDesktopDragHandles}}
+              <span class="fa fa-arrows checklist-handle" title="{{_ 'dragChecklist'}}"></span>
+            {{/if}}
+            {{#viewer}}
+              {{checklist.title}}
+            {{/viewer}}
+          </h4>
+        {{else}}
+          <h4 class="title">
+            {{#viewer}}
+              {{checklist.title}}
+            {{/viewer}}
+          </h4>
+        {{/if}}
+      </div>
+    {{/if}}
+    {{#if $gt finishedPercent 0}}
+      <div class="checklist-progress-bar-container">
+        <div class="checklist-progress-text">{{finishedPercent}}%</div>
+        <div class="checklist-progress-bar">
+          <div class="checklist-progress" style="width:{{finishedPercent}}%"></div>
+        </div>
+      </div>
+    {{/if}}
+    {{> checklistItems checklist=checklist card=card}}
+  </div>
+</template>
+
+<template name="checklistDeletePopup">
+  <p>{{_ 'confirm-checklist-delete-popup'}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+</template>
+
+<template name="addChecklistItemForm">
+  <a class="fa fa-copy" title="{{_ 'copy-text-to-clipboard'}}"></a>
+  <span class="copied-tooltip">{{_ 'copied'}}</span>
+  <textarea class="js-add-checklist-item" rows="1" autofocus></textarea>
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-submit-add-checklist-item-form" type="submit">{{_ 'save'}}</button>
+    <a class="fa fa-times-thin js-close-inlined-form" title="{{_ 'close-add-checklist-item'}}"></a>
+    {{#if showNewlineBecomesNewChecklistItem}}
+      <div class="material-toggle-switch" title="{{_ 'newlineBecomesNewChecklistItem'}}">
+        <input class="toggle-switch" type="checkbox" id="toggleNewlineBecomesNewChecklistItem">
+        <label class="toggle-label" for="toggleNewlineBecomesNewChecklistItem"></label>
+        {{_ 'newLineNewItem'}}
+      </div>
+      {{#if $eq position 'top'}}
+        <div class="material-toggle-switch" title="{{_ 'newlineBecomesNewChecklistItemOriginOrder'}}">
+          <input class="toggle-switch" type="checkbox" id="toggleNewlineBecomesNewChecklistItemOriginOrder">
+          <label class="toggle-label" for="toggleNewlineBecomesNewChecklistItemOriginOrder"></label>
+          {{_ 'originOrder'}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="editChecklistItemForm">
+  <a class="fa fa-copy" title="{{_ 'copy-text-to-clipboard'}}"></a>
+  <span class="copied-tooltip">{{_ 'copied'}}</span>
+  <textarea class="js-edit-checklist-item" rows="1" autofocus dir="auto">
+    {{#if $eq type 'item'}}
+      {{item.title}}
+    {{else}}
+      {{checklist.title}}
+    {{/if}}
+  </textarea>
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-submit-edit-checklist-item-form" type="submit">{{_ 'save'}}</button>
+    <a class="fa fa-times-thin js-close-inlined-form" title="{{_ 'close-edit-checklist-item'}}"></a>
+    <span title="{{createdAt}}">{{moment createdAt}}</span>
+    {{#if canModifyCard}}
+      <a class="js-delete-checklist-item">{{_ "delete"}}...</a>
+      <a class="js-convert-checklist-item-to-card">
+        <i class="fa fa-copy"></i>
+        {{_ 'convertChecklistItemToCardPopup-title'}}
+      </a>
+    {{/if}}
+  </div>
+</template>
+
+<template name="checklistItems">
+  {{#if checklist.items.length}}
+    {{#if canModifyCard}}
+      {{> inlinedForm autoclose=false classNames="js-add-checklist-item" checklist=checklist position="top"}}
+        {{> addChecklistItemForm checklist=checklist showNewlineBecomesNewChecklistItem=true position="top"}}
+      {{else}}
+        <a class="add-checklist-item js-open-inlined-form" title="{{_ 'add-checklist-item'}}">
+          <i class="fa fa-plus"></i>
+        </a>
+    {{/if}}
+  {{/if}}
+  <div class="checklist-items js-checklist-items">
+    {{#each item in checklist.items}}
+      {{#if inlinedForm classNames="js-edit-checklist-item" item=item checklist=checklist}}
+        {{> editChecklistItemForm type='item' item=item checklist=checklist}}
+      {{else}}
+        {{> checklistItemDetail item=item checklist=checklist card=card}}
+      {{/if}}
+    {{/each}}
+    {{#if canModifyCard}}
+      {{> inlinedForm autoclose=false classNames="js-add-checklist-item" checklist=checklist}}
+        {{> addChecklistItemForm checklist=checklist showNewlineBecomesNewChecklistItem=true}}
+      {{else}}
+        <a class="add-checklist-item js-open-inlined-form" title="{{_ 'add-checklist-item'}}">
+          <i class="fa fa-plus"></i>
+      {{/if}}
+  </div>
+</template>
+
+<template name="checklistItemDetail">
+  <div class="js-checklist-item checklist-item {{#if item.isFinished}}is-checked{{#if checklist.hideCheckedChecklistItems}} invisible{{/if}}{{/if}}{{#if checklist.hideAllChecklistItems}} is-checked invisible{{/if}}" role="checkbox" aria-checked="{{#if item.isFinished}}true{{else}}false{{/if}}" tabindex="0">
+    {{#if canModifyCard}}
+      <div class="check-box-container">
+        <div class="check-box materialCheckBox {{#if item.isFinished}}is-checked{{/if}}"></div>
+      </div>
+      {{#if isTouchScreenOrShowDesktopDragHandles}}
+        <span class="fa fa-arrows checklistitem-handle" title="{{_ 'dragChecklistItem'}}"></span>
+      {{/if}}
+      <div class="item-title js-open-inlined-form is-editable {{#if item.isFinished}}is-checked{{/if}}">
+        {{#viewer}}
+          {{item.title}}
+        {{/viewer}}
+      </div>
+    {{else}}
+      <div class="materialCheckBox {{#if item.isFinished}}is-checked{{/if}}"></div>
+      <div class="item-title {{#if item.isFinished}}is-checked{{/if}}">
+        {{#viewer}}
+          {{item.title}}
+        {{/viewer}}
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="checklistActionsPopup">
+  <ul class="pop-over-list">
+    <li>
+      <a class="js-delete-checklist delete-checklist">
+        <i class="fa fa-trash"></i>
+        {{_ "delete"}} ...
+      </a>
+    </li>
+    <li>
+      <a class="js-move-checklist move-checklist">
+        <i class="fa fa-arrow-right"></i>
+        {{_ "moveChecklist"}} ...
+      </a>
+    </li>
+    <li>
+      <a class="js-copy-checklist copy-checklist">
+        <i class="fa fa-copy"></i>
+        {{_ "copyChecklist"}} ...
+      </a>
+    </li>
+    <li>
+      <a class="js-hide-checked-checklist-items">
+        <i class="fa fa-eye-slash"></i>
+        {{_ "hideCheckedChecklistItems"}} ...
+        <div class="material-toggle-switch" title="{{_ 'hide-checked-items'}}">
+          {{#if checklist.hideCheckedChecklistItems}}
+            <input class="toggle-switch" type="checkbox" id="toggleHideCheckedChecklistItems_{{checklist._id}}" checked="checked">
+          {{else}}
+            <input class="toggle-switch" type="checkbox" id="toggleHideCheckedChecklistItems_{{checklist._id}}">
+          {{/if}}
+          <label class="toggle-label" for="toggleHideCheckedChecklistItems_{{checklist._id}}"></label>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="js-hide-all-checklist-items">
+        <i class="fa fa-ban"></i>
+        {{_ "hideAllChecklistItems"}} ...
+        <div class="material-toggle-switch" title="{{_ 'hideAllChecklistItems'}}">
+          {{#if checklist.hideAllChecklistItems}}
+            <input class="toggle-switch" type="checkbox" id="toggleHideAllChecklistItems_{{checklist._id}}" checked="checked">
+          {{else}}
+            <input class="toggle-switch" type="checkbox" id="toggleHideAllChecklistItems_{{checklist._id}}">
+          {{/if}}
+          <label class="toggle-label" for="toggleHideAllChecklistItems_{{checklist._id}}"></label>
+        </div>
+      </a>
+    </li>
+  </ul>
+</template>
+
+<template name="copyChecklistPopup">
+  {{> copyAndMoveChecklist}}
+</template>
+
+<template name="moveChecklistPopup">
+  {{> copyAndMoveChecklist}}
+</template>
+
+<template name="copyAndMoveChecklist">
+  {{#unless currentUser.isWorker}}
+    <label>{{_ 'boards'}}:</label>
+    <select class="js-select-boards" autofocus>
+      {{#each boards}}
+        <option value="{{_id}}" selected="{{#if isDialogOptionBoardId _id}}selected{{/if}}">{{title}}</option>
+      {{/each}}
+    </select>
+  {{/unless}}
+
+  <label>{{_ 'swimlanes'}}:</label>
+  <select class="js-select-swimlanes">
+    {{#each swimlanes}}
+      <option value="{{_id}}" selected="{{#if isDialogOptionSwimlaneId _id}}selected{{/if}}">{{title}}</option>
+    {{/each}}
+  </select>
+
+  <label>{{_ 'lists'}}:</label>
+  <select class="js-select-lists">
+    {{#each lists}}
+      <option value="{{_id}}" selected="{{#if isDialogOptionListId _id}}selected{{/if}}">{{title}}</option>
+    {{/each}}
+  </select>
+
+  <label>{{_ 'cards'}}:</label>
+  <select class="js-select-cards">
+    {{#each cards}}
+      <option value="{{_id}}" selected="{{#if isDialogOptionCardId _id}}selected{{/if}}">{{title}}</option>
+    {{/each}}
+  </select>
+
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-done">{{_ 'done'}}</button>
+  </div>
+</template>

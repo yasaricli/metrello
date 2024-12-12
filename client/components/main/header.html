@@ -1,0 +1,149 @@
+
+<template name="header">
+  {{!--
+    If the user is connected we display a small "quick-access" top bar that
+    list all starred boards with a link to go there. This is inspired by the
+    Reddit "subreddit" bar.
+    The first link goes to the boards page.
+  --}}
+  {{#if currentUser}}
+    <div id="header-quick-access" class="{{currentBoard.colorClass}}">
+      {{#if isMiniScreen}}
+        <span>
+          <a href="{{pathFor 'home'}}">
+            <span class="fa fa-home"></span>
+          </a>
+        </span>
+        <ul class="header-quick-access-list">
+          {{#if currentList}}
+            {{#each currentBoard.lists}}
+              <li class="{{#if $.Session.equals 'currentList' _id}}current{{/if}}">
+                <a class="js-select-list">
+                  {{#viewer}}
+                    {{title}}
+                  {{/viewer}}
+                </a>
+              </li>
+            {{/each}}
+          {{else}}
+            {{#each currentUser.starredBoards}}
+              <li class="{{#if $.Session.equals 'currentBoard' _id}}current{{/if}}">
+                <a href="{{pathFor 'board' id=_id slug=slug}}">
+                  {{#viewer}}
+                    {{title}}
+                  {{/viewer}}
+                </a>
+              </li>
+            {{/each}}
+          {{/if}}
+        </ul>
+        <a class="js-toggle-desktop-drag-handles" title="{{_ 'show-desktop-drag-handles'}}" alt="{{_ 'show-desktop-drag-handles'}}">
+          <i class="fa fa-arrows"></i>
+          {{#if isShowDesktopDragHandles}}
+            <i class="fa fa-check-square-o"></i>
+          {{else}}
+            <i class="fa fa-ban"></i>
+          {{/if}}
+        </a>
+        <div id="header-new-board-icon"></div>
+      {{else}}
+        {{!--
+          On sandstorm, the logo shouldn't be clickable, because we only have one
+          page/document on it, and we don't want to see the home page containing
+          the list of all boards.
+        --}}
+        {{#unless currentSetting.hideLogo}}
+          {{#if currentSetting.customTopLeftCornerLogoImageUrl}}
+            {{#if currentSetting.customTopLeftCornerLogoLinkUrl}}
+              <a href="{{currentSetting.customTopLeftCornerLogoLinkUrl}}" alt="{{currentSetting.productName}}" title="{{currentSetting.productName}}">
+                <img src="{{currentSetting.customTopLeftCornerLogoImageUrl}}" height="{{#if currentSetting.customTopLeftCornerLogoHeight}}{{currentSetting.customTopLeftCornerLogoHeight}}{{else}}27{{/if}}" width="auto" margin="0" padding="0">
+              </a>
+            {{else}}
+              <img src="{{currentSetting.customTopLeftCornerLogoImageUrl}}" height="{{#if currentSetting.customTopLeftCornerLogoHeight}}{{currentSetting.customTopLeftCornerLogoHeight}}{{else}}27{{/if}}" width="auto" margin="0" padding="0" alt="{{currentSetting.productName}}" title="{{currentSetting.productName}}">
+            {{/if}}
+          {{else}}
+            <div id="headerIsSettingDatabaseCallDone">
+              <img src="{{pathFor '/logo-header.png'}}" alt="{{currentSetting.productName}}" title="{{currentSetting.productName}}">
+            </div>
+          {{/if}}
+        {{/unless}}
+        <span class="allBoards">
+          <a href="{{pathFor 'home'}}">
+            <span class="fa fa-home"></span>
+            {{_ 'all-boards'}}
+          </a>
+        </span>
+        <ul class="header-quick-access-list">
+          {{#each currentUser.starredBoards}}
+            <li class="{{#if $.Session.equals 'currentBoard' _id}}current{{/if}}">
+              <a href="{{pathFor 'board' id=_id slug=slug}}">
+                {{#viewer}}
+                  {{title}}
+                {{/viewer}}
+              </a>
+            </li>
+          {{else}}
+            <li class="current empty">{{_ 'quick-access-description'}}</li>
+          {{/each}}
+        </ul>
+        <a class="js-toggle-desktop-drag-handles" title="{{_ 'show-desktop-drag-handles'}}" alt="{{_ 'show-desktop-drag-handles'}}">
+          <i class="fa fa-arrows"></i>
+          {{#if isShowDesktopDragHandles}}
+            <i class="fa fa-check-square-o"></i>
+          {{else}}
+            <i class="fa fa-ban"></i>
+          {{/if}}
+        </a>
+        <div id="header-new-board-icon"></div>
+      {{/if}}
+      {{> notifications}}
+      {{#if currentSetting.customHelpLinkUrl}}
+        <div id="header-help">
+          <a href="{{currentSetting.customHelpLinkUrl}}" title="{{_ 'help'}}" target="_blank" rel="noopener noreferrer">
+            <span class="fa fa-question"></span>
+          </a>
+        </div>
+      {{/if}}
+      {{> headerUserBar}}
+    </div>
+  {{/if}}
+
+  <div id="header" class="{{currentBoard.colorClass}}">
+    {{!--
+      The main bar is a colorful bar that provide all the meta-data for the
+      current page. This bar is contextual based.
+      If the user is not connected we display "sign in" and "log in" buttons.
+    --}}
+    <div id="header-main-bar" class="{{#if wrappedHeader}}wrapper{{/if}}">
+      {{> Template.dynamic template=headerBar}}
+    </div>
+  </div>
+
+  {{#if appIsOffline}}
+    {{> offlineWarning}}
+  {{/if}}
+
+  {{#if currentUser.isBoardMember}}
+    {{#if hasAnnouncement}}
+      <div class="announcement">
+        <p>
+          <i class="fa fa-bullhorn"></i>
+          {{#viewer}}
+            {{announcement}}
+          {{/viewer}}
+          <i class="fa fa-times-circle js-close-announcement"></i>
+        </p>
+      </div>
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="offlineWarning">
+  <div class="offline-warning">
+    <p>
+      <i class="fa fa-warning"></i>
+      {{_ 'app-is-offline'}}
+      <a class="app-try-reconnect">{{_ 'app-try-reconnect'}}</a>
+    </p>
+  </div>
+</template>

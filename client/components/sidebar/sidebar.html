@@ -1,0 +1,982 @@
+
+<template name="sidebar">
+  <div class="board-sidebar sidebar {{#if isOpen}}is-open{{/if}}">
+    {{!--
+    <a class="sidebar-tongue js-toggle-sidebar {{#if isTongueHidden}}is-hidden{{/if}}"
+       title="{{showTongueTitle}}">
+      <i class="fa fa-navicon"></i>
+    </a>
+    --}}
+    <div class="sidebar-actions">
+      <div class="sidebar-shortcuts">
+        <a class="board-header-btn js-shortcuts" title="{{_ 'keyboard-shortcuts'}}">
+          <i class="fa fa-keyboard-o"></i>
+          <span>{{_ 'keyboard-shortcuts'}}</span>
+        </a>
+      </div>
+      <a class="sidebar-xmark js-close-sidebar">&#10005;</a>
+    </div>
+    <div class="sidebar-content js-board-sidebar-content">
+      {{!--
+      <a class="hide-btn js-hide-sidebar">
+        <i class="fa fa-navicon"></i>
+      </a>
+      --}}
+      {{#unless isDefaultView}}
+        <h2>
+          <a class="fa fa-chevron-left js-back-home"></a>
+          {{getViewTitle}}
+        </h2>
+      {{/unless}}
+      {{#if isOpen}}
+        {{> Template.dynamic template=getViewTemplate}}
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="homeSidebar">
+  <hr/>
+  {{> membersWidget}}
+  <hr/>
+  {{> labelsWidget}}
+  <ul id="cards" class="label-text-hidden">
+    <a class="flex js-toggle-minicard-label-text" title="{{_ 'hide-minicard-label-text'}}">
+      <span>{{_ 'hide-minicard-label-text'}}</span>
+      <b>&nbsp;</b>
+      <div class="materialCheckBox {{#if hiddenMinicardLabelText}}is-checked{{/if}}"></div>
+    </a>
+  </ul>
+  <hr/>
+  {{#unless currentUser.isNoComments}}
+    <h3 class="activity-title">
+      <i class="fa fa-comments-o"></i>
+      {{_ 'activities'}}
+      <div class="material-toggle-switch" title="{{_ 'show-activities'}}">
+        {{#if showActivities}}
+          <input type="checkbox" id="toggleShowActivitiesBoard" class="toggle-switch" checked="checked"/>
+        {{else}}
+          <input type="checkbox" id="toggleShowActivitiesBoard" class="toggle-switch"/>
+        {{/if}}
+        <label class="toggle-label" for="toggleShowActivitiesBoard"></label>
+      </div>
+    </h3>
+    {{> activities mode="board"}}
+  {{/unless}}
+</template>
+
+<template name="membersWidget">
+  {{#unless currentUser.isCommentOnly}}
+    {{#unless currentUser.isWorker}}
+      <h3>
+        <a class="board-header-btn js-open-board-menu" title="{{_ 'boardMenuPopup-title'}}">
+          <i class="board-header-btn-icon fa fa-cog"></i>
+          {{_ 'boardMenuPopup-title'}}
+        </a>
+      </h3>
+    {{/unless}}
+  {{/unless}}
+  <hr/>
+  <h3>
+    <i class="fa fa-users"></i>
+    {{_ 'members'}}
+  </h3>
+  {{> basicTabs tabs=tabs}}
+  {{#tabContent slug="people"}}
+    {{#unless currentUser.isWorker}}
+      <p class="quiet"></p>
+    {{/unless}}
+    <div class="board-widget-content">
+      {{#each currentBoard.activeMembers}}
+        {{> userAvatar userId=this.userId showStatus=true}}
+      {{/each}}
+      {{#if isSandstorm}}
+        {{#if currentUser.isBoardMember}}
+          <a class="member add-member sandstorm-powerbox-request-identity" title="{{_ 'add-members'}}">
+            <i class="fa fa-plus"></i>
+          </a>
+        {{/if}}
+      {{else}}
+        {{#if currentUser.isBoardAdmin}}
+          <a class="member add-member js-manage-board-members" title="{{_ 'add-members'}}">
+            <i class="fa fa-plus"></i>
+          </a>
+        {{/if}}
+      {{/if}}
+      <div class="clearfix"></div>
+      {{#if isInvited}}
+        <hr/>
+        <p>
+          <i class="fa fa-exclamation-circle"></i>
+          {{_ 'just-invited'}}
+        </p>
+        <button class="js-member-invite-accept primary">{{_ 'accept'}}</button>
+        <button class="js-member-invite-decline">{{_ 'decline'}}</button>
+      {{/if}}
+    </div>
+  {{/tabContent}}
+  {{#tabContent slug="organizations"}}
+    {{#unless currentUser.isWorker}}
+      <p class="quiet"></p>
+    {{/unless}}
+    {{#if AtLeastOneOrgWasCreated}}
+      <div class="board-widget board-widget-members">
+        <div class="board-widget-content">
+          {{> boardOrgGeneral}}
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    {{/if}}
+  {{/tabContent}}
+  {{#tabContent slug="teams"}}
+    {{#unless currentUser.isWorker}}
+      <p class="quiet"></p>
+    {{/unless}}
+    {{#if AtLeastOneTeamWasCreated}}
+      <div class="board-widget board-widget-members">
+        <div class="board-widget-content">
+          {{> boardTeamGeneral}}
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    {{/if}}
+  {{/tabContent}}
+</template>
+
+<template name="boardOrgGeneral">
+  <table>
+    <tbody>
+      <tr>
+        <th>
+          {{_ 'add-organizations'}}
+          <br/>
+          <i class="addOrganizationsLabel">{{_ 'to-create-organizations-contact-admin'}}</i>
+          <br/>
+          <i class="addOrganizationsLabel">{{_ 'add-organizations-label'}}</i>
+        </th>
+        <th>
+          {{#if currentUser.isBoardAdmin}}
+            <a class="member orgOrTeamMember add-member js-manage-board-addOrg" title="{{_ 'add-members'}}">
+              <i class="addTeamFaPlus fa fa-plus"></i>
+              <div class="divaddfaplusminus">{{_ 'add'}}</div>
+            </a>
+          {{/if}}
+        </th>
+      </tr>
+      {{#each org in currentBoard.activeOrgs}}
+        {{> boardOrgRow orgId=org.orgId}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="boardTeamGeneral">
+  <table>
+    <tbody>
+      <tr>
+        <th>
+          {{_ 'add-teams'}}
+          <br/>
+          <i class="addTeamsLabel">{{_ 'to-create-teams-contact-admin'}}</i>
+          <br/>
+          <i class="addTeamsLabel">{{_ 'add-teams-label'}}</i>
+        </th>
+        <th>
+          {{#if currentUser.isBoardAdmin}}
+            <a class="member orgOrTeamMember add-member js-manage-board-addTeam" title="{{_ 'add-members'}}">
+              <i class="addTeamFaPlus fa fa-plus"></i>
+              <div class="divaddfaplusminus">{{_ 'add'}}</div>
+            </a>
+          {{/if}}
+        </th>
+      </tr>
+      {{#each currentBoard.activeTeams}}
+        {{> boardTeamRow teamId=this.teamId}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="boardChangeColorPopup">
+  <div class="board-backgrounds-list clearfix">
+    {{#each backgroundColors}}
+      <div class="board-background-select js-select-background">
+        <span class="background-box board-color-{{this}}">
+          <span>{{this}}</span>
+          {{#if isSelected}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </span>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="boardChangeBackgroundImagePopup">
+  <form>
+    <label>
+      {{_ 'board-background-image-url'}}
+      <input type="text" class="js-board-background-image-url" value="{{backgroundImageURL}}" autofocus/>
+    </label>
+    <div class="buttonsContainer">
+      <input type="submit" class="primary wide" value="{{_ 'save'}}"/>
+    </div>
+    <br/><br/><br/><br/><br/>
+    <hr/>
+    <div>
+      <button class="js-remove-background-image negate wide card-details-red right">{{_ 'unset-color'}}</button>
+    </div>
+  </form>
+</template>
+
+<template name="boardInfoOnMyBoardsPopup">
+  <form class="board-info-on-my-boards">
+    <h3>{{_ 'show-at-all-boards-page'}}</h3>
+    {{#unless currentSetting.hideCardCounterList}}
+      <div class="check-div">
+        <a class="flex js-field-has-cardcounterlist {{#if allowsCardCounterList}}is-checked{{/if}}">
+          <div class="materialCheckBox {{#if allowsCardCounterList}}is-checked{{/if}}"></div>
+          <span>
+            <i class="fa fa-sign-out"></i>
+            {{_ 'show-card-counter-per-list'}}
+          </span>
+        </a>
+      </div>
+    {{/unless}}
+    {{#unless currentSetting.hideBoardMemberList}}
+      <div class="check-div">
+        <a class="flex js-field-has-boardmemberlist {{#if allowsBoardMemberList}}is-checked{{/if}}">
+          <div class="materialCheckBox {{#if allowsBoardMemberList}}is-checked{{/if}}"></div>
+          <span>
+            <i class="fa fa-hourglass-start"></i>
+            {{_ 'show-board_members-avatar'}}
+          </span>
+        </a>
+      </div>
+    {{/unless}}
+  </form>
+</template>
+
+<template name="boardCardSettingsPopup">
+  <form class="board-card-settings">
+    <h3>{{_ 'show-on-card'}}, {{_ 'show-on-minicard'}}</h3>
+    <div class="check-div">
+      <a class="flex js-field-has-receiveddate {{#if allowsReceivedDate}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsReceivedDate}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-sign-out"></i>
+          {{_ 'card-received'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-startdate {{#if allowsStartDate}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsStartDate}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-hourglass-start"></i>
+          {{_ 'card-start'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-duedate {{#if allowsDueDate}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsDueDate}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-sign-in"></i>
+          {{_ 'card-due'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-enddate {{#if allowsEndDate}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsEndDate}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-hourglass-end"></i>
+          {{_ 'card-end'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-members {{#if allowsMembers}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsMembers}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-users"></i>
+          {{_ 'members'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-creator {{#if allowsCreator}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsCreator}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-user"></i>
+          {{_ 'creator'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-creator-on-minicard {{#if allowsCreatorOnMinicard}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsCreatorOnMinicard}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-user"></i>
+          {{_ 'creator-on-minicard'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-assignee {{#if allowsAssignee}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsAssignee}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-user"></i>
+          {{_ 'assignee'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-assigned-by {{#if allowsAssignedBy}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsAssignedBy}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-shopping-cart"></i>
+          {{_ 'assigned-by'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-requested-by {{#if allowsRequestedBy}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsRequestedBy}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-user-plus"></i>
+          {{_ 'requested-by'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-card-sorting-by-number {{#if allowsCardSortingByNumber}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsCardSortingByNumber}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-sort"></i>
+          {{_ 'card-sorting-by-number'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-card-sorting-by-number-on-minicard {{#if allowsCardSortingByNumberOnMinicard}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsCardSortingByNumberOnMinicard}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-sort"></i>
+          {{_ 'card-sorting-by-number-on-minicard'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-card-show-lists {{#if allowsShowLists}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsShowLists}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-list"></i>
+          {{_ 'card-show-lists'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-labels {{#if allowsLabels}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsLabels}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-tags"></i>
+          {{_ 'labels'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-card-number {{#if allowsCardNumber}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsCardNumber}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-hashtag"></i>
+          {{_ 'card'}}
+          {{_ 'number'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-description-title {{#if allowsDescriptionTitle}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsDescriptionTitle}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-align-left"></i>
+          {{_ 'description'}}
+          {{_ 'title'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-description-text {{#if allowsDescriptionText}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsDescriptionText}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-align-left"></i>
+          {{_ 'description'}}
+          {{_ 'custom-field-text'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-description-text-on-minicard {{#if allowsDescriptionTextOnMinicard}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsDescriptionTextOnMinicard}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-align-left"></i>
+          {{_ 'description-on-minicard'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-checklists {{#if allowsChecklists}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsChecklists}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-check"></i>
+          {{_ 'checklists'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-subtasks {{#if allowsSubtasks}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsSubtasks}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-sitemap"></i>
+          {{_ 'subtasks'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-attachments {{#if allowsAttachments}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsAttachments}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-paperclip"></i>
+          {{_ 'attachments'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-badge-attachment-on-minicard {{#if allowsBadgeAttachmentOnMinicard}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsBadgeAttachmentOnMinicard}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-paperclip"></i>
+          {{_ 'badge-attachment-on-minicard'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-cover-attachment-on-minicard {{#if allowsCoverAttachmentOnMinicard}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsCoverAttachmentOnMinicard}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-book"></i>
+          <i class="fa fa-picture-o"></i>
+          {{_ 'cover-attachment-on-minicard'}}
+        </span>
+      </a>
+    </div>
+    {{!--
+    <div class="check-div">
+      <a class="flex js-field-has-comments {{#if allowsComments}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsComments}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-comment-o"></i>
+          {{_ 'comment'}}
+        </span>
+      </a>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-activities {{#if allowsActivities}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsActivities}}is-checked{{/if}}"></div>
+        <span>
+          <i class="fa fa-history"></i>
+          {{_ 'activities'}}
+        </span>
+      </a>
+    </div>
+    --}}
+  </form>
+</template>
+
+<template name="boardSubtaskSettingsPopup">
+  <form class="board-subtask-settings">
+    <h3>{{_ 'show-parent-in-minicard'}}</h3>
+    <a id="prefix-with-full-path" class="flex js-field-show-parent-in-minicard {{#if $eq presentParentTask 'prefix-with-full-path'}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if $eq presentParentTask 'prefix-with-full-path'}}is-checked{{/if}}"></div>
+      <span>{{_ 'prefix-with-full-path'}}</span>
+    </a>
+    <a id="prefix-with-parent" class="flex js-field-show-parent-in-minicard {{#if $eq presentParentTask 'prefix-with-parent'}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if $eq presentParentTask 'prefix-with-parent'}}is-checked{{/if}}"></div>
+      <span>{{_ 'prefix-with-parent'}}</span>
+    </a>
+    <a id="subtext-with-full-path" class="flex js-field-show-parent-in-minicard {{#if $eq presentParentTask 'subtext-with-full-path'}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if $eq presentParentTask 'subtext-with-full-path'}}is-checked{{/if}}"></div>
+      <span>{{_ 'subtext-with-full-path'}}</span>
+    </a>
+    <a id="subtext-with-parent" class="flex js-field-show-parent-in-minicard {{#if $eq presentParentTask 'subtext-with-parent'}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if $eq presentParentTask 'subtext-with-parent'}}is-checked{{/if}}"></div>
+      <span>{{_ 'subtext-with-parent'}}</span>
+    </a>
+    <a id="no-parent" class="flex js-field-show-parent-in-minicard {{#if $eq presentParentTask 'no-parent'}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if $eq presentParentTask 'no-parent'}}is-checked{{/if}}"></div>
+      <span>{{_ 'no-parent'}}</span>
+    </a>
+    <div>
+      <hr/>
+    </div>
+    <div class="check-div">
+      <a class="flex js-field-has-subtasks {{#if allowsSubtasks}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if allowsSubtasks}}is-checked{{/if}}"></div>
+        <span>{{_ 'show-subtasks-field'}}</span>
+      </a>
+    </div>
+    <label>
+      {{_ 'deposit-subtasks-board'}}
+      <select class="js-field-deposit-board" disabled="{{#unless allowsSubtasks}}disabled{{/unless}}">
+        {{#each boards}}
+          {{#if isBoardSelected}}
+            <option value="{{_id}}" selected="selected">{{title}}</option>
+          {{else}}
+            <option value="{{_id}}">{{title}}</option>
+          {{/if}}
+        {{/each}}
+        {{#if isNullBoardSelected}}
+          <option value="null" selected="selected">{{_ 'custom-field-dropdown-none'}}</option>
+        {{else}}
+          <option value="null">{{_ 'custom-field-dropdown-none'}}</option>
+        {{/if}}
+      </select>
+    </label>
+    <div>
+      <hr/>
+    </div>
+    <label>
+      {{_ 'deposit-subtasks-list'}}
+      <select class="js-field-deposit-list" disabled="{{#unless hasLists}}disabled{{/unless}}">
+        {{#each lists}}
+          {{#if isListSelected}}
+            <option value="{{_id}}" selected="selected">{{title}}</option>
+          {{else}}
+            <option value="{{_id}}">{{title}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+    </label>
+  </form>
+</template>
+
+<template name="chooseBoardSource">
+  <ul class="pop-over-list">
+    <li>
+      <a href="{{pathFor '/import/trello'}}">{{_ 'from-trello'}}</a>
+    </li>
+    <li>
+      <a href="{{pathFor '/import/wekan'}}">{{_ 'from-wekan'}}</a>
+    </li>
+    <li>
+      <a href="{{pathFor '/import/csv'}}">{{_ 'from-csv'}}</a>
+    </li>
+  </ul>
+</template>
+
+<template name="archiveBoardPopup">
+  <p>{{_ 'close-board-pop'}}</p>
+  <button class="js-confirm negate full" type="submit">
+    <i class="fa fa-archive"></i>
+    {{_ 'archive'}}
+  </button>
+</template>
+
+<template name="outgoingWebhooksPopup">
+  {{#each integrations}}
+    <form class="integration-form">
+      <a class="flex">
+        <span>{{_ 'disable-webhook'}}</span>
+        <b>&nbsp;</b>
+        <div class="materialCheckBox {{#unless enabled}}is-checked{{/unless}}"></div>
+      </a>
+      <input class="js-outgoing-webhooks-title" placeholder="{{_ 'webhook-title'}}" type="text" name="title" value="{{title}}"/>
+      <input class="js-outgoing-webhooks-url" type="text" name="url" value="{{url}}"/>
+      <input class="js-outgoing-webhooks-token" placeholder="{{_ 'webhook-token' }}" type="text" value="{{token}}" name="token"/>
+      <select class="js-outgoing-webhooks-type" name="type">
+        {{#each _type in types}}
+          {{#if $eq _type ../type}}
+            <option value="{{_type}}" selected="selected">{{_ _type}}</option>
+          {{else}}
+            <option value="{{_type}}">{{_ _type}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+      <input type="hidden" value="{{type}}" name="_type"/>
+      <input type="hidden" value="{{_id}}" name="id"/>
+      <input class="primary wide" type="submit" value="{{_ 'save'}}"/>
+    </form>
+  {{/each}}
+  <form class="integration-form">
+    <input class="js-outgoing-webhooks-title" placeholder="{{_ 'webhook-title'}}" type="text" name="title"/>
+    <input class="js-outgoing-webhooks-url" placeholder="{{_ 'URL' }}" type="text" name="url"/>
+    <input class="js-outgoing-webhooks-token" placeholder="{{_ 'webhook-token' }}" type="text" name="token"/>
+    <select class="js-outgoing-webhooks-type" name="type">
+      {{#each _type in types}}
+        <option value="{{_type}}">{{_ _type}}</option>
+      {{/each}}
+    </select>
+    <input class="primary wide" type="submit" value="{{_ 'create'}}"/>
+  </form>
+</template>
+
+<template name="boardMenuPopup">
+  <ul class="pop-over-list">
+    {{#if currentUser.isBoardAdmin}}
+      <li>
+        <a class="js-open-rules-view" title="{{_ 'rules'}}">
+          <i class="fa fa-magic"></i>
+          {{_ 'rules'}}
+        </a>
+      </li>
+    {{/if}}
+    {{#if currentUser.isBoardAdmin}}
+      <li>
+        <a class="js-custom-fields">
+          <i class="fa fa-list-alt"></i>
+          {{_ 'custom-fields'}}
+        </a>
+      </li>
+    {{/if}}
+    <li>
+      <a class="js-open-archives">
+        <i class="fa fa-archive"></i>
+        {{_ 'archived-items'}}
+      </a>
+    </li>
+    {{#if currentUser.isBoardAdmin}}
+      <li>
+        <a class="js-change-board-color">
+          <i class="fa fa-paint-brush"></i>
+          {{_ 'board-change-color'}}
+        </a>
+      </li>
+      <li>
+        <a class="js-change-background-image">
+          <i class="fa fa-picture-o"></i>
+          {{_ 'board-change-background-image'}}
+        </a>
+      </li>
+    {{/if}}
+    {{!--
+    {{#if currentUser.isBoardAdmin}}
+      {{#unless currentSetting.hideBoardMemberList}}
+        {{#unless currentSetting.hideCardCounterList}}
+          <li>
+            <a class="js-board-info-on-my-boards" title="{{_ 'board-info-on-my-boards'}}">
+              <i class="fa fa-id-card-o"></i>
+              {{_ 'board-info-on-my-boards'}}
+            </a>
+          </li>
+        {{/unless}}
+      {{/unless}}
+    {{/if}}
+    --}}
+  </ul>
+  <hr/>
+  <ul class="pop-over-list">
+    {{#if withApi}}
+      <li>
+        <a class="js-export-board">
+          <i class="fa fa-share-alt"></i>
+          {{_ 'export-board'}}
+        </a>
+      </li>
+    {{/if}}
+    {{#if currentUser.isBoardAdmin}}
+      <li>
+        <a class="js-outgoing-webhooks">
+          <i class="fa fa-globe"></i>
+          {{_ 'outgoing-webhooks'}}
+        </a>
+      </li>
+      <li>
+        <a class="js-card-settings">
+          <i class="fa fa-id-card-o"></i>
+          {{_ 'card-settings'}}
+        </a>
+      </li>
+      <li>
+        <a class="js-subtask-settings">
+          <i class="fa fa-sitemap"></i>
+          {{_ 'subtask-settings'}}
+        </a>
+      </li>
+    {{/if}}
+  </ul>
+  {{#unless currentBoard.isTemplatesBoard}}
+    {{#if currentUser.isBoardAdmin}}
+      <hr/>
+      <ul class="pop-over-list">
+        <li>
+          <a class="js-archive-board">
+            <i class="fa fa-arrow-right"></i>
+            <i class="fa fa-archive"></i>
+            {{_ 'archive-board'}}
+          </a>
+        </li>
+      </ul>
+    {{/if}}
+  {{/unless}}
+</template>
+
+<template name="exportBoard">
+  <ul class="pop-over-list">
+    <li>
+      <a class="download-json-link" href="{{exportUrl}}" download="{{exportJsonFilename}}">
+        <i class="fa fa-share-alt"></i>
+        {{_ 'export-board-json'}}
+      </a>
+    </li>
+    <li>
+      <a href="{{exportUrlExcel}}" download="{{exportFilenameExcel}}">
+        <i class="fa fa-share-alt"></i>
+        {{_ 'export-board-excel'}}
+      </a>
+    </li>
+    <li>
+      <a href="{{exportCsvUrl}}" download="{{exportCsvFilename}}">
+        <i class="fa fa-share-alt"></i>
+        {{_ 'export-board-csv'}}
+      </a>
+    </li>
+    <li>
+      <a href="{{exportScsvUrl}}" download="{{exportCsvFilename}}">
+        <i class="fa fa-share-alt"></i>
+        {{_ 'export-board-csv'}}
+      </a>
+    </li>
+    <li>
+      <a href="{{exportTsvUrl}}" download="{{exportTsvFilename}}">
+        <i class="fa fa-share-alt"></i>
+        {{_ 'export-board-tsv'}}
+      </a>
+    </li>
+    <li>
+      <a class="html-export-board">
+        <i class="fa fa-archive"></i>
+        {{_ 'export-board-html'}}
+      </a>
+    </li>
+  </ul>
+</template>
+
+<template name="labelsWidget">
+  <div class="board-widget board-widget-labels">
+    <h3>
+      <i class="fa fa-tags"></i>
+      {{_ 'labels'}}
+    </h3>
+    <div class="board-widget-content">
+      {{#each currentBoard.labels}}
+        <a class="card-label card-label-{{color}} {{#if currentUser.isNotCommentOnly}}{{#if currentUser.isNotWorker}}js-label{{/if}}{{/if}}">
+          <span class="card-label-name">
+            {{> viewer}}
+            {{name}}
+          </span>
+        </a>
+      {{/each}}
+      {{#if currentUser.isBoardAdmin}}
+        <a class="card-label add-label js-add-label" title="{{_ 'label-create'}}">
+          <i class="fa fa-plus"></i>
+        </a>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="memberPopup">
+  <div class="board-member-menu">
+    <div class="miniprofile-header">
+      {{> userAvatar userId=user._id showEdit=true}}
+      <div class="info">
+        <h3>
+          <span class="js-profile">{{user.profile.fullname}}</span>
+        </h3>
+        <p class="quiet">@{{user.username}}</p>
+        {{#if isInvited}}
+          <p>
+            <i class="fa fa-exclamation-circle"></i>
+            {{_ 'not-accepted-yet'}}
+          </p>
+        {{/if}}
+      </div>
+    </div>
+    <ul class="pop-over-list">
+      <li>
+        <a class="js-filter-member">{{_ 'filter-cards'}}</a>
+      </li>
+      {{#if currentUser.isBoardAdmin}}
+        <li>
+          <a class="js-change-role">
+            {{_ 'change-permissions'}}
+            <span class="quiet">({{memberType}})</span>
+          </a>
+        </li>
+      {{/if}}
+      {{#unless currentUser.isWorker}}
+        <li>
+          {{#if $eq currentUser._id userId}}
+            <a class="js-leave-member">{{_ 'leave-board'}}</a>
+          {{else}}
+            {{#if currentUser.isBoardAdmin}}
+              <a class="js-remove-member">{{_ 'remove-from-board'}}</a>
+            {{/if}}
+          {{/if}}
+        </li>
+      {{/unless}}
+    </ul>
+  </div>
+</template>
+
+<template name="removeMemberPopup">
+  <p>{{_ 'remove-member-pop' name=user.profile.fullname username=user.username boardTitle=board.title}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'remove-member'}}</button>
+</template>
+
+<template name="leaveBoardPopup">
+  <p>{{_ 'leave-board-pop' boardTitle=board.title}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'leave-board'}}</button>
+</template>
+
+<template name="addBoardOrgPopup">
+  <select class="js-boardOrgs" id="jsBoardOrgs">
+    <option value="-1">{{_ 'organizations'}} :</option>
+    {{#each value in orgsDatas}}
+      <option value="{{value._id}}">{{value.orgDisplayName}}</option>
+    {{/each}}
+  </select>
+</template>
+
+<template name="removeBoardOrgPopup">
+  <form>
+    <input type="text" class="hide" id="hideOrgId" value="{{org._id}}"/>
+    <label>
+      {{_ 'remove-organization-from-board'}}
+    </label>
+    <br/>
+    <hr/>
+    <div class="buttonsContainer">
+      <input type="submit" class="primary wide leaveBoardBtn" id="leaveBoardBtn" value="{{_ 'confirm-btn'}}"/>
+      <input type="submit" class="primary wide cancelLeaveBoardBtn" id="cancelLeaveBoardBtn" value="{{_ 'cancel'}}"/>
+    </div>
+  </form>
+</template>
+
+<template name="addBoardTeamPopup">
+  <select class="js-boardTeams" id="jsBoardTeams">
+    <option value="-1">{{_ 'teams'}} :</option>
+    {{#each value in teamsDatas}}
+      <option value="{{value._id}}">{{_ value.teamDisplayName}}</option>
+    {{/each}}
+  </select>
+</template>
+
+<template name="removeBoardTeamPopup">
+  <form>
+    <input type="text" class="hide" id="hideTeamId" value="{{team._id}}"/>
+    <label>
+      {{_ 'remove-team-from-table'}}
+    </label>
+    <br/>
+    <hr/>
+    <div class="buttonsContainer">
+      <input type="submit" class="primary wide leaveBoardBtn" id="leaveBoardTeamBtn" value="{{_ 'confirm-btn'}}"/>
+      <input type="submit" class="primary wide cancelLeaveBoardBtn" id="cancelLeaveBoardTeamBtn" value="{{_ 'cancel'}}"/>
+    </div>
+  </form>
+</template>
+
+<template name="addMemberPopup">
+  <div class="js-search-member">
+    {{> EasySearch.Input index=searchIndex}}
+  </div>
+  {{#if loading.get}}
+    {{> spinner}}
+  {{else}}
+    {{#if error.get}}
+      <div class="warning">{{_ error.get}}</div>
+    {{else}}
+      <ul class="pop-over-list">
+        {{#EasySearch.Each index=searchIndex}}
+          <li class="item js-member-item {{#if isBoardMember}}disabled{{/if}}">
+            <a class="name js-select-member" title="{{profile.fullname}} ({{username}})">
+              {{> userAvatar userId=__originalId}}
+              <span class="full-name">
+                {{profile.fullname}}
+                (<span class="username">{{username}}</span>)
+              </span>
+              {{#if isBoardMember}}
+                <div class="quiet">({{_ 'joined'}})</div>
+              {{/if}}
+            </a>
+          </li>
+        {{/EasySearch.Each}}
+        {{#EasySearch.IfSearching index=searchIndex}}
+          {{> spinner}}
+        {{/EasySearch.IfSearching}}
+        {{#EasySearch.IfNoResults index=searchIndex}}
+          <div class="manage-member-section">
+            <p class="quiet">{{_ 'no-results'}}</p>
+          </div>
+        {{/EasySearch.IfNoResults}}
+      </ul>
+      <button class="js-email-invite primary full">{{_ 'email-invite'}}</button>
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="changePermissionsPopup">
+  <ul class="pop-over-list">
+    <li>
+      <a class="{{#if isLastAdmin}}disabled{{else}}js-set-admin{{/if}}">
+        {{_ 'admin'}}
+        {{#if isAdmin}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+        <span class="sub-name">{{_ 'admin-desc'}}</span>
+      </a>
+    </li>
+    <li>
+      <a class="{{#if isLastAdmin}}disabled{{else}}js-set-normal{{/if}}">
+        {{_ 'normal'}}
+        {{#if isNormal}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+        <span class="sub-name">{{_ 'normal-desc'}}</span>
+      </a>
+    </li>
+    <li>
+      <a class="{{#if isLastAdmin}}disabled{{else}}js-set-no-comments{{/if}}">
+        {{_ 'no-comments'}}
+        {{#if isNoComments}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+        <span class="sub-name">{{_ 'no-comments-desc'}}</span>
+      </a>
+    </li>
+    <li>
+      <a class="{{#if isLastAdmin}}disabled{{else}}js-set-comment-only{{/if}}">
+        {{_ 'comment-only'}}
+        {{#if isCommentOnly}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+        <span class="sub-name">{{_ 'comment-only-desc'}}</span>
+      </a>
+    </li>
+    <li>
+      <a class="{{#if isLastAdmin}}disabled{{else}}js-set-worker{{/if}}">
+        {{_ 'worker'}}
+        {{#if isWorker}}
+          <i class="fa fa-check"></i>
+        {{/if}}
+        <span class="sub-name">{{_ 'worker-desc'}}</span>
+      </a>
+    </li>
+  </ul>
+  {{#if isLastAdmin}}
+    <hr/>
+    <p class="quiet bottom">{{_ 'last-admin-desc'}}</p>
+  {{/if}}
+</template>

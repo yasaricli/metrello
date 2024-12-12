@@ -1,0 +1,15 @@
+
+<template name="connectionMethod">
+  <div class="at-form-authentication">
+    <label>{{_ 'authentication-method'}}</label>
+    <select class="select-authentication">
+      {{#each authentications}}
+        {{#if isSelected value}}
+          <option value="{{value}}" selected>{{_ value}}</option>
+        {{else}}
+          <option value="{{value}}">{{_ value}}</option>
+        {{/if}}
+      {{/each}}
+    </select>
+  </div>
+</template>

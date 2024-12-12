@@ -1,0 +1,184 @@
+<template name="myCardsHeaderBar">
+  {{#if currentUser}}
+    <h1>
+      {{!-- <a class="back-btn" href="{{pathFor 'home'}}">
+        <i class="fa fa-chevron-left"></i>
+      </a> --}}
+      <i class="fa fa-list"></i>
+      {{_ 'my-cards'}}
+    </h1>
+
+    <div class="board-header-btns left">
+      <a class="board-header-btn js-my-cards-view-change" title="{{_ 'myCardsViewChange-title'}}">
+        <i class="fa fa-caret-down"></i>
+        {{#if $eq myCardsView 'boards'}}
+          <i class="fa fa-trello"></i>
+          {{_ 'myCardsViewChange-choice-boards'}}
+        {{/if}}
+        {{#if $eq myCardsView 'table'}}
+          <i class="fa fa-table"></i>
+          {{_ 'myCardsViewChange-choice-table'}}
+        {{/if}}
+      </a>
+    </div>
+  {{/if}}
+</template>
+
+<template name="myCardsModalTitle">
+  {{#if currentUser}}
+    <h2>
+      <i class="fa fa-keyboard-o"></i>
+      {{_ 'my-cards'}}
+    </h2>
+  {{/if}}
+</template>
+
+<template name="myCards">
+  {{#if currentUser}}
+    {{#if searching.get}}
+      {{> spinner}}
+    {{else}}
+      {{#if $eq myCardsView 'boards'}}
+        <div class="wrapper">
+          {{#each board in myCardsList}}
+            <div class="my-cards-board-wrapper">
+              <div class="my-cards-board-title {{board.colorClass}}" id="header">
+                <a href="{{board.originRelativeUrl}}">
+                  {{#viewer}}
+                    {{board.title}}
+                  {{/viewer}}
+                </a>
+              </div>
+              {{#each swimlane in board.mySwimlanes}}
+                <div class="my-cards-swimlane-title {{#if swimlane.colorClass}}{{swimlane.colorClass}}{{else}}swimlane-default-color{{/if}}">
+                  {{#viewer}}
+                    {{swimlane.title}}
+                  {{/viewer}}
+                </div>
+                {{#each list in swimlane.myLists}}
+                  <div class="my-cards-list-wrapper">
+                    <div class="my-cards-list-title {{list.colorClass}}">
+                      {{#viewer}}
+                        {{list.title}}
+                      {{/viewer}}
+                    </div>
+                    {{#each card in list.myCards}}
+                      <div class="my-cards-card-wrapper">
+                        <a class="minicard-wrapper" href="{{card.originRelativeUrl}}">
+                          {{> minicard card}}
+                        </a>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/each}}
+              {{/each}}
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+      {{#if $eq myCardsView 'table'}}
+        <div class="wrapper">
+          <table class="my-cards-board-table">
+            <thead>
+              <tr>
+                <th>{{_ "Card"}}</th>
+                <th>{{_ "List"}}</th>
+                <th>{{_ "Board"}}</th>
+                <th>{{_ "Swimlane"}}</th>
+                {{#unless isMiniScreen}}
+                  <th>{{_ "Members"}}</th>
+                  <th>{{_ "Labels"}}</th>
+                  <th>{{_ "Due Date"}}</th>
+                {{/unless}}
+              </tr>
+            </thead>
+            <tbody>
+              {{#each board in myCardsList}}
+                {{#each swimlane in board.mySwimlanes}}
+                  {{#each list in swimlane.myLists}}
+                    {{#each card in list.myCards}}
+                      <tr>
+                        <td>
+                          {{#unless isMiniScreen}}
+                            <div class="my-cards-board-badge {{board.colorClass}}" id="header"></div>
+                          {{/unless}}
+                          <div class="my-cards-card-title-table">
+                            {{card.title}}
+                            {{!-- <a class="minicard-wrapper" href="{{card.originRelativeUrl}}">
+                              {{card.title}}
+                            </a> --}}
+                          </div>
+                        </td>
+                        <td>{{list.title}}</td>
+                        <td>
+                          {{board.title}}
+                          {{!-- <a href="{{board.originRelativeUrl}}"> --}}
+                        </td>
+                        <td>{{swimlane.title}}</td>
+                        {{#unless isMiniScreen}}
+                          <td>
+                            <div>
+                              {{#each member in card.members}}
+                                <a class="name">
+                                  {{> userAvatar userId=member noRemove=true}}
+                                </a>
+                              {{/each}}
+                            </div>
+                          </td>
+                          <td>
+                            <div>
+                              {{#each label in card.labelIds}}
+                                <span class="card-label card-label-{{labelColor board label}}" title="{{name}}">
+                                  {{labelName board label}}
+                                </span>
+                              {{/each}}
+                            </div>
+                          </td>
+                          <td>
+                            {{#if card.dueAt}}
+                              {{moment card.dueAt 'LLL'}}
+                            {{/if}}
+                          </td>
+                        {{/unless}}
+                      </tr>
+                    {{/each}}
+                  {{/each}}
+                {{/each}}
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="myCardsViewChangePopup">
+  {{#if currentUser}}
+    <ul class="pop-over-list">
+      <li>
+        {{#with "myCardsViewChange-choice-boards"}}
+          <a class="js-my-cards-view-boards">
+            <i class="fa fa-trello colorful"></i>
+            {{_ 'myCardsViewChange-choice-boards'}}
+            {{#if $eq Utils.myCardsView "boards"}}
+              <i class="fa fa-check"></i>
+            {{/if}}
+          </a>
+        {{/with}}
+      </li>
+      <hr>
+      <li>
+        {{#with "myCardsViewChange-choice-table"}}
+          <a class="js-my-cards-view-table">
+            <i class="fa fa-table colorful"></i>
+            {{_ 'myCardsViewChange-choice-table'}}
+            {{#if $eq Utils.myCardsView "table"}}
+              <i class="fa fa-check"></i>
+            {{/if}}
+          </a>
+        {{/with}}
+      </li>
+    </ul>
+  {{/if}}
+</template>

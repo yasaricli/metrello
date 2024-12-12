@@ -1,0 +1,131 @@
+
+<template name="customFieldsSidebar">
+  <ul class="sidebar-list">
+    {{#each customFields}}
+      <li>
+        <div class="minicard-wrapper js-minicard">
+          <div class="minicard">
+            <a class="fa fa-pencil js-edit-custom-field minicard-edit-button"></a>
+            <div class="minicard-title">
+              {{#viewer}}
+                {{name}}
+              {{/viewer}}
+              ({{type}})
+            </div>
+          </div>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+
+  {{#if currentUser.isBoardMember}}
+    <hr>
+    <a class="sidebar-btn js-open-create-custom-field">
+      <i class="fa fa-plus"></i>
+      <span>{{_ 'createCustomField'}}</span>
+    </a>
+  {{/if}}
+</template>
+
+<template name="createCustomFieldPopup">
+  <form>
+    <label>
+      {{_ 'name'}}
+      {{#unless _id}}
+        <input type="text" class="js-field-name" autofocus>
+      {{else}}
+        <input type="text" class="js-field-name" value="{{name}}">
+      {{/unless}}
+    </label>
+
+    <label>
+      {{_ 'type'}}
+      <select class="js-field-type" {{#if _id}}disabled{{/if}}>
+        {{#each types}}
+          {{#if selected}}
+            <option value="{{value}}" selected="selected">{{name}}</option>
+          {{else}}
+            <option value="{{value}}">{{name}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+    </label>
+
+    <div class="js-field-settings js-field-settings-currency {{#if isTypeNotSelected 'currency'}}hide{{/if}}">
+      <label>
+        {{_ 'custom-field-currency-option'}}
+        <select class="js-field-currency">
+          {{#each getCurrencyCodes}}
+            {{#if selected}}
+              <option value="{{value}}" selected="selected">{{name}}</option>
+            {{else}}
+              <option value="{{value}}">{{name}}</option>
+            {{/if}}
+          {{/each}}
+        </select>
+      </label>
+      <a class="flex js-field-show-sum-at-top-of-list {{#if showSumAtTopOfList}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if showSumAtTopOfList}}is-checked{{/if}}"></div>
+        <span>{{_ 'showSum-field-on-list'}}</span>
+      </a>
+    </div>
+
+    <div class="js-field-settings js-field-settings-currency {{#if isTypeNotSelected 'number'}}hide{{/if}}">
+      <a class="flex js-field-show-sum-at-top-of-list {{#if showSumAtTopOfList}}is-checked{{/if}}">
+        <div class="materialCheckBox {{#if showSumAtTopOfList}}is-checked{{/if}}"></div>
+        <span>{{_ 'showSum-field-on-list'}}</span>
+      </a>
+    </div>
+
+    <div class="js-field-settings js-field-settings-dropdown {{#if isTypeNotSelected 'dropdown'}}hide{{/if}}">
+      <label>
+        {{_ 'custom-field-dropdown-options'}}
+        {{#each dropdownItems.get}}
+          <input type="text" class="js-dropdown-item" value="{{name}}" placeholder="">
+        {{/each}}
+        <input type="text" class="js-dropdown-item last" value="" placeholder="{{_ 'custom-field-dropdown-options-placeholder'}}">
+      </label>
+    </div>
+
+    <div class="js-field-settings js-field-settings-stringtemplate {{#if isTypeNotSelected 'stringtemplate'}}hide{{/if}}">
+      <label>
+        {{_ 'custom-field-stringtemplate-format'}}
+        <input type="text" class="js-field-stringtemplate-format" value="{{getStringtemplateFormat}}">
+      </label>
+      <label>
+        {{_ 'custom-field-stringtemplate-separator'}}
+        <input type="text" class="js-field-stringtemplate-separator" value="{{getStringtemplateSeparator}}">
+      </label>
+    </div>
+
+    <a class="flex js-field-show-on-card {{#if showOnCard}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if showOnCard}}is-checked{{/if}}"></div>
+      <span>{{_ 'show-field-on-card'}}</span>
+    </a>
+
+    <a class="flex js-field-automatically-on-card {{#if automaticallyOnCard}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if automaticallyOnCard}}is-checked{{/if}}"></div>
+      <span>{{_ 'automatically-field-on-card'}}</span>
+    </a>
+
+    <a class="flex js-field-always-on-card {{#if alwaysOnCard}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if alwaysOnCard}}is-checked{{/if}}"></div>
+      <span>{{_ 'always-field-on-card'}}</span>
+    </a>
+
+    <a class="flex js-field-showLabel-on-card {{#if showLabelOnMiniCard}}is-checked{{/if}}">
+      <div class="materialCheckBox {{#if showLabelOnMiniCard}}is-checked{{/if}}"></div>
+      <span>{{_ 'showLabel-field-on-card'}}</span>
+    </a>
+
+    <button type="button" class="primary wide left">{{_ 'save'}}</button>
+    {{#if _id}}
+      <button type="button" class="negate wide right js-delete-custom-field">{{_ 'delete'}}</button>
+    {{/if}}
+  </form>
+</template>
+
+<template name="deleteCustomFieldPopup">
+  <p>{{_ "custom-field-delete-pop"}}</p>
+  <button type="submit" class="js-confirm negate full">{{_ 'delete'}}</button>
+</template>

@@ -1,0 +1,163 @@
+
+<template name="information">
+  <div class="setting-content">
+    {{#unless currentUser.isAdmin}}
+      {{_ 'error-notAuthorized'}}
+    {{else}}
+      <div class="content-title">
+        <span>
+          <i class="fa fa-info-circle"></i>
+          {{_ 'info'}}
+        </span>
+      </div>
+      <div class="content-body">
+        <div class="side-menu">
+          <ul>
+            <li class="active">
+              <a class="js-setting-menu" data-id="information-display">
+                <i class="fa fa-info-circle"></i>
+                {{_ 'info'}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="main-body">
+          {{> statistics}}
+        </div>
+      </div>
+    {{/unless}}
+  </div>
+</template>
+
+<template name="statistics">
+  <table>
+    <tbody>
+      <tr>
+        <th>WeKan ® {{_ 'info'}}</th>
+        <td>{{statistics.version}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'Meteor_version'}}</th>
+        <td>{{statistics.meteor.meteorVersion}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'Node_version'}}</th>
+        <td>{{statistics.process.nodeVersion}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'MongoDB_version'}}</th>
+        <td>{{statistics.mongo.mongoVersion}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'MongoDB_storage_engine'}}</th>
+        <td>{{statistics.mongo.mongoStorageEngine}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'MongoDB_Oplog_enabled'}}</th>
+        <td>{{statistics.mongo.mongoOplogEnabled}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Type'}}</th>
+        <td>{{statistics.os.type}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Platform'}}</th>
+        <td>{{statistics.os.platform}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Arch'}}</th>
+        <td>{{statistics.os.arch}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Release'}}</th>
+        <td>{{statistics.os.release}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Uptime'}}</th>
+        <td>{{humanReadableTime statistics.os.uptime}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Loadavg'}}</th>
+        <td>{{numFormat statistics.os.loadavg.[0]}}, {{numFormat statistics.os.loadavg.[1]}}, {{numFormat statistics.os.loadavg.[2]}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Totalmem'}}</th>
+        <td>{{fileSize statistics.os.totalmem}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Freemem'}}</th>
+        <td>{{fileSize statistics.os.freemem}}</td>
+      </tr>
+      <tr>
+        <th>{{_ 'OS_Cpus'}}</th>
+        <td>{{statistics.os.cpus.length}}</td>
+      </tr>
+      {{#unless isSandstorm}}
+        <tr>
+          <th>{{_ 'Node_heap_total_heap_size'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.totalHeapSize}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_total_heap_size_executable'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.totalHeapSizeExecutable}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_total_physical_size'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.totalPhysicalSize}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_total_available_size'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.totalAvailableSize}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_used_heap_size'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.usedHeapSize}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_heap_size_limit'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.heapSizeLimit}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_malloced_memory'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.mallocedMemory}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_peak_malloced_memory'}}</th>
+          <td>{{fileSize statistics.nodeHeapStats.peakMallocedMemory}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_does_zap_garbage'}}</th>
+          <td>{{statistics.nodeHeapStats.doesZapGarbage}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_number_of_native_contexts'}}</th>
+          <td>{{statistics.nodeHeapStats.numberOfNativeContexts}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_heap_number_of_detached_contexts'}}</th>
+          <td>{{statistics.nodeHeapStats.numberOfDetachedContexts}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_memory_usage_rss'}}</th>
+          <td>{{fileSize statistics.nodeMemoryUsage.rss}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_memory_usage_heap_total'}}</th>
+          <td>{{fileSize statistics.nodeMemoryUsage.heapTotal}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_memory_usage_heap_used'}}</th>
+          <td>{{fileSize statistics.nodeMemoryUsage.heapUsed}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Node_memory_usage_external'}}</th>
+          <td>{{fileSize statistics.nodeMemoryUsage.external}}</td>
+        </tr>
+        <tr>
+          <th>{{_ 'Mongo_sessions_count'}}</th>
+          <td>{{statistics.session.sessionsCount}}</td>
+        </tr>
+      {{/unless}}
+    </tbody>
+  </table>
+</template>

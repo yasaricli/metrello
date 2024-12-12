@@ -1,0 +1,27 @@
+
+<template name="dateBadge">
+  {{#if canModifyCard}}
+    <a class="js-edit-date card-date {{classes}}" title="{{showTitle}} {{_ 'predicate-week'}} {{showWeek}}">
+      <time datetime="{{showISODate}}">
+        {{showDate}}
+        <b>{{showWeek}}</b>
+      </time>
+    </a>
+  {{else}}
+    <a class="card-date {{classes}}" title="{{showTitle}} {{_ 'predicate-week'}} {{showWeek}}">
+      <time datetime="{{showISODate}}">
+        {{showDate}}
+        <b>{{showWeek}}</b>
+      </time>
+    </a>
+  {{/if}}
+</template>
+
+<template name="dateCustomField">
+  <a class="{{classes}}" title="{{showTitle}} {{_ 'predicate-week'}} {{showWeek}}">
+    <time datetime="{{showISODate}}">
+      {{showDate}}
+      <b>{{showWeek}}</b>
+    </time>
+  </a>
+</template>

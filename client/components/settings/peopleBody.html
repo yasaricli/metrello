@@ -1,0 +1,839 @@
+
+<template name="people">
+  <div class="setting-content">
+    {{#unless currentUser.isAdmin}}
+      {{_ 'error-notAuthorized'}}
+    {{else}}
+      <div class="content-title ext-box">
+        <div class="ext-box-left">
+          {{#if loading.get}}
+            {{> spinner}}
+          {{else if orgSetting.get}}
+            <span>
+              <i class="fa fa-sitemap"></i>
+              {{#unless isMiniScreen}}
+                {{_ 'organizations'}}
+              {{/unless}}
+            </span>
+            <input id="searchOrgInput" placeholder="{{_ 'search'}}">
+            <button id="searchOrgButton">
+              <i class="fa fa-search"></i>
+              {{_ 'search'}}
+            </button>
+            <div class="ext-box-right">
+              <span>{{#unless isMiniScreen}}{{_ 'org-number'}}{{/unless}} #{orgNumber}</span>
+            </div>
+          {{else if teamSetting.get}}
+            <span>
+              <i class="fa fa-users"></i>
+              {{#unless isMiniScreen}}
+                {{_ 'teams'}}
+              {{/unless}}
+            </span>
+            <input id="searchTeamInput" placeholder="{{_ 'search'}}">
+            <button id="searchTeamButton">
+              <i class="fa fa-search"></i>
+              {{_ 'search'}}
+            </button>
+            <div class="ext-box-right">
+              <span>{{#unless isMiniScreen}}{{_ 'team-number'}}{{/unless}} #{teamNumber}</span>
+            </div>
+          {{else if peopleSetting.get}}
+            <span>
+              <i class="fa fa-user"></i>
+              {{#unless isMiniScreen}}
+                {{_ 'people'}}
+              {{/unless}}
+            </span>
+            <input id="searchInput" placeholder="{{_ 'search'}}">
+            <button id="searchButton">
+              <i class="fa fa-search"></i>
+              {{_ 'search'}}
+            </button>
+            <div class="ext-box-right">
+              <span>{{#unless isMiniScreen}}{{_ 'people-number'}}{{/unless}} #{peopleNumber}</span>
+            </div>
+            <div class="divAddOrRemoveTeam" id="divAddOrRemoveTeam">
+              <button id="addOrRemoveTeam">
+                <i class="fa fa-edit"></i>
+                {{_ 'add'}} / {{_ 'delete'}} {{_ 'teams'}}
+              </button>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+      <div class="content-body">
+        <div class="side-menu">
+          <ul>
+            <li class="active">
+              <a class="js-org-menu" data-id="org-setting">
+                <i class="fa fa-sitemap"></i>
+                {{_ 'organizations'}}
+              </a>
+            </li>
+            <li>
+              <a class="js-team-menu" data-id="team-setting">
+                <i class="fa fa-users"></i>
+                {{_ 'teams'}}
+              </a>
+            </li>
+            <li>
+              <a class="js-people-menu" data-id="people-setting">
+                <i class="fa fa-user"></i>
+                {{_ 'people'}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="main-body">
+          {{#if loading.get}}
+            {{> spinner}}
+          {{else if orgSetting.get}}
+            {{> orgGeneral}}
+          {{else if teamSetting.get}}
+            {{> teamGeneral}}
+          {{else if peopleSetting.get}}
+            {{> peopleGeneral}}
+          {{/if}}
+        </div>
+      </div>
+    {{/unless}}
+  </div>
+</template>
+
+<template name="orgGeneral">
+  <table>
+    <thead>
+      <tr>
+        <th>{{_ 'displayName'}}</th>
+        <th>{{_ 'description'}}</th>
+        <th>{{_ 'shortName'}}</th>
+        <th>{{_ 'autoAddUsersWithDomainName'}}</th>
+        <th>{{_ 'website'}}</th>
+        <th>{{_ 'createdAt'}}</th>
+        <th>{{_ 'active'}}</th>
+        <th>
+          {{> newOrgRow}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr></tr>
+      {{#each org in orgList}}
+        {{> orgRow orgId=org._id}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="teamGeneral">
+  <table>
+    <thead>
+      <tr>
+        <th>{{_ 'displayName'}}</th>
+        <th>{{_ 'description'}}</th>
+        <th>{{_ 'shortName'}}</th>
+        <th>{{_ 'website'}}</th>
+        <th>{{_ 'createdAt'}}</th>
+        <th>{{_ 'active'}}</th>
+        <th>
+          {{> newTeamRow}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr></tr>
+      {{#each team in teamList}}
+        {{> teamRow teamId=team._id}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="peopleGeneral">
+  <div id="divAddOrRemoveTeamContainer">
+    {{> modifyTeamsUsers}}
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>{{> selectAllUser}}</th>
+        <th>{{_ 'username'}}</th>
+        <th>{{_ 'fullname'}}</th>
+        <th>{{_ 'initials'}}</th>
+        <th>{{_ 'admin'}}</th>
+        <th>{{_ 'email'}}</th>
+        <th>{{_ 'verified'}}</th>
+        <th>{{_ 'createdAt'}}</th>
+        <th>{{_ 'active'}}</th>
+        <th>{{_ 'authentication-method'}}</th>
+        <th>{{_ 'import-usernames'}}</th>
+        <th>{{_ 'organizations'}}</th>
+        <th>{{_ 'teams'}}</th>
+        <th>{{> newUserRow}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr></tr>
+      {{#each user in peopleList}}
+        {{> peopleRow userId=user._id}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="selectAllUser">
+  {{_ 'dueCardsViewChange-choice-all'}}
+  <input class="allUserChkBox" type="checkbox" id="chkSelectAll">
+</template>
+
+<template name="newOrgRow">
+  <a class="new-org">
+    <i class="fa fa-plus-square"></i>
+    {{_ 'new'}}
+  </a>
+</template>
+
+<template name="newTeamRow">
+  <a class="new-team">
+    <i class="fa fa-plus-square"></i>
+    {{_ 'new'}}
+  </a>
+</template>
+
+<template name="newUserRow">
+  <a class="new-user">
+    <i class="fa fa-plus-square"></i>
+    {{_ 'new'}}
+  </a>
+</template>
+
+<template name="orgRow">
+  <tr>
+    {{#if orgData.orgIsActive}}
+      <td>{{ orgData.orgDisplayName }}</td>
+    {{else}}
+      <td><s>{{ orgData.orgDisplayName }}</s></td>
+    {{/if}}
+    {{#if orgData.orgIsActive}}
+      <td>{{ orgData.orgDesc }}</td>
+    {{else}}
+      <td><s>{{ orgData.orgDesc }}</s></td>
+    {{/if}}
+    {{#if orgData.orgIsActive}}
+      <td>{{ orgData.orgShortName }}</td>
+    {{else}}
+      <td><s>{{ orgData.orgShortName }}</s></td>
+    {{/if}}
+    {{#if orgData.orgIsActive}}
+      <td>{{ orgData.orgAutoAddUsersWithDomainName }}</td>
+    {{else}}
+      <td><s>{{ orgData.orgAutoAddUsersWithDomainName }}</s></td>
+    {{/if}}
+    {{#if orgData.orgIsActive}}
+      <td>{{ orgData.orgWebsite }}</td>
+    {{else}}
+      <td><s>{{ orgData.orgWebsite }}</s></td>
+    {{/if}}
+    {{#if orgData.orgIsActive}}
+      <td>{{ moment orgData.createdAt 'LLL' }}</td>
+    {{else}}
+      <td><s>{{ moment orgData.createdAt 'LLL' }}</s></td>
+    {{/if}}
+    <td>
+      {{#if orgData.orgIsActive}}
+        {{_ 'yes'}}
+      {{else}}
+        {{_ 'no'}}
+      {{/if}}
+    </td>
+    <td>
+      <a class="edit-org">
+        <i class="fa fa-edit"></i>
+        {{_ 'edit'}}
+      </a>
+      <a class="more-settings-org">
+        <i class="fa fa-ellipsis-h"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="teamRow">
+  <tr>
+    {{#if teamData.teamIsActive}}
+      <td>{{ teamData.teamDisplayName }}</td>
+    {{else}}
+      <td><s>{{ teamData.teamDisplayName }}</s></td>
+    {{/if}}
+    {{#if teamData.teamIsActive}}
+      <td>{{ teamData.teamDesc }}</td>
+    {{else}}
+      <td><s>{{ teamData.teamDesc }}</s></td>
+    {{/if}}
+    {{#if teamData.teamIsActive}}
+      <td>{{ teamData.teamShortName }}</td>
+    {{else}}
+      <td><s>{{ teamData.teamShortName }}</s></td>
+    {{/if}}
+    {{#if teamData.teamIsActive}}
+      <td>{{ teamData.teamWebsite }}</td>
+    {{else}}
+      <td><s>{{ teamData.teamWebsite }}</s></td>
+    {{/if}}
+    {{#if teamData.teamIsActive}}
+      <td>{{ moment teamData.createdAt 'LLL' }}</td>
+    {{else}}
+      <td><s>{{ moment teamData.createdAt 'LLL' }}</s></td>
+    {{/if}}
+    <td>
+      {{#if teamData.teamIsActive}}
+        {{_ 'yes'}}
+      {{else}}
+        {{_ 'no'}}
+      {{/if}}
+    </td>
+    <td>
+      <a class="edit-team">
+        <i class="fa fa-edit"></i>
+        {{_ 'edit'}}
+      </a>
+      <a class="more-settings-team">
+        <i class="fa fa-ellipsis-h"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="peopleRow">
+  <tr>
+    <td>
+      {{#if userData.loginDisabled}}
+        <input class="selectUserChkBox" type="checkbox" disabled="disabled" id="{{userData._id}}">
+      {{else}}
+        <input class="selectUserChkBox" type="checkbox" id="{{userData._id}}">
+      {{/if}}
+    </td>
+    <td class="username">
+      {{#if userData.loginDisabled}}
+        <s>{{ userData.username }}</s>
+      {{else}}
+        {{ userData.username }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{ userData.profile.fullname }}</s>
+      {{else}}
+        {{ userData.profile.fullname }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{ userData.profile.initials }}</s>
+      {{else}}
+        {{ userData.profile.initials }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        {{#if userData.isAdmin}}
+          <s>{{_ 'yes'}}</s>
+        {{else}}
+          <s>{{_ 'no'}}</s>
+        {{/if}}
+      {{else}}
+        {{#if userData.isAdmin}}
+          {{_ 'yes'}}
+        {{else}}
+          {{_ 'no'}}
+        {{/if}}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{ userData.emails.[0].address }}</s>
+      {{else}}
+        {{ userData.emails.[0].address }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        {{#if userData.emails.[0].verified}}
+          <s>{{_ 'yes'}}</s>
+        {{else}}
+          <s>{{_ 'no'}}</s>
+        {{/if}}
+      {{else}}
+        {{#if userData.emails.[0].verified}}
+          {{_ 'yes'}}
+        {{else}}
+          {{_ 'no'}}
+        {{/if}}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{ moment userData.createdAt 'LLL' }}</s>
+      {{else}}
+        {{ moment userData.createdAt 'LLL' }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        {{_ 'no'}}
+      {{else}}
+        {{_ 'yes'}}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{_ userData.authenticationMethod }}</s>
+      {{else}}
+        {{_ userData.authenticationMethod }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{ userData.importUsernamesString }}</s>
+      {{else}}
+        {{ userData.importUsernamesString }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{ userData.orgsUserBelongs }}</s>
+      {{else}}
+        {{ userData.orgsUserBelongs }}
+      {{/if}}
+    </td>
+    <td>
+      {{#if userData.loginDisabled}}
+        <s>{{ userData.teamsUserBelongs }}</s>
+      {{else}}
+        {{ userData.teamsUserBelongs }}
+      {{/if}}
+    </td>
+    <td>
+      <a class="edit-user">
+        <i class="fa fa-edit"></i>
+        {{_ 'edit'}}
+      </a>
+      <a class="more-settings-user">
+        <i class="fa fa-ellipsis-h"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="editOrgPopup">
+  <form>
+    <label class="hide orgId" type="text" value="{{org._id}}"></label>
+    <label>
+      {{_ 'displayName'}}
+      <input class="js-orgDisplayName" type="text" value="{{org.orgDisplayName}}" required>
+      <span class="error hide orgname-taken">{{_ 'error-orgname-taken'}}</span>
+    </label>
+    <label>
+      {{_ 'description'}}
+      <input class="js-orgDesc" type="text" value="{{org.orgDesc}}" required>
+    </label>
+    <label>
+      {{_ 'shortName'}}
+      <input class="js-orgShortName" type="text" value="{{org.orgShortName}}" required>
+    </label>
+    <label>
+      {{_ 'autoAddUsersWithDomainName'}}
+      <input class="js-orgAutoAddUsersWithDomainName" type="text" value="{{org.orgAutoAddUsersWithDomainName}}">
+    </label>
+    <label>
+      {{_ 'website'}}
+      <input class="js-orgWebsite" type="text" value="{{org.orgWebsite}}">
+    </label>
+    <label>
+      {{_ 'active'}}
+      <select class="select-active js-org-isactive">
+        <option value="false">{{_ 'no'}}</option>
+        <option value="true" selected="{{org.orgIsActive}}">{{_ 'yes'}}</option>
+      </select>
+    </label>
+    <hr>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="editTeamPopup">
+  <form>
+    <label class="hide teamId" type="text" value="{{team._id}}"></label>
+    <label>
+      {{_ 'displayName'}}
+      <input class="js-teamDisplayName" type="text" value="{{team.teamDisplayName}}" required>
+      <span class="error hide teamname-taken">{{_ 'error-teamname-taken'}}</span>
+    </label>
+    <label>
+      {{_ 'description'}}
+      <input class="js-teamDesc" type="text" value="{{team.teamDesc}}" required>
+    </label>
+    <label>
+      {{_ 'shortName'}}
+      <input class="js-teamShortName" type="text" value="{{team.teamShortName}}" required>
+    </label>
+    <label>
+      {{_ 'website'}}
+      <input class="js-teamWebsite" type="text" value="{{team.teamWebsite}}">
+    </label>
+    <label>
+      {{_ 'active'}}
+      <select class="select-active js-team-isactive">
+        <option value="false">{{_ 'no'}}</option>
+        <option value="true" selected="{{team.teamIsActive}}">{{_ 'yes'}}</option>
+      </select>
+    </label>
+    <hr>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="editUserPopup">
+  <form>
+    <label class="hide userId" type="text" value="{{user._id}}"></label>
+    <label>
+      {{_ 'username'}}
+      <span class="error hide username-taken">{{_ 'error-username-taken'}}</span>
+      {{#if isLdap}}
+        <input class="js-profile-username" type="text" value="{{user.username}}" readonly>
+      {{else}}
+        <input class="js-profile-username" type="text" value="{{user.username}}" required>
+      {{/if}}
+    </label>
+    <label>
+      {{_ 'fullname'}}
+      <input class="js-profile-fullname" type="text" value="{{user.profile.fullname}}" required>
+    </label>
+    <label>
+      {{_ 'initials'}}
+      <input class="js-profile-initials" type="text" value="{{user.profile.initials}}">
+    </label>
+    <label>
+      {{_ 'admin'}}
+      <select class="select-role js-profile-isadmin">
+        <option value="false">{{_ 'no'}}</option>
+        <option value="true" selected="{{user.isAdmin}}">{{_ 'yes'}}</option>
+      </select>
+    </label>
+    <label>
+      {{_ 'email'}}
+      <span class="error hide email-taken">{{_ 'error-email-taken'}}</span>
+      {{#if isLdap}}
+        <input class="js-profile-email" type="email" value="{{user.emails.[0].address}}" readonly>
+      {{else}}
+        <input class="js-profile-email" type="email" value="{{user.emails.[0].address}}" required>
+      {{/if}}
+    </label>
+    <label>
+      {{_ 'import-usernames'}}
+      <input class="js-import-usernames" type="text" value="{{user.importUsernames}}">
+    </label>
+    <label>
+      {{_ 'verified'}}
+      <select class="select-verified js-profile-email-verified">
+        <option value="false">{{_ 'no'}}</option>
+        <option value="true" selected="{{userData.emails.[0].verified}}">{{_ 'yes'}}</option>
+      </select>
+    </label>
+    <label>
+      {{_ 'active'}}
+      <select class="select-active js-profile-isactive">
+        <option value="false">{{_ 'yes'}}</option>
+        <option value="true" selected="{{user.loginDisabled}}">{{_ 'no'}}</option>
+      </select>
+    </label>
+    <label>
+      {{_ 'authentication-type'}}
+      <select class="select-authenticationMethod js-authenticationMethod">
+        {{#each authentications}}
+          {{#if isSelected value}}
+            <option value="{{value}}" selected>{{_ value}}</option>
+          {{else}}
+            <option value="{{value}}">{{_ value}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+    </label>
+    <label>
+      {{_ 'organizations'}}
+      <i class="fa fa-plus-square" id="addUserOrg"></i>
+      <i class="fa fa-minus-square" id="removeUserOrg"></i>
+      <select class="js-orgs" id="jsOrgs">
+        <option value="-1">{{_ 'organizations'}} :</option>
+        {{#each value in orgsDatas}}
+          <option value="{{value._id}}">{{value.orgDisplayName}}</option>
+        {{/each}}
+      </select>
+      <input id="jsUserOrgsInPut" class="js-userOrgs" type="text" value="{{user.orgsUserBelongs}}" disabled>
+      <input id="jsUserOrgIdsInPut" class="js-userOrgIds hide" type="hidden" value="{{user.orgIdsUserBelongs}}">
+    </label>
+    <label>
+      {{_ 'teams'}}
+      <i class="fa fa-plus-square" id="addUserTeam"></i>
+      <i class="fa fa-minus-square" id="removeUserTeam"></i>
+      <select class="js-teams" id="jsTeams">
+        <option value="-1">{{_ 'teams'}} :</option>
+        {{#each value in teamsDatas}}
+          <option value="{{value._id}}">{{_ value.teamDisplayName}}</option>
+        {{/each}}
+      </select>
+      <input id="jsUserTeamsInPut" class="js-userteams" type="text" value="{{user.teamsUserBelongs}}" disabled>
+      <input id="jsUserTeamIdsInPut" class="js-userteamIds hide" type="hidden" value="{{user.teamIdsUserBelongs}}">
+    </label>
+    <hr>
+    <label>
+      {{_ 'password'}}
+      <input class="js-profile-password" type="password">
+    </label>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="newOrgPopup">
+  <form>
+    <label>
+      {{_ 'displayName'}}
+      <input class="js-orgDisplayName" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'description'}}
+      <input class="js-orgDesc" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'shortName'}}
+      <input class="js-orgShortName" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'autoAddUsersWithDomainName'}}
+      <input class="js-orgAutoAddUsersWithDomainName" type="text" value="">
+    </label>
+    <label>
+      {{_ 'website'}}
+      <input class="js-orgWebsite" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'active'}}
+      <select class="select-active js-org-isactive">
+        <option value="false" selected="selected">{{_ 'no'}}</option>
+        <option value="true">{{_ 'yes'}}</option>
+      </select>
+    </label>
+    <hr>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="newTeamPopup">
+  <form>
+    <label>
+      {{_ 'displayName'}}
+      <input class="js-teamDisplayName" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'description'}}
+      <input class="js-teamDesc" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'shortName'}}
+      <input class="js-teamShortName" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'website'}}
+      <input class="js-teamWebsite" type="text" value="">
+    </label>
+    <label>
+      {{_ 'active'}}
+      <select class="select-active js-team-isactive">
+        <option value="false" selected="selected">{{_ 'no'}}</option>
+        <option value="true">{{_ 'yes'}}</option>
+      </select>
+    </label>
+    <hr>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="modifyTeamsUsers">
+  <label>
+    {{_ 'teams'}}
+    <select class="js-teamsUser" id="jsteamsUser">
+      {{#each value in teamsDatas}}
+        <option value="{{value._id}}">{{_ value.teamDisplayName}}</option>
+      {{/each}}
+    </select>
+  </label>
+  <hr>
+  <label>
+    {{_ 'r-action'}}
+    <div class="form-group flex">
+      <input class="wekan-form-control" id="addAction" type="radio" name="action" value="true" checked="checked">
+      <label for="addAction">{{_ 'add'}}</label>
+      <input class="wekan-form-control" id="deleteAction" type="radio" name="action" value="false">
+      <label for="deleteAction">{{_ 'delete'}}</label>
+    </div>
+  </label>
+  <div class="buttonsContainer">
+    <input class="primary wide" id="addTeamBtn" type="submit" value="{{_ 'save'}}">
+    <input class="primary wide" id="cancelBtn" type="submit" value="{{_ 'cancel'}}">
+  </div>
+</template>
+
+<template name="newUserPopup">
+  <form>
+    <label>
+      {{_ 'fullname'}}
+      <input class="js-profile-fullname" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'username'}}
+      <span class="error hide username-taken">{{_ 'error-username-taken'}}</span>
+      <input class="js-profile-username" type="text" value="" required>
+    </label>
+    <label>
+      {{_ 'initials'}}
+      <input class="js-profile-initials" type="text" value="">
+    </label>
+    <label>
+      {{_ 'email'}}
+      <span class="error hide email-taken">{{_ 'error-email-taken'}}</span>
+      <input class="js-profile-email" type="email" value="" required>
+    </label>
+    <label>
+      {{_ 'import-usernames'}}
+      <input class="js-import-usernames" type="text" value="">
+    </label>
+    <label>
+      {{_ 'admin'}}
+      <select class="select-role js-profile-isadmin">
+        <option value="false" selected="selected">{{_ 'no'}}</option>
+        <option value="true">{{_ 'yes'}}</option>
+      </select>
+    </label>
+    <label>
+      {{_ 'active'}}
+      <select class="select-active js-profile-isactive">
+        <option value="false" selected="selected">{{_ 'yes'}}</option>
+        <option value="true">{{_ 'no'}}</option>
+      </select>
+    </label>
+    <label>
+      {{_ 'authentication-type'}}
+      <select class="select-authenticationMethod js-authenticationMethod">
+        {{#each authentications}}
+          {{#if isSelected value}}
+            <option value="{{value}}" selected>{{_ value}}</option>
+          {{else}}
+            <option value="{{value}}">{{_ value}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+    </label>
+    <label>
+      {{_ 'organizations'}}
+      <i class="fa fa-plus-square" id="addUserOrgNewUser"></i>
+      <i class="fa fa-minus-square" id="removeUserOrgNewUser"></i>
+      <select class="js-orgsNewUser" id="jsOrgsNewUser">
+        <option value="-1">{{_ 'organizations'}} :</option>
+        {{#each value in orgsDatas}}
+          <option value="{{value._id}}">{{value.orgDisplayName}}</option>
+        {{/each}}
+      </select>
+      <input id="jsUserOrgsInPutNewUser" class="js-userOrgsNewUser" type="text" value="{{user.orgsUserBelongs}}" disabled>
+      <input id="jsUserOrgIdsInPutNewUser" class="js-userOrgIdsNewUser hide" type="text" value="{{user.orgIdsUserBelongs}}">
+    </label>
+    <label>
+      {{_ 'teams'}}
+      <i class="fa fa-plus-square" id="addUserTeamNewUser"></i>
+      <i class="fa fa-minus-square" id="removeUserTeamNewUser"></i>
+      <select class="js-teamsNewUser" id="jsTeamsNewUser">
+        <option value="-1">{{_ 'teams'}} :</option>
+        {{#each value in teamsDatas}}
+          <option value="{{value._id}}">{{_ value.teamDisplayName}}</option>
+        {{/each}}
+      </select>
+      <input id="jsUserTeamsInPutNewUser" class="js-userteamsNewUser" type="text" value="{{user.teamsUserBelongs}}" disabled>
+      <input id="jsUserTeamIdsInPutNewUser" class="js-userteamIdsNewUser hide" type="text" value="{{user.teamIdsUserBelongs}}">
+    </label>
+    <hr>
+    <label>
+      {{_ 'password'}}
+      <input class="js-profile-password" type="password" required>
+    </label>
+    <div class="buttonsContainer">
+      <input class="primary wide" type="submit" value="{{_ 'save'}}">
+    </div>
+  </form>
+</template>
+
+<template name="settingsOrgPopup">
+  <ul class="pop-over-list">
+    <li>
+      <form>
+        <label id="deleteOrgWarningMessage" class="hide">{{_ 'delete-org-warning-message'}}</label>
+        <br>
+        <label>{{_ 'delete-org-confirm-popup'}}</label>
+        <br>
+        <label class="hide orgId" type="text" value="{{org._id}}"></label>
+        <div class="buttonsContainer">
+          <input id="deleteButton" class="card-details-red right wide" type="button" value="{{_ 'delete'}}">
+        </div>
+      </form>
+    </li>
+  </ul>
+</template>
+
+<template name="settingsTeamPopup">
+  <ul class="pop-over-list">
+    <li>
+      <form>
+        <label id="deleteTeamWarningMessage" class="hide">{{_ 'delete-team-warning-message'}}</label>
+        <br>
+        <label>{{_ 'delete-team-confirm-popup'}}</label>
+        <br>
+        <label class="hide teamId" type="text" value="{{team._id}}"></label>
+        <div class="buttonsContainer">
+          <input id="deleteButton" class="card-details-red right wide" type="button" value="{{_ 'delete'}}">
+        </div>
+      </form>
+    </li>
+  </ul>
+</template>
+
+<template name="settingsUserPopup">
+  <ul class="pop-over-list">
+    <li>
+      <a class="impersonate-user">
+        <i class="fa fa-user"></i>
+        {{_ 'impersonate-user'}}
+      </a>
+    </li>
+    <br>
+    <hr>
+    <li>
+      <form>
+        <label class="hide userId" type="text" value="{{user._id}}"></label>
+        <label>{{_ 'delete-user-confirm-popup'}}</label>
+        <br>
+        <div class="buttonsContainer">
+          <input id="deleteButton" class="card-details-red right wide" type="button" value="{{_ 'delete'}}">
+        </div>
+      </form>
+    </li>
+  </ul>
+</template>

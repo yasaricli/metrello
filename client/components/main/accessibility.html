@@ -1,0 +1,14 @@
+
+<template name="accessibilityHeaderBar">
+  {{#if currentUser}}
+    <h1>
+      {{_ 'accessibility-title'}}
+    </h1>
+  {{/if}}
+</template>
+
+<template name="accessibility">
+  {{#if currentUser}}
+    {{_ 'accessibility-content'}}
+  {{/if}}
+</template>

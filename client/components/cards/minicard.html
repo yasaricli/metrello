@@ -1,0 +1,277 @@
+
+<template name="minicard">
+  <div class="minicard nodragscroll {{#if isLinkedCard}}linked-card{{/if}} {{#if isLinkedBoard}}linked-board{{/if}} {{#if colorClass}}minicard-{{colorClass}}{{/if}}">
+    {{#if canModifyCard}}
+      {{#if isTouchScreenOrShowDesktopDragHandles}}
+        <a class="fa fa-navicon minicard-details-menu-with-handle js-open-minicard-details-menu" title="{{_ 'cardDetailsActionsPopup-title'}}"></a>
+        <div class="handle">
+          <i class="fa fa-arrows"></i>
+        </div>
+      {{else}}
+        <a class="fa fa-navicon minicard-details-menu js-open-minicard-details-menu" title="{{_ 'cardDetailsActionsPopup-title'}}"></a>
+      {{/if}}
+    {{/if}}
+
+    <div class="dates">
+      {{#if getReceived}}
+        {{#unless getStart}}
+          {{#unless getDue}}
+            {{#unless getEnd}}
+              <div class="date">
+                {{> minicardReceivedDate}}
+              </div>
+            {{/unless}}
+          {{/unless}}
+        {{/unless}}
+      {{/if}}
+      {{#if getStart}}
+        <div class="date">
+          {{> minicardStartDate}}
+        </div>
+      {{/if}}
+      {{#if getDue}}
+        <div class="date">
+          {{> minicardDueDate}}
+        </div>
+      {{/if}}
+      {{#if getEnd}}
+        {{> minicardEndDate}}
+      {{/if}}
+      {{#if getSpentTime}}
+        <div class="date">
+          {{> cardSpentTime}}
+        </div>
+      {{/if}}
+    </div>
+
+    {{#if cover}}
+      {{#if currentBoard.allowsCoverAttachmentOnMinicard}}
+        <div class="minicard-cover" style="background-image: url('{{cover.link 'original'}}?dummyReloadAfterSessionEstablished={{sess}}');"></div>
+      {{/if}}
+    {{/if}}
+
+    <div class="minicard-title">
+      {{#if $eq 'prefix-with-full-path' currentBoard.presentParentTask}}
+        <div class="parent-prefix">
+          {{parentString ' > '}}
+        </div>
+      {{/if}}
+      {{#if $eq 'prefix-with-parent' currentBoard.presentParentTask}}
+        <div class="parent-prefix">
+          {{parentCardName}}
+        </div>
+      {{/if}}
+      {{#if isLinkedBoard}}
+        <a class="js-linked-link">
+          <span class="linked-icon fa fa-folder"></span>
+        </a>
+      {{else if isLinkedCard}}
+        <a class="js-linked-link">
+          <span class="linked-icon fa fa-id-card"></span>
+        </a>
+      {{/if}}
+      {{#if getArchived}}
+        <span class="linked-icon linked-archived fa fa-archive"></span>
+      {{/if}}
+      {{> viewer}}
+      {{#if currentBoard.allowsCardNumber}}
+        <span class="card-number">##{{getCardNumber}}</span>
+      {{/if}}
+      {{getTitle}}
+      {{#if $eq 'subtext-with-full-path' currentBoard.presentParentTask}}
+        <div class="parent-subtext">
+          {{parentString ' > '}}
+        </div>
+      {{/if}}
+      {{#if $eq 'subtext-with-parent' currentBoard.presentParentTask}}
+        <div class="parent-subtext">
+          {{parentCardName}}
+        </div>
+      {{/if}}
+    </div>
+
+    {{#if labels}}
+      <div class="minicard-labels {{#if hiddenMinicardLabelText}}minicard-labels-no-text{{/if}}">
+        {{#each labels}}
+          {{#unless hiddenMinicardLabelText}}
+            <span class="js-card-label card-label card-label-{{color}}" title="{{name}}">
+              {{> viewer}}{{name}}
+            </span>
+          {{/unless}}
+          {{#if hiddenMinicardLabelText}}
+            <div class="minicard-label card-label-{{color}}" title="{{name}}"></div>
+          {{/if}}
+        {{/each}}
+      </div>
+    {{/if}}
+
+    <div class="minicard-custom-fields">
+      {{#each customFieldsWD}}
+        {{#if definition.showOnCard}}
+          {{#if trueValue}}
+            <div class="minicard-custom-field">
+              {{#if definition.showLabelOnMiniCard}}
+                <div class="minicard-custom-field-item">
+                  {{> viewer}}{{definition.name}}
+                </div>
+                <div class="minicard-custom-field-item">
+                  {{#if $eq definition.type "currency"}}
+                    {{> viewer}}{{formattedCurrencyCustomFieldValue definition}}
+                  {{else if $eq definition.type "date"}}
+                    <div class="date">
+                      {{> minicardCustomFieldDate}}
+                    </div>
+                  {{else if $eq definition.type "checkbox"}}
+                    <div class="materialCheckBox {{#if value}}is-checked{{/if}}"></div>
+                  {{else if $eq definition.type "stringtemplate"}}
+                    {{> viewer}}{{formattedStringtemplateCustomFieldValue definition}}
+                  {{else}}
+                    {{> viewer}}{{trueValue}}
+                  {{/if}}
+                </div>
+              {{else}}
+                <div class="minicard-custom-field-item-fullwidth">
+                  {{#if $eq definition.type "currency"}}
+                    {{> viewer}}{{formattedCurrencyCustomFieldValue definition}}
+                  {{else if $eq definition.type "date"}}
+                    <div class="date">
+                      {{> minicardCustomFieldDate}}
+                    </div>
+                  {{else if $eq definition.type "checkbox"}}
+                    <div class="materialCheckBox {{#if value}}is-checked{{/if}}"></div>
+                  {{else if $eq definition.type "stringtemplate"}}
+                    {{> viewer}}{{formattedStringtemplateCustomFieldValue definition}}
+                  {{else}}
+                    {{> viewer}}{{trueValue}}
+                  {{/if}}
+                </div>
+              {{/if}}
+            </div>
+          {{/if}}
+        {{/if}}
+      {{/each}}
+    </div>
+
+    {{#if showAssignee}}
+      {{#if getAssignees}}
+        <div class="minicard-assignees js-minicard-assignees">
+          {{#each getAssignees}}
+            {{> userAvatar userId=this}}
+          {{/each}}
+        </div>
+      {{/if}}
+    {{/if}}
+
+    {{#if showMembers}}
+      {{#if getMembers}}
+        <div class="minicard-members js-minicard-members">
+          {{#each getMembers}}
+            {{> userAvatar userId=this}}
+          {{/each}}
+        </div>
+      {{/if}}
+    {{/if}}
+
+    {{#if showCreatorOnMinicard}}
+      <div class="minicard-creator">
+        {{> userAvatar userId=this.userId noRemove=true}}
+      </div>
+    {{/if}}
+
+    <div class="badges">
+      {{#if canModifyCard}}
+        {{#if comments.length}}
+          <div class="badge" title="{{_ 'card-comments-title' comments.length}}">
+            <span class="badge-icon fa fa-comment-o badge-comment badge-text"></span>
+            {{comments.length}}
+          </div>
+        {{/if}}
+      {{/if}}
+      {{#if getDescription}}
+        {{#unless currentBoard.allowsDescriptionTextOnMinicard}}
+          <div class="badge badge-state-image-only" title="{{getDescription}}">
+            <span class="badge-icon fa fa-align-left"></span>
+          </div>
+        {{/unless}}
+      {{/if}}
+      {{#if getVoteQuestion}}
+        <div class="badge badge-state-image-only" title="{{getVoteQuestion}}">
+          <span class="badge-icon fa fa-thumbs-up {{#if voteState}}text-green{{/if}}"></span>
+          <span class="badge-text">{{voteCountPositive}}</span>
+          <span class="badge-icon fa fa-thumbs-down {{#if $eq voteState false}}text-red{{/if}}"></span>
+          <span class="badge-text">{{voteCountNegative}}</span>
+        </div>
+      {{/if}}
+      {{#if getPokerQuestion}}
+        <div class="badge badge-state-image-only" title="{{getPokerQuestion}}">
+          <span class="badge-icon fa fa-check {{#if pokerState}}text-green{{/if}}"></span>
+          {{#if expiredPoker}}
+            <span class="badge-text">{{getPokerEstimation}}</span>
+          {{/if}}
+        </div>
+      {{/if}}
+      {{#if attachments.length}}
+        {{#if currentBoard.allowsBadgeAttachmentOnMinicard}}
+          <div class="badge">
+            <span class="badge-icon fa fa-paperclip"></span>
+            <span class="badge-text">{{attachments.length}}</span>
+          </div>
+        {{/if}}
+      {{/if}}
+      {{#if checklists.length}}
+        <div class="badge {{#if checklistFinished}}is-finished{{/if}}">
+          <span class="badge-icon fa fa-check-square-o"></span>
+          <span class="badge-text check-list-text">{{checklistFinishedCount}}/{{checklistItemCount}}</span>
+        </div>
+      {{/if}}
+      {{#if allSubtasks.count}}
+        <div class="badge">
+          <span class="badge-icon fa fa-sitemap"></span>
+          <span class="badge-text check-list-text">{{subtasksFinishedCount}}/{{allSubtasksCount}}</span>
+        </div>
+      {{/if}}
+      {{#if currentBoard.allowsCardSortingByNumber}}
+        {{#if currentBoard.allowsCardSortingByNumberOnMinicard}}
+          <div class="badge">
+            <span class="badge-icon fa fa-sort"></span>
+            <span class="badge-text check-list-sort">{{sort}}</span>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{#if currentBoard.allowsDescriptionTextOnMinicard}}
+      {{#if getDescription}}
+        <div class="minicard-description">
+          {{> viewer}}{{getDescription}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="editCardSortOrderPopup">
+  <input class="js-edit-card-sort-popup" type="text" autofocus value="{{sort}}" dir="auto">
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-submit-edit-card-sort-popup" type="submit">{{_ 'save'}}</button>
+  </div>
+</template>
+
+<template name="minicardDetailsActionsPopup">
+  <ul class="pop-over-list">
+    {{#if canModifyCard}}
+      <li><a class="js-move-card"><i class="fa fa-arrow-right"></i>{{_ 'moveCardPopup-title'}}</a></li>
+      <li><a class="js-copy-card"><i class="fa fa-copy"></i>{{_ 'copyCardPopup-title'}}</a></li>
+      <hr>
+      <li><a class="js-archive"><i class="fa fa-arrow-right"></i><i class="fa fa-archive"></i>{{_ 'archive-card'}}</a></li>
+      <hr>
+      <li><a class="js-move-card-to-top"><i class="fa fa-arrow-up"></i>{{_ 'moveCardToTop-title'}}</a></li>
+      <li><a class="js-move-card-to-bottom"><i class="fa fa-arrow-down"></i>{{_ 'moveCardToBottom-title'}}</a></li>
+      <hr>
+      <li><a class="js-add-labels"><i class="fa fa-tags"></i>{{_ 'card-edit-labels'}}</a></li>
+      <li><a class="js-due-date"><i class="fa fa-sign-in"></i>{{_ 'editCardDueDatePopup-title'}}</a></li>
+      <li><a class="js-set-card-color"><i class="fa fa-paint-brush"></i>{{_ 'setCardColorPopup-title'}}</a></li>
+      <li><a class="js-link"><i class="fa fa-link"></i>{{_ 'link-card'}}</a></li>
+    {{/if}}
+  </ul>
+</template>

@@ -1,0 +1,179 @@
+
+<template name="cardCustomFieldsPopup">
+  <ul class="pop-over-list">
+    {{#each board.customFields}}
+      <li class="item">
+        <a class="name js-select-field" href="#">
+          <span class="full-name">{{name}}</span>
+          {{#if hasCustomField}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+  <hr>
+  <a class="quiet-button full js-settings">
+    <i class="fa fa-cog"></i>
+    <span>{{_ 'settings'}}</span>
+  </a>
+</template>
+
+<template name="cardCustomField">
+  {{> Template.dynamic template=getTemplate}}
+</template>
+
+<template name="cardCustomField-text">
+  {{#if canModifyCard}}
+    {{#inlinedForm classNames="js-card-customfield-text"}}
+      {{#editor autofocus=true}}
+        {{value}}
+      {{/editor}}
+      <div class="edit-controls clearfix">
+        <button class="primary" type="submit">{{_ 'save'}}</button>
+        <a class="fa fa-times-thin js-close-inlined-form"></a>
+      </div>
+    {{else}}
+      <a class="js-open-inlined-form">
+        {{#if value}}
+          {{#viewer}}{{value}}{{/viewer}}
+        {{else}}
+          {{_ 'edit'}}
+        {{/if}}
+      </a>
+    {{/inlinedForm}}
+  {{else}}
+    {{#viewer}}{{value}}{{/viewer}}
+  {{/if}}
+</template>
+
+<template name="cardCustomField-number">
+  {{#if canModifyCard}}
+    {{#inlinedForm classNames="js-card-customfield-number"}}
+      <input type="number" value="{{data.value}}">
+      <div class="edit-controls clearfix">
+        <button class="primary" type="submit">{{_ 'save'}}</button>
+        <a class="fa fa-times-thin js-close-inlined-form"></a>
+      </div>
+    {{else}}
+      <a class="js-open-inlined-form">
+        {{#if value}}{{value}}{{else}}{{_ 'edit'}}{{/if}}
+      </a>
+    {{/inlinedForm}}
+  {{else}}
+    {{#if value}}{{value}}{{/if}}
+  {{/if}}
+</template>
+
+<template name="cardCustomField-checkbox">
+  <div class="js-checklist-item checklist-item {{#if data.value}}is-checked{{/if}}">
+    {{#if canModifyCard}}
+      <div class="check-box-container">
+        <div class="check-box materialCheckBox {{#if data.value}}is-checked{{/if}}"></div>
+      </div>
+    {{else}}
+      <div class="materialCheckBox {{#if data.value}}is-checked{{/if}}"></div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="cardCustomField-currency">
+  {{#if canModifyCard}}
+    {{#inlinedForm classNames="js-card-customfield-currency"}}
+      <input type="text" value="{{data.value}}" autofocus>
+      <div class="edit-controls clearfix">
+        <button class="primary" type="submit">{{_ 'save'}}</button>
+        <a class="fa fa-times-thin js-close-inlined-form"></a>
+      </div>
+    {{else}}
+      <a class="js-open-inlined-form">
+        {{#if value}}{{formattedValue}}{{else}}{{_ 'edit'}}{{/if}}
+      </a>
+    {{/inlinedForm}}
+  {{else}}
+    {{#if value}}{{formattedValue}}{{/if}}
+  {{/if}}
+</template>
+
+<template name="cardCustomField-date">
+  {{#if canModifyCard}}
+    <a class="js-edit-date {{classes}}" title="{{showTitle}} {{_ 'predicate-week'}} {{showWeek}}">
+      {{#if value}}
+        <div class="card-date">
+          <time datetime="{{showISODate}}">
+            {{showDate}}
+            <b>{{showWeek}}</b>
+          </time>
+        </div>
+      {{else}}
+        {{_ 'edit'}}
+      {{/if}}
+    </a>
+  {{else}}
+    {{#if value}}
+      <div class="card-date">
+        <time datetime="{{showISODate}}">
+          {{showDate}}
+          <b>{{showWeek}}</b>
+        </time>
+      </div>
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="cardCustomField-dropdown">
+  {{#if canModifyCard}}
+    {{#inlinedForm classNames="js-card-customfield-dropdown"}}
+      <select class="inline">
+        {{#each items}}
+          <option value="{{_id}}" {{#if $eq ../data.value _id}}selected="selected"{{/if}}>
+            {{#viewer}}{{name}}{{/viewer}}
+          </option>
+        {{/each}}
+      </select>
+      <div class="edit-controls clearfix">
+        <button class="primary" type="submit">{{_ 'save'}}</button>
+        <a class="fa fa-times-thin js-close-inlined-form"></a>
+      </div>
+    {{else}}
+      <a class="js-open-inlined-form">
+        {{#if value}}
+          {{#viewer}}{{selectedItem}}{{/viewer}}
+        {{else}}
+          {{_ 'edit'}}
+        {{/if}}
+      </a>
+    {{/inlinedForm}}
+  {{else}}
+    {{#if value}}
+      {{#viewer}}{{selectedItem}}{{/viewer}}
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="cardCustomField-stringtemplate">
+  {{#if canModifyCard}}
+    {{#inlinedForm classNames="js-card-customfield-stringtemplate"}}
+      {{#each item in stringtemplateItems.get}}
+        <input class="js-card-customfield-stringtemplate-item" type="text" value="{{item}}" placeholder="">
+      {{/each}}
+      <input class="js-card-customfield-stringtemplate-item last" type="text" value="" placeholder="{{_ 'custom-field-stringtemplate-item-placeholder'}}" autofocus>
+      <div class="edit-controls clearfix">
+        <button class="primary" type="submit">{{_ 'save'}}</button>
+        <a class="fa fa-times-thin js-close-inlined-form"></a>
+      </div>
+    {{else}}
+      <a class="js-open-inlined-form">
+        {{#if value}}
+          {{#viewer}}{{formattedValue}}{{/viewer}}
+        {{else}}
+          {{_ 'edit'}}
+        {{/if}}
+      </a>
+    {{/inlinedForm}}
+  {{else}}
+    {{#if value}}
+      {{#viewer}}{{formattedValue}}{{/viewer}}
+    {{/if}}
+  {{/if}}
+</template>

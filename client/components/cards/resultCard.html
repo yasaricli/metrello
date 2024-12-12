@@ -1,0 +1,58 @@
+
+<template name="resultCard">
+  <div class="result-card-wrapper">
+    <a class="minicard-wrapper js-minicard card-title" href="{{originRelativeUrl}}">
+      {{> minicard}}
+    </a>
+    <ul class="result-card-context-list">
+      <li class="result-card-context" title="{{_ 'board'}}">
+        <div class="result-card-block-wrapper">
+          {{#if boardId}}
+            {{#viewer}}
+              {{getBoard.title}}
+            {{/viewer}}
+          {{else}}
+            <div class="broken-cards-null">NULL</div>
+          {{/if}}
+        </div>
+        {{#if getBoard.archived}}
+          <i class="fa fa-archive"></i>
+        {{/if}}
+      </li>
+      <li class="result-card-context result-card-context-separator">
+        {{_ 'context-separator'}}
+      </li>
+      <li class="result-card-context" title="{{_ 'swimlane'}}">
+        <div class="result-card-block-wrapper">
+          {{#if swimlaneId}}
+            {{#viewer}}
+              {{getSwimlane.title}}
+            {{/viewer}}
+          {{else}}
+            <div class="broken-cards-null">NULL</div>
+          {{/if}}
+        </div>
+        {{#if getSwimlane.archived}}
+          <i class="fa fa-archive"></i>
+        {{/if}}
+      </li>
+      <li class="result-card-context result-card-context-separator">
+        {{_ 'context-separator'}}
+      </li>
+      <li class="result-card-context" title="{{_ 'list'}}">
+        <div class="result-card-block-wrapper">
+          {{#if listId}}
+            {{#viewer}}
+              {{getList.title}}
+            {{/viewer}}
+          {{else}}
+            <div class="broken-cards-null">NULL</div>
+          {{/if}}
+        </div>
+        {{#if getList.archived}}
+          <i class="fa fa-archive"></i>
+        {{/if}}
+      </li>
+    </ul>
+  </div>
+</template>

@@ -1,0 +1,23 @@
+
+<template name="datepicker">
+  <div class="datepicker-container">
+    <form class="edit-date">
+      <div class="fields">
+        <div class="left">
+          <label for="date">{{_ 'date'}}</label>
+          <input class="js-date-field" id="date" type="text" name="date" value="{{showDate}}" placeholder="{{dateFormat}}" autofocus>
+        </div>
+        <div class="right">
+          <label for="time">{{_ 'time'}}</label>
+          <input class="js-time-field" id="time" type="text" name="time" value="{{showTime}}" placeholder="{{timeFormat}}">
+        </div>
+      </div>
+      <div class="js-datepicker"></div>
+      {{#if error.get}}
+        <div class="warning">{{_ error.get}}</div>
+      {{/if}}
+      <button class="primary wide left js-submit-date" type="submit">{{_ 'save'}}</button>
+      <button class="negate wide right js-delete-date">{{_ 'delete'}}</button>
+    </form>
+  </div>
+</template>

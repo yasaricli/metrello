@@ -1,0 +1,89 @@
+
+<template name="dueCardsHeaderBar">
+  {{#if currentUser}}
+    <h1>
+      <i class="fa fa-calendar"></i>
+      {{_ 'dueCards-title'}}
+    </h1>
+
+    <div class="board-header-btns left">
+      <a class="board-header-btn js-due-cards-view-change" title="{{_ 'dueCardsViewChange-title'}}">
+        <i class="fa fa-caret-down"></i>
+        {{#if $eq dueCardsView 'me'}}
+          <i class="fa fa-user"></i>
+          {{_ 'dueCardsViewChange-choice-me'}}
+        {{/if}}
+        {{#if $eq dueCardsView 'all'}}
+          <i class="fa fa-users"></i>
+          {{_ 'dueCardsViewChange-choice-all'}}
+        {{/if}}
+      </a>
+    </div>
+  {{/if}}
+</template>
+
+<template name="dueCardsModalTitle">
+  {{#if currentUser}}
+    <h2>
+      <i class="fa fa-keyboard-o"></i>
+      {{_ 'dueCards-title'}}
+    </h2>
+  {{/if}}
+</template>
+
+<template name="dueCards">
+  {{#if currentUser}}
+    {{#if searching.get}}
+      {{> spinner}}
+    {{else if hasResults.get}}
+      <div class="global-search-results-list-wrapper">
+        {{#if hasQueryErrors.get}}
+          <div>
+            {{#each msg in errorMessages}}
+              <span class="global-search-error-messages">
+                {{msg}}
+              </span>
+            {{/each}}
+          </div>
+        {{else}}
+          {{> resultsPaged this}}
+        {{/if}}
+      </div>
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="dueCardsViewChangePopup">
+  {{#if currentUser}}
+    <ul class="pop-over-list">
+      <li>
+        {{#with "dueCardsViewChange-choice-me"}}
+          <a class="js-due-cards-view-me">
+            <i class="fa fa-user colorful"></i>
+            {{_ 'dueCardsViewChange-choice-me'}}
+            {{#if $eq Utils.dueCardsView "me"}}
+              <i class="fa fa-check"></i>
+            {{/if}}
+          </a>
+        {{/with}}
+      </li>
+      <hr>
+      <li>
+        {{#with "dueCardsViewChange-choice-all"}}
+          <a class="js-due-cards-view-all">
+            <i class="fa fa-users colorful"></i>
+            {{_ 'dueCardsViewChange-choice-all'}}
+            <span class="sub-name">
+              {{#viewer}}
+                {{_ 'dueCardsViewChange-choice-all-description'}}
+              {{/viewer}}
+            </span>
+            {{#if $eq Utils.dueCardsView "all"}}
+              <i class="fa fa-check"></i>
+            {{/if}}
+          </a>
+        {{/with}}
+      </li>
+    </ul>
+  {{/if}}
+</template>

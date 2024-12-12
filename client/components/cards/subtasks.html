@@ -1,0 +1,140 @@
+<template name="subtasks">
+  <h3 class="card-details-item-title">
+    <i class="fa fa-sitemap"></i>
+    {{_ 'subtasks'}}
+  </h3>
+  {{#if currentUser.isBoardAdmin}}
+    {{#if toggleDeleteDialog.get}}
+      <div class="board-overlay" id="card-details-overlay"></div>
+      {{> subtaskDeleteDialog subtask=subtaskToDelete}}
+    {{/if}}
+  {{/if}}
+
+  <div class="card-subtasks-items">
+    {{#each subtask in currentCard.subtasks}}
+      {{> subtaskDetail subtask=subtask}}
+    {{/each}}
+  </div>
+
+  {{#if canModifyCard}}
+    {{> inlinedForm autoclose=false classNames="js-add-subtask" cardId=cardId}}
+      {{> addSubtaskItemForm}}
+  {{else}}
+    <a class="js-open-inlined-form" title="{{_ 'add-subtask'}}">
+      <i class="fa fa-plus"></i>
+    </a>
+  {{/if}}
+</template>
+
+<template name="subtaskDetail">
+  <div class="js-subtasks subtask">
+    {{#if inlinedForm classNames="js-edit-subtask-title" subtask=subtask}}
+      {{> editSubtaskItemForm subtask=subtask}}
+    {{else}}
+      <div class="subtask-title">
+        <span></span>
+        {{#if canModifyCard}}
+          <a class="fa fa-navicon subtask-details-menu js-open-subtask-details-menu" title="{{_ 'subtaskActionsPopup-title'}}"></a>
+        {{/if}}
+        {{#if canModifyCard}}
+          <h2 class="title js-open-inlined-form is-editable">
+            {{#viewer}}
+              {{subtask.title}}
+            {{/viewer}}
+          </h2>
+        {{else}}
+          <h2 class="title">
+            {{#viewer}}
+              {{subtask.title}}
+            {{/viewer}}
+          </h2>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="addSubtaskItemForm">
+  <textarea class="js-add-subtask-item" rows="1" autofocus dir="auto"></textarea>
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-submit-add-subtask-item-form" type="submit">{{_ 'save'}}</button>
+    <a class="fa fa-times-thin js-close-inlined-form"></a>
+  </div>
+</template>
+
+<template name="editSubtaskItemForm">
+  <textarea class="js-edit-subtask-item" rows="1" autofocus dir="auto">{{#if $eq type 'item'}}{{item.title}}{{else}}{{subtask.title}}{{/if}}</textarea>
+  <div class="edit-controls clearfix">
+    <button class="primary confirm js-submit-edit-subtask-item-form" type="submit">{{_ 'save'}}</button>
+    <a class="fa fa-times-thin js-close-inlined-form"></a>
+    <span title="{{createdAt}}">{{ moment createdAt }}</span>
+    {{#if canModifyCard}}
+      {{#if currentUser.isBoardAdmin}}
+        <a class="js-delete-subtask-item">{{_ "delete"}}...</a>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="subtasksItems">
+  <div class="subtasks-items js-subtasks-items">
+    {{#each item in subtasks.items}}
+      {{#if inlinedForm classNames="js-edit-subtask-item" item=item subtasks=subtasks}}
+        {{> editSubtaskItemForm type='item' item=item subtasks=subtasks}}
+      {{else}}
+        {{> subtaskItemDetail item=item subtasks=subtasks}}
+      {{/if}}
+    {{/each}}
+    {{#if canModifyCard}}
+      {{> inlinedForm autoclose=false classNames="js-add-subtask-item" subtasks=subtasks dir="auto"}}
+        {{> addSubtaskItemForm}}
+    {{else}}
+      <a class="add-subtask-item js-open-inlined-form">
+        <i class="fa fa-plus"></i>
+        {{_ 'add-subtask-item'}}...
+      </a>
+    {{/if}}
+  </div>
+</template>
+
+<template name="subtaskItemDetail">
+  <div class="js-subtasks-item subtasks-item">
+    {{#if canModifyCard}}
+      <div class="check-box materialCheckBox {{#if item.isFinished}}is-checked{{/if}}"></div>
+      <div class="item-title js-open-inlined-form is-editable {{#if item.isFinished}}is-checked{{/if}}">
+        {{#viewer}}
+          {{item.title}}
+        {{/viewer}}
+      </div>
+    {{else}}
+      <div class="materialCheckBox {{#if item.isFinished}}is-checked{{/if}}"></div>
+      <div class="item-title {{#if item.isFinished}}is-checked{{/if}}">
+        {{#viewer}}
+          {{item.title}}
+        {{/viewer}}
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="subtaskDeletePopup">
+  <p>{{_ 'confirm-subtask-delete-popup'}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+</template>
+
+<template name="subtaskActionsPopup">
+  <ul class="pop-over-list">
+    <li>
+      <a class="js-view-subtask" title="{{subtask.title}}">
+        <i class="fa fa-eye"></i>
+        {{_ "view-it"}}
+      </a>
+      {{#if currentUser.isBoardAdmin}}
+        <a class="js-delete-subtask delete-subtask">
+          <i class="fa fa-trash"></i>
+          {{_ "delete"}}...
+        </a>
+      {{/if}}
+    </li>
+  </ul>
+</template>

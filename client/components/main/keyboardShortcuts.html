@@ -1,0 +1,31 @@
+
+<template name="shortcutsHeaderBar">
+  <h1>
+    <a class="back-btn" href="{{pathFor 'home'}}">
+      <i class="fa fa-chevron-left"></i>
+    </a>
+    {{_ 'keyboard-shortcuts'}}
+  </h1>
+</template>
+
+<template name="shortcutsModalTitle">
+  <h2>
+    <i class="fa fa-keyboard-o"></i>
+    {{_ 'keyboard-shortcuts'}}
+  </h2>
+</template>
+
+<template name="keyboardShortcuts">
+  <div class="wrapper shortcuts-list">
+    {{#each mapping}}
+      <div class="shortcuts-list-item">
+        <div class="shortcuts-list-item-keys">
+          {{#each keys}}
+            <kbd>{{this}}</kbd>
+          {{/each}}
+        </div>
+        <div class="shortcuts-list-item-action">{{_ action}}</div>
+      </div>
+    {{/each}}
+  </div>
+</template>

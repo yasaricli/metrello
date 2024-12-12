@@ -1,0 +1,91 @@
+
+<template name="commentForm">
+  <div class="new-comment js-new-comment {{#if commentFormIsOpen}}is-open{{/if}}">
+    {{> userAvatar userId=currentUser._id noRemove=true}}
+    <form class="js-new-comment-form">
+      {{> editor class="js-new-comment-input"}}
+      {{getUnsavedValue 'cardComment' currentCard._id}}
+      <div class="add-controls">
+        <button class="primary confirm clear js-add-comment" type="submit">{{_ 'comment'}}</button>
+      </div>
+    </form>
+  </div>
+</template>
+
+<template name="comments">
+  <div class="comments">
+    {{#each commentData in getComments}}
+      {{> comment commentData}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="comment">
+  <div class="comment">
+    {{> userAvatar userId=userId}}
+    <p class="comment-desc">
+      <span class="comment-member">
+        {{> memberName user=user}}
+      </span>
+      {{#if isEditing}}
+        <div class="js-edit-comment">
+          {{> editor autofocus=true}}
+          {{text}}
+          <div class="edit-controls">
+            <button class="primary" type="submit">{{_ 'edit'}}</button>
+            <i class="fa fa-times-thin js-close-inlined-form"></i>
+          </div>
+        </div>
+      {{else}}
+        <div class="comment-text">
+          {{> viewer}}
+          {{text}}
+        </div>
+        {{> commentReactions reactions=reactions commentId=_id}}
+        <span class="comment-meta" title="{{createdAt}}">{{moment createdAt}}</span>
+        {{#if $eq currentUser._id userId}}
+          {{> editOrDeleteComment}}
+        {{else if currentUser.isBoardAdmin}}
+          {{> editOrDeleteComment}}
+        {{/if}}
+      {{/if}}
+    </p>
+  </div>
+</template>
+
+<template name="editOrDeleteComment">
+  {{_ ' - '}}
+  <a class="js-open-inlined-form">{{_ "edit"}}</a>
+  {{_ ' - '}}
+  <a class="js-delete-comment">{{_ "delete"}}</a>
+</template>
+
+<template name="deleteCommentPopup">
+  <p>{{_ "comment-delete"}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+</template>
+
+<template name="commentReactions">
+  <div class="reactions">
+    {{#each reaction in reactions}}
+      <span class="reaction {{#if isSelected reaction.userIds}}selected{{/if}}" data-codepoint="{{reaction.reactionCodepoint}}" title="{{userNames reaction.userIds}}">
+        <span class="reaction-codepoint">{{{reaction.reactionCodepoint}}}</span>
+        <span class="reaction-count">{{reaction.userIds.length}}</span>
+      </span>
+    {{/each}}
+    {{#if currentUser.isBoardMember}}
+      <a class="open-comment-reaction-popup" title="{{_ 'addReactionPopup-title'}}">
+        <i class="fa fa-smile-o"></i>
+        <i class="fa fa-plus"></i>
+      </a>
+    {{/if}}
+  </div>
+</template>
+
+<template name="addReactionPopup">
+  <div class="reactions-popup">
+    {{#each codepoint in codepoints}}
+      <span class="add-comment-reaction" data-codepoint="{{codepoint}}">{{{codepoint}}}</span>
+    {{/each}}
+  </div>
+</template>

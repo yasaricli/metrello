@@ -1,0 +1,37 @@
+
+<template name="ruleDetails">
+  <div class="rules">
+    <h2>
+      <i class="fa fa-magic"></i>
+      {{_ 'r-rule-details'}}
+    </h2>
+    <div class="triggers-content">
+      <div class="triggers-body">
+        <div class="triggers-main-body">
+          <h4>{{_ 'r-trigger'}}</h4>
+          <div class="trigger-item">
+            <div class="trigger-content">
+              <div class="trigger-text">
+                {{trigger}}
+              </div>
+            </div>
+          </div>
+          <h4>{{_ 'r-action'}}</h4>
+          <div class="trigger-item">
+            <div class="trigger-content">
+              <div class="trigger-text">
+                {{action}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rules-back">
+      <button class="js-goback">
+        <i class="fa fa-chevron-left"></i>
+        {{_ 'back'}}
+      </button>
+    </div>
+  </div>
+</template>

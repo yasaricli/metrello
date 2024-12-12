@@ -1,0 +1,143 @@
+
+<template name="swimlaneHeader">
+  <div class="swimlane-header-wrap js-swimlane-header {{colorClass}}" title="{{_ 'rename'}}">
+    {{#if isTemplateContainer}}
+      {{> swimlaneFixedHeader this}}
+    {{else}}
+      {{> inlinedForm}}
+      {{> editSwimlaneTitleForm}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="swimlaneFixedHeader">
+  <div class="swimlane-header {{#if currentUser.isBoardMember}}js-open-inlined-form is-editable{{/if}}">
+    {{#if $eq title 'Card Templates'}}
+      {{_ 'card-templates-swimlane'}}
+    {{else if $eq title 'List Templates'}}
+      {{_ 'list-templates-swimlane'}}
+    {{else if $eq title 'Board Templates'}}
+      {{_ 'board-templates-swimlane'}}
+    {{else if $eq title 'Default'}}
+      {{_ 'defaultdefault'}}
+    {{else}}
+      {{> viewer}}
+      {{isTitleDefault title}}
+    {{/if}}
+  </div>
+  <div class="swimlane-header-menu">
+    {{#unless currentUser.isCommentOnly}}
+      <a class="fa fa-plus js-open-add-swimlane-menu swimlane-header-plus-icon" title="{{_ 'add-swimlane'}}"></a>
+      <a class="fa fa-navicon js-open-swimlane-menu" title="{{_ 'swimlaneActionPopup-title'}}"></a>
+      {{-- TODO: Collapse Swimlane: make button working, etc.
+      {{#unless collapsed}}
+        <a class="js-collapse-swimlane" title="{{_ 'collapse'}}">
+          <i class="fa fa-arrow-down swimlane-header-collapse-down"></i>
+          <i class="fa fa-arrow-up swimlane-header-collapse-up"></i>
+        </a>
+      {{/unless}}
+      {{#if collapsed}}
+        <a class="js-collapse-swimlane" title="{{_ 'uncollapse'}}">
+          <i class="fa fa-arrow-up swimlane-header-collapse-up"></i>
+          <i class="fa fa-arrow-down swimlane-header-collapse-down"></i>
+        </a>
+      {{/if}}
+      --}}
+      {{#unless isTouchScreen}}
+        {{#if isShowDesktopDragHandles}}
+          <a class="swimlane-header-handle handle fa fa-arrows js-swimlane-header-handle"></a>
+        {{/if}}
+      {{/unless}}
+      {{#if isTouchScreen}}
+        <a class="swimlane-header-miniscreen-handle handle fa fa-arrows js-swimlane-header-handle"></a>
+      {{/if}}
+    {{/unless}}
+  </div>
+</template>
+
+<template name="editSwimlaneTitleForm">
+  <div class="list-composer">
+    <input class="list-name-input full-line" type="text" value="{{isTitleDefault title}}" autofocus>
+    <div class="edit-controls clearfix">
+      <button class="primary confirm" type="submit">{{_ 'save'}}</button>
+      <a class="fa fa-times-thin js-close-inlined-form"></a>
+    </div>
+  </div>
+</template>
+
+<template name="swimlaneActionPopup">
+  {{#unless currentUser.isCommentOnly}}
+    <ul class="pop-over-list">
+      {{#if currentUser.isBoardAdmin}}
+        <li><a class="js-set-swimlane-color"><i class="fa fa-paint-brush"></i> {{_ 'select-color'}}</a></li>
+      {{/if}}
+      <li><a class="js-set-swimlane-height"><i class="fa fa-arrows-v"></i> {{_ 'set-swimlane-height'}}</a></li>
+    </ul>
+    {{#if currentUser.isBoardAdmin}}
+      {{#unless isTemplateContainer}}
+        <hr>
+        <ul class="pop-over-list">
+          <li><a class="js-close-swimlane"><i class="fa fa-arrow-right"></i><i class="fa fa-archive"></i> {{_ 'archive-swimlane'}}</a></li>
+          <li><a class="js-copy-swimlane"><i class="fa fa-copy"></i> {{_ 'copy-swimlane'}}</a></li>
+          <li><a class="js-move-swimlane"><i class="fa fa-arrow-up"></i> {{_ 'move-swimlane'}}</a></li>
+        </ul>
+      {{/unless}}
+    {{/if}}
+  {{/unless}}
+</template>
+
+<template name="swimlaneAddPopup">
+  {{#unless currentUser.isCommentOnly}}
+    <form>
+      <input class="swimlane-name-input full-line" type="text" placeholder="{{_ 'add-swimlane'}}" autocomplete="off" autofocus>
+      <div class="edit-controls clearfix">
+        <button class="primary confirm" type="submit">{{_ 'add'}}</button>
+        {{#unless currentBoard.isTemplatesBoard}}
+          {{#unless currentBoard.isTemplateBoard}}
+            <span class="quiet">{{_ 'or'}} <a class="js-swimlane-template">{{_ 'template'}}</a></span>
+          {{/unless}}
+        {{/unless}}
+      </div>
+    </form>
+  {{/unless}}
+</template>
+
+<template name="setSwimlaneColorPopup">
+  <form class="edit-label">
+    <div class="palette-colors">
+      {{#each colors}}
+        <span class="card-label palette-color js-palette-color card-details-{{color}}">
+          {{#if isSelected color}}
+            <i class="fa fa-check"></i>
+          {{/if}}
+        </span>
+      {{/each}}
+    </div>
+    <button class="primary confirm js-submit">{{_ 'save'}}</button>
+    <button class="js-remove-color negate wide right">{{_ 'unset-color'}}</button>
+  </form>
+</template>
+
+<template name="setSwimlaneHeightPopup">
+  <div id="js-swimlane-height-edit">
+    <label>{{_ 'set-swimlane-height-value'}}</label>
+    <label>-1</label>
+    <p>
+      <input class="swimlane-height-value" type="number" value="{{swimlaneHeightValue}}" min="100">
+      <input class="swimlane-height-apply" type="submit" value="{{_ 'apply'}}">
+      <input class="swimlane-height-error">
+    </p>
+  </div>
+</template>
+
+<template name="swimlaneHeightErrorPopup">
+  <div class="swimlane-height-invalid">
+    <p>{{_ 'swimlane-height-error-message'}} &gt;=100</p>
+    <button class="full js-back-view" type="submit">{{_ 'cancel'}}</button>
+  </div>
+</template>
+
+<template name="swimlaneDeletePopup">
+  <p>{{_ "swimlane-delete-pop"}}</p>
+  <button class="js-confirm negate full" type="submit">{{_ 'delete'}}</button>
+</template>

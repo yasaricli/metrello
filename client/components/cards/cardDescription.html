@@ -1,0 +1,8 @@
+
+<template name="descriptionForm">
+  <div class="new-description js-new-description {{#if descriptionFormIsOpen}}is-open{{/if}}">
+    <form class="js-new-description-form">
+      {{> editor class="js-new-description-input" autofocus="autofocus" content=(getUnsavedValue 'cardDescription' _id getDescription)}}
+    </form>
+  </div>
+</template>

@@ -1,0 +1,10 @@
+
+<template name="inlinedForm">
+  {{#if isOpen.get}}
+    <form class="inlined-form js-inlined-form {{classNames}}" id="{{id}}">
+      {{> Template.contentBlock}}
+    </form>
+  {{else}}
+    {{> Template.elseBlock}}
+  {{/if}}
+</template>
