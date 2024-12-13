@@ -238,15 +238,12 @@
 
       {{#if currentData.timeKey}}
         {{_ activity.activityType}}
-        {{" "}}
         <i title="{{currentData.timeValue}}" class="activity-meta">{{moment currentData.timeValue 'LLL'}}</i>
         {{#if currentData.timeOldValue}}
-          {{" "}}
-          {{{_ "previous_as"}}}
-          {{" "}}
+          {{_ "previous_as"}}
           <i title="{{currentData.timeOldValue}}" class="activity-meta">{{moment currentData.timeOldValue 'LLL'}}</i>
         {{/if}}
-        {{" @"}}
+        @
       {{else if currentData.timeValue}}
         {{_ activity.activityType currentData.timeValue}}
       {{/if}}

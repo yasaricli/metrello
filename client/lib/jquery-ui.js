@@ -1,20 +1,10 @@
-// https://bugs.jqueryui.com/ticket/15020
-// required for sortable
-require('jquery-ui/ui/widget')
-require('jquery-ui/ui/scroll-parent')
-require('jquery-ui/ui/data')
-require('jquery-ui/ui/widgets/mouse')
-require('jquery-ui/ui/ie')
-require('jquery-ui/ui/widgets/sortable')
+import $ from 'jquery';
+import 'jquery-ui/ui/widgets/sortable';
+import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/widgets/droppable';
 
-// required for draggable
-require('jquery-ui/ui/plugin')
-require('jquery-ui/ui/safe-active-element')
-require('jquery-ui/ui/safe-blur')
-require('jquery-ui/ui/widgets/draggable')
+// Import touch punch for mobile support
+import 'jquery-ui-touch-punch';
 
-// everything already required for droppable
-require('jquery-ui/ui/widgets/droppable')
-
-// enable touch on mobile
-require('@rwap/jquery-ui-touch-punch')
+// Initialize jQuery UI
+$.ui = $.ui || {};

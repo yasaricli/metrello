@@ -1,8 +1,3 @@
-
-<template name="cardDetailsPopup">
-  {{> cardDetails popupCard}}
-</template>
-
 <template name="cardDetails">
   {{> attachmentViewer}}
 
@@ -435,84 +430,14 @@
           {{#if showPlanningPokerButtons}}
             <div class="poker-result">
               <div class="poker-deck">
-                <div class="poker-card">
-                  <span class="inner js-poker js-poker-vote-one {{#if $eq pokerState 'one'}}poker-voted{{/if}}">{{_ 'poker-one'}}</span>
-                  {{#if $eq pokerState "one"}}
-                    <i class="fa fa-check"></i>
-                  {{/if}}
-                </div>
-                <div class="poker-deck">
+                {{#each pokerCard in pokerCards}}
                   <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-two {{#if $eq pokerState 'two'}}poker-voted{{/if}}">{{_ 'poker-two'}}</span>
-                    {{#if $eq pokerState "two"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
+                    <span class="inner js-poker js-poker-vote-{{pokerCard.value}}
+                      {{#if isPokerVoted pokerCard.value}}poker-voted{{/if}}">
+                      {{_ (concat 'poker-' pokerCard.value)}}
+                    </span>
                   </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-three {{#if $eq pokerState 'three'}}poker-voted{{/if}}">{{_ 'poker-three'}}</span>
-                    {{#if $eq pokerState "three"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-five {{#if $eq pokerState 'five'}}poker-voted{{/if}}">{{_ 'poker-five'}}</span>
-                    {{#if $eq pokerState "five"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-eight {{#if $eq pokerState 'eight'}}poker-voted{{/if}}">{{_ 'poker-eight'}}</span>
-                    {{#if $eq pokerState "eight"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-thirteen {{#if $eq pokerState 'thirteen'}}poker-voted{{/if}}">{{_ 'poker-thirteen'}}</span>
-                    {{#if $eq pokerState "thirteen"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-twenty {{#if $eq pokerState 'twenty'}}poker-voted{{/if}}">{{_ 'poker-twenty'}}</span>
-                    {{#if $eq pokerState "twenty"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-forty {{#if $eq pokerState 'forty'}}poker-voted{{/if}}">{{_ 'poker-forty'}}</span>
-                    {{#if $eq pokerState "forty"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-one-hundred {{#if $eq pokerState 'oneHundred'}}poker-voted{{/if}}">{{_ 'poker-oneHundred'}}</span>
-                    {{#if $eq pokerState "oneHundred"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
-                <div class="poker-deck">
-                  <div class="poker-card">
-                    <span class="inner js-poker js-poker-vote-unsure {{#if $eq pokerState 'unsure'}}poker-voted{{/if}}">{{_ 'poker-unsure'}}</span>
-                    {{#if $eq pokerState "unsure"}}
-                      <i class="fa fa-check"></i>
-                    {{/if}}
-                  </div>
-                </div>
+                {{/each}}
               </div>
               {{#if currentUser.isBoardAdmin}}
                 <button class="card-details-blue js-poker-finish {{#if $eq voteState false}}poker-voted{{/if}}">{{_ 'poker-finish'}}</button>
@@ -634,3 +559,344 @@
                   </div>
                   <div class="poker-table-row">
                     <div class="poker-table-cell">
+                      <button class="card-details-gray js-poker poker-card-result {{#if $eq pokerWinner 40}}winner{{else}}loser{{/if}}">{{_ 'poker-forty'}}</button>
+                    </div>
+                    <div class="poker-table-cell">{{pokerCountForty}}</div>
+                    <div class="poker-table-cell poker-table-cell-who">
+                      <div class="poker-result">
+                        {{#each m in pokerMemberForty}}
+                          <a class="name">{{> userAvatar userId=m._id noRemove=true}}</a>
+                        {{/each}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="poker-table-row">
+                    <div class="poker-table-cell">
+                      <button class="card-details-gray js-poker poker-card-result {{#if $eq pokerWinner 100}}winner{{else}}loser{{/if}}">{{_ 'poker-oneHundred'}}</button>
+                    </div>
+                    <div class="poker-table-cell">{{pokerCountOneHundred}}</div>
+                    <div class="poker-table-cell poker-table-cell-who">
+                      <div class="poker-result">
+                        {{#each m in pokerMemberOneHundred}}
+                          <a class="name">{{> userAvatar userId=m._id noRemove=true}}</a>
+                        {{/each}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="poker-table-row">
+                    <div class="poker-table-cell">
+                      <button class="card-details-gray js-poker poker-card-result {{#if $eq pokerWinner 'unsure'}}winner{{else}}loser{{/if}}">{{_ 'poker-unsure'}}</button>
+                    </div>
+                    <div class="poker-table-cell">{{pokerCountUnsure}}</div>
+                    <div class="poker-table-cell poker-table-cell-who">
+                      <div class="poker-result">
+                        {{#each m in pokerMemberUnsure}}
+                          <a class="name">{{> userAvatar userId=m._id noRemove=true}}</a>
+                        {{/each}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{/if}}
+        {{/if}}
+        <div class="card-details-items">
+          {{#if currentBoard.allowsLabels}}
+            <div class="card-details-item card-details-item-labels">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-tags"></i>
+                {{_ 'labels'}}
+              </h3>
+              <a class="{{#if canModifyCard}}js-add-labels{{else}}is-disabled{{/if}}" title="{{_ 'card-labels-title'}}">
+                {{#each labels}}
+                  <span class="card-label card-label-{{color}}" title="{{name}}">
+                    {{#viewer}}
+                      {{name}}
+                    {{/viewer}}
+                  </span>
+                {{/each}}
+              </a>
+              {{#if canModifyCard}}
+                {{#unless currentUser.isWorker}}
+                  <a class="card-label add-label js-add-labels" title="{{_ 'card-labels-title'}}">
+                    <i class="fa fa-plus"></i>
+                  </a>
+                {{/unless}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.hasAnyAllowsDate}}
+            <hr>
+          {{/if}}
+          {{#if currentBoard.allowsReceivedDate}}
+            <div class="card-details-item card-details-item-received">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-sign-out"></i>
+                {{_ 'card-received'}}
+              </h3>
+              {{#if getReceived}}
+                {{> cardReceivedDate}}
+              {{else}}
+                {{#if canModifyCard}}
+                  {{#unless currentUser.isWorker}}
+                    <a class="card-label add-label js-received-date">
+                      <i class="fa fa-plus"></i>
+                    </a>
+                  {{/unless}}
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsStartDate}}
+            <div class="card-details-item card-details-item-start">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-hourglass-start"></i>
+                {{_ 'card-start'}}
+              </h3>
+              {{#if getStart}}
+                {{> cardStartDate}}
+              {{else}}
+                {{#if canModifyCard}}
+                  {{#unless currentUser.isWorker}}
+                    <a class="card-label add-label js-start-date">
+                      <i class="fa fa-plus"></i>
+                    </a>
+                  {{/unless}}
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsDueDate}}
+            <div class="card-details-item card-details-item-due">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-sign-in"></i>
+                {{_ 'card-due'}}
+              </h3>
+              {{#if getDue}}
+                {{> cardDueDate}}
+              {{else}}
+                {{#if canModifyCard}}
+                  {{#unless currentUser.isWorker}}
+                    <a class="card-label add-label js-due-date">
+                      <i class="fa fa-plus"></i>
+                    </a>
+                  {{/unless}}
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsEndDate}}
+            <div class="card-details-item card-details-item-end">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-hourglass-end"></i>
+                {{_ 'card-end'}}
+              </h3>
+              {{#if getEnd}}
+                {{> cardEndDate}}
+              {{else}}
+                {{#if canModifyCard}}
+                  {{#unless currentUser.isWorker}}
+                    <a class="card-label add-label js-end-date">
+                      <i class="fa fa-plus"></i>
+                    </a>
+                  {{/unless}}
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.hasAnyAllowsUser}}
+            <hr>
+          {{/if}}
+          {{#if currentBoard.allowsCreator}}
+            <div class="card-details-item card-details-item-creator">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-user"></i>
+                {{_ 'creator'}}
+              </h3>
+              {{> userAvatar userId=userId noRemove=true}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsMembers}}
+            <div class="card-details-item card-details-item-members">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-users"></i>
+                {{_ 'members'}}
+              </h3>
+              {{#each userId in getMembers}}
+                {{> userAvatar userId=userId cardId=_id}}
+              {{/each}}
+              {{#if canModifyCard}}
+                {{#unless currentUser.isWorker}}
+                  <a class="member add-member card-details-item-add-button js-add-members" title="{{_ 'card-members-title'}}">
+                    <i class="fa fa-plus"></i>
+                  </a>
+                {{/unless}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsAssignee}}
+            <div class="card-details-item card-details-item-assignees">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-user"></i>
+                {{_ 'assignee'}}
+              </h3>
+              {{#each userId in getAssignees}}
+                {{> userAvatar userId=userId cardId=_id assignee=true}}
+              {{/each}}
+              {{#if canModifyCard}}
+                <a class="assignee add-assignee card-details-item-add-button js-add-assignees" title="{{_ 'assignee'}}">
+                  <i class="fa fa-plus"></i>
+                </a>
+              {{/if}}
+              {{#if currentUser.isWorker}}
+                {{#unless assigneeSelected}}
+                  <a class="assignee add-assignee card-details-item-add-button js-add-assignees" title="{{_ 'assignee'}}">
+                    <i class="fa fa-plus"></i>
+                  </a>
+                {{/unless}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsRequestedBy}}
+            <div class="card-details-item card-details-item-name">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-shopping-cart"></i>
+                {{_ 'requested-by'}}
+              </h3>
+              {{#if canModifyCard}}
+                {{#unless currentUser.isWorker}}
+                  {{#inlinedForm classNames="js-card-details-requester"}}
+                    {{> editCardRequesterForm}}
+                  {{/inlinedForm}}
+                {{else}}
+                  <a class="js-open-inlined-form">
+                    {{#if getRequestedBy}}
+                      {{#viewer}}
+                        {{getRequestedBy}}
+                      {{/viewer}}
+                    {{else}}
+                      {{_ 'add'}}
+                    {{/if}}
+                  </a>
+                {{/unless}}
+              {{else}}
+                {{#if getRequestedBy}}
+                  {{#viewer}}
+                    {{getRequestedBy}}
+                  {{/viewer}}
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsAssignedBy}}
+            <div class="card-details-item card-details-item-name">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-user-plus"></i>
+                {{_ 'assigned-by'}}
+              </h3>
+              {{#if canModifyCard}}
+                {{#unless currentUser.isWorker}}
+                  {{#inlinedForm classNames="js-card-details-assigner"}}
+                    {{> editCardAssignerForm}}
+                  {{/inlinedForm}}
+                {{else}}
+                  <a class="js-open-inlined-form">
+                    {{#if getAssignedBy}}
+                      {{#viewer}}
+                        {{getAssignedBy}}
+                      {{/viewer}}
+                    {{else}}
+                      {{_ 'add'}}
+                    {{/if}}
+                  </a>
+                {{/unless}}
+              {{else}}
+                {{#if getRequestedBy}}
+                  {{#viewer}}
+                    {{getAssignedBy}}
+                  {{/viewer}}
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if $or currentBoard.allowsCardSortingByNumber getSpentTime}}
+            <hr>
+          {{/if}}
+          {{#if currentBoard.allowsCardSortingByNumber}}
+            <div class="card-details-item card-details-sort-order">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-sort"></i>
+                {{_ 'sort'}}
+              </h3>
+              {{#if canModifyCard}}
+                {{#inlinedForm classNames="js-card-details-sort"}}
+                  {{> editCardSortOrderForm}}
+                {{/inlinedForm}}
+              {{else}}
+                <a class="js-open-inlined-form">
+                  {{#viewer}}
+                    {{sort}}
+                  {{/viewer}}
+                </a>
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if currentBoard.allowsShowLists}}
+            <div class="card-details-item card-details-show-lists">
+              <h3 class="card-details-item-title">
+                <i class="fa fa-list"></i>
+                {{_ 'list'}}
+              </h3>
+              <select class="js-select-card-details-lists" disabled="{{#unless canModifyCard}}disabled{{/unless}}">
+                {{#each currentBoard.lists}}
+                  <option value="{{_id}}" selected="{{#if isCurrentListId _id}}selected{{/if}}">{{title}}</option>
+                {{/each}}
+              </select>
+            </div>
+          {{/if}}
+          {{#if getSpentTime}}
+            <div class="card-details-item card-details-item-spent">
+              <h3 class="card-details-item-title">
+                {{#if getIsOvertime}}
+                  {{_ 'overtime-hours'}}
+                {{else}}
+                  {{_ 'spent-time-hours'}}
+                {{/if}}
+              </h3>
+              {{> cardSpentTime}}
+            </div>
+          {{/if}}
+          {{#if customFieldsWD}}
+            {{#unless customFieldsGrid}}
+              <hr>
+            {{/unless}}
+            {{#each customFieldsWD}}
+              {{#if customFieldsGrid}}
+                <hr>
+              {{/if}}
+              <div class="card-details-item card-details-item-customfield">
+                <h3 class="card-details-item-title">
+                  <i class="fa fa-list-alt"></i>
+                  {{definition.name}}
+                </h3>
+                {{> cardCustomField}}
+              </div>
+            {{/each}}
+            {{#if $gt customFieldsWD.length 1}}
+              <div class="material-toggle-switch" title="{{_ 'change'}} {{_ 'custom-fields'}} {{_ 'layout'}}">
+                {{#if customFieldsGrid}}
+                  <input class="toggle-switch" type="checkbox" id="toggleCustomFieldsGridButton" checked="checked">
+                {{else}}
+                  <input class="toggle-switch" type="checkbox" id="toggleCustomFieldsGridButton">
+                {{/if}}
+                <label class="toggle-label" for="toggleCustomFieldsGridButton"></label>
+              </div>
+            {{/if}}
+            <a class="fa fa-plus js-custom-fields card-details-item custom-fields" title="{{_ 'custom-fields'}}"></a>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

@@ -1,4 +1,3 @@
-
 <template name="customFieldsSidebar">
   <ul class="sidebar-list">
     {{#each customFields}}
@@ -40,7 +39,7 @@
 
     <label>
       {{_ 'type'}}
-      <select class="js-field-type" {{#if _id}}disabled{{/if}}>
+      <select class="js-field-type" disabled={{isDisabled}}>
         {{#each types}}
           {{#if selected}}
             <option value="{{value}}" selected="selected">{{name}}</option>

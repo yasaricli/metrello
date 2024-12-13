@@ -1,4 +1,3 @@
-
 <template name="boardList">
   <div class="wrapper">
     <ul class="AllBoardTeamsOrgs">
@@ -41,109 +40,82 @@
           {{_ 'add-board'}}
         </a>
       </li>
-      {{#each boards}}
-        <li class="{{_id}} {{#if isStarred}}starred{{/if}} {{colorClass}} js-board">
-          {{#if isInvited}}
-            <div class="board-list-item">
-              <span class="details">
-                <span class="board-list-item-name">{{title}}</span>
-                <i class="fa js-star-board fa-star{{#if isStarred}} is-star-active{{else}}-o{{/if}}" title="{{_ 'star-board-title'}}"></i>
-                <p class="board-list-item-desc">{{_ 'just-invited'}}</p>
-                <button class="js-accept-invite primary">{{_ 'accept'}}</button>
-                <button class="js-decline-invite">{{_ 'decline'}}</button>
-              </span>
-            </div>
-          {{else}}
-            {{#if $eq type "template-container"}}
-              <a class="js-open-board template-container board-list-item" href="{{pathFor 'board' id=_id slug=slug}}">
-                <span class="details">
-                  <span class="board-list-item-name" title="{{_ 'template-container'}}">
-                    {{> viewer}}
-                    {{title}}
-                  </span>
-                  <i class="fa js-star-board fa-star{{#if isStarred}} is-star-active{{else}}-o{{/if}}" title="{{_ 'star-board-title'}}"></i>
-                  <p class="board-list-item-desc">
-                    {{> viewer}}
-                    {{description}}
-                  </p>
-                  {{#if hasSpentTimeCards}}
-                    <i class="fa js-has-spenttime-cards fa-circle{{#if hasOvertimeCards}} has-overtime-card-active{{else}} no-overtime-card-active{{/if}}" title="{{#if hasOvertimeCards}}{{_ 'has-overtime-cards'}}{{else}}{{_ 'has-spenttime-cards'}}{{/if}}"></i>
-                  {{/if}}
-                  {{#if isTouchScreenOrShowDesktopDragHandles}}
-                    <i class="fa board-handle fa-arrows" title="{{_ 'drag-board'}}"></i>
-                  {{else}}
-                    {{#if isSandstorm}}
-                      <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
-                      <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
-                    {{else if isAdministrable}}
-                      <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
-                      <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
-                    {{else if currentUser.isAdmin}}
-                      <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
-                      <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
-                    {{/if}}
-                  {{/if}}
-                </span>
-              </a>
-            {{else}}
-              <a class="js-open-board board-list-item" href="{{pathFor 'board' id=_id slug=slug}}">
-                <span class="details">
-                  <span class="board-list-item-name" title="{{_ 'board-drag-drop-reorder-or-click-open'}}">
-                    {{> viewer}}
-                    {{title}}
-                  </span>
-                  {{#unless currentSetting.hideBoardMemberList}}
-                    {{#if allowsBoardMemberList}}
-                      <div class="minicard-members">
-                        {{#each boardMembers _id}}
-                          <a class="name">
-                            {{> userAvatar userId=member noRemove=true}}
-                          </a>
-                        {{/each}}
-                      </div>
-                    {{/if}}
-                  {{/unless}}
-                  {{#unless currentSetting.hideCardCounterList}}
-                    {{#if allowsCardCounterList}}
-                      <div class="minicard-lists flex flex-wrap">
-                        {{#each boardLists _id}}
-                          <div class="item">
-                            {{list}}
-                          </div>
-                        {{/each}}
-                      </div>
-                    {{/if}}
-                  {{/unless}}
-                  <i class="fa js-star-board fa-star{{#if isStarred}} is-star-active{{else}}-o{{/if}}" title="{{_ 'star-board-title'}}"></i>
-                  <p class="board-list-item-desc">
-                    {{> viewer}}
-                    {{description}}
-                  </p>
-                  {{#if hasSpentTimeCards}}
-                    <i class="fa js-has-spenttime-cards fa-circle{{#if hasOvertimeCards}} has-overtime-card-active{{else}} no-overtime-card-active{{/if}}" title="{{#if hasOvertimeCards}}{{_ 'has-overtime-cards'}}{{else}}{{_ 'has-spenttime-cards'}}"></i>
-                  {{/if}}
-                  {{#if isTouchScreenOrShowDesktopDragHandles}}
-                    <i class="fa board-handle fa-arrows" title="{{_ 'drag-board'}}"></i>
-                  {{else}}
-                    {{#if isSandstorm}}
-                      <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
-                      <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
-                    {{else if isAdministrable}}
-                      <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
-                      <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
-                    {{else if currentUser.isAdmin}}
-                      <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
-                      <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
-                    {{/if}}
-                  {{/if}}
-                </span>
-              </a>
-            {{/if}}
-          {{/if}}
+      {{#each board in boards}}
+        <li class="{{board._id}} {{#if board.isStarred}}starred{{/if}} {{board.colorClass}} js-board">
+          {{> boardListItem board=board}}
         </li>
       {{/each}}
     </ul>
   </div>
+</template>
+
+<template name="boardListItem">
+  {{#if board.isInvited}}
+    <div class="board-list-item">
+      <span class="details">
+        <span class="board-list-item-name">{{board.title}}</span>
+        <i class="fa js-star-board fa-star{{#if board.isStarred}} is-star-active{{else}}-o{{/if}}" title="{{_ 'star-board-title'}}"></i>
+        <p class="board-list-item-desc">{{_ 'just-invited'}}</p>
+        <button class="js-accept-invite primary">{{_ 'accept'}}</button>
+        <button class="js-decline-invite">{{_ 'decline'}}</button>
+      </span>
+    </div>
+  {{else}}
+    <a class="js-open-board board-list-item" href="{{pathFor 'board' id=board._id slug=board.slug}}">
+      <span class="details">
+        <span class="board-list-item-name" title="{{_ 'board-drag-drop-reorder-or-click-open'}}">
+          {{board.title}}
+        </span>
+        {{#unless currentSetting.hideBoardMemberList}}
+          {{#if board.allowsBoardMemberList}}
+            <div class="minicard-members">
+              {{#each boardMembers board._id}}
+                <a class="name">
+                  {{> userAvatar userId=member noRemove=true}}
+                </a>
+              {{/each}}
+            </div>
+          {{/if}}
+        {{/unless}}
+        {{#unless currentSetting.hideCardCounterList}}
+          {{#if board.allowsCardCounterList}}
+            <div class="minicard-lists flex flex-wrap">
+              {{#each boardLists board._id}}
+                <div class="item">
+                  {{list}}
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+        {{/unless}}
+        <i class="fa js-star-board fa-star{{#if board.isStarred}} is-star-active{{else}}-o{{/if}}" title="{{_ 'star-board-title'}}"></i>
+        <p class="board-list-item-desc">
+          {{board.description}}
+        </p>
+        {{#if board.hasSpentTimeCards}}
+          <i class="fa js-has-spenttime-cards fa-circle{{#if board.hasOvertimeCards}} has-overtime-card-active{{else}} no-overtime-card-active{{/if}}" title="{{#if board.hasOvertimeCards}}{{_ 'has-overtime-cards'}}{{else}}{{_ 'has-spenttime-cards'}}"></i>
+        {{/if}}
+        {{#if isTouchScreenOrShowDesktopDragHandles}}
+          <i class="fa board-handle fa-arrows" title="{{_ 'drag-board'}}"></i>
+        {{else}}
+          {{#if isSandstorm}}
+            <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
+            <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
+          {{else}}
+            {{#if isAdministrable}}
+              <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
+              <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
+            {{else}}
+              {{#if currentUser.isAdmin}}
+                <i class="fa js-clone-board fa-clone" title="{{_ 'duplicate-board'}}"></i>
+                <i class="fa js-archive-board fa-archive" title="{{_ 'archive-board'}}"></i>
+              {{/if}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      </span>
+    </a>
+  {{/if}}
 </template>
 
 <template name="boardListHeaderBar">

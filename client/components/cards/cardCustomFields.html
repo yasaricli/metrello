@@ -1,4 +1,3 @@
-
 <template name="cardCustomFieldsPopup">
   <ul class="pop-over-list">
     {{#each board.customFields}}
@@ -126,7 +125,7 @@
     {{#inlinedForm classNames="js-card-customfield-dropdown"}}
       <select class="inline">
         {{#each items}}
-          <option value="{{_id}}" {{#if $eq ../data.value _id}}selected="selected"{{/if}}>
+          <option value="{{_id}}" {{selectedIf ../data.value _id}}>
             {{#viewer}}{{name}}{{/viewer}}
           </option>
         {{/each}}

@@ -326,6 +326,19 @@ BlazeComponent.extendComponent({
   }
 }).register('editor');
 
+Template.editor.helpers({
+  textareaAttributes() {
+    const attributes = {
+      id: this.id,
+    };
+    if (this.autofocus) {
+      attributes.autofocus = 'autofocus';
+    }
+    return attributes;
+  },
+  // ...existing code...
+});
+
 import DOMPurify from 'dompurify';
 
 // Additional  safeAttrValue function to allow for other specific protocols

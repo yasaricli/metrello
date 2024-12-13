@@ -43,7 +43,7 @@ do
 			# - sudo -E uses existing environment variables, so that this can be used in build script:
 			#   https://github.com/tj/n/issues/584#issuecomment-523640742
 			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			sudo -E n 22.11.0
+			sudo -E n 22.12.0
 			#sudo npm -g uninstall node-pre-gyp
 			# Latest fibers for Meteor sudo mkdir -p /usr/local/lib/node_modules/fibers/.node-gyp sudo npm -g install fibers
 			#sudo npm -g install @mapbox/node-pre-gyp
@@ -55,7 +55,7 @@ do
 			brew install npm
 			npm -g install n
 			#export N_NODE_MIRROR=https://github.com/wekan/node-v14-esm/releases/download
-			n 22.11.0
+			n 22.12.0
 			#npm -g uninstall node-pre-gyp
 			#npm -g install @mapbox/node-pre-gyp
 			npm -g install meteor
@@ -98,9 +98,9 @@ do
 		meteor npm install --omit=dev
 		meteor build .build --directory --platforms=web.browser
 		rm -rf .build/bundle/programs/web.browser.legacy
-		(cd .build/bundle/programs/server && rm -rf node_modules && chmod u+w *.json && meteor npm install --production)
+		(cd .build/bundle/programs/server && rm -rf node_modules && chmod u+w *.json && meteor npm install --omit=dev)
                 #(cd .build/bundle/programs/server/node_modules/fibers && node build.js)
-		(cd .build/bundle/programs/server/npm/node_modules/meteor/accounts-password && meteor npm remove bcrypt && meteor npm install bcrypt --production)
+		(cd .build/bundle/programs/server/npm/node_modules/meteor/accounts-password && meteor npm remove bcrypt && meteor npm install bcrypt --omit=dev)
 		# Cleanup
 		cd .build/bundle
 		find . -type d -name '*-garbage*' | xargs rm -rf

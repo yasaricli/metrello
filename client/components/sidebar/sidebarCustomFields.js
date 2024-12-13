@@ -180,6 +180,10 @@ const CreateCustomFieldPopup = BlazeComponent.extendComponent({
     return settings;
   },
 
+  isDisabled() {
+    return !!this.data()._id;
+  },
+
   events() {
     return [
       {

@@ -1,4 +1,3 @@
-
 <template name="swimlane">
   <div class="swimlane nodragscroll">
     {{> swimlaneHeader}}
@@ -76,7 +75,7 @@
     {{#unless currentUser.isCommentOnly}}
       <div class="list list-composer js-list-composer {{#if isMiniScreen}}mini-list{{/if}}">
         <div class="list-header-add">
-          {{> inlinedForm autoclose=false}}
+          {{#inlinedForm}}
             <input class="list-name-input full-line" type="text" placeholder="{{_ 'add-list'}}" autocomplete="off" autofocus>
             {{#if currentBoard.getLastList}}
               {{_ 'add-after-list'}}

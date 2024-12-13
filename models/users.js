@@ -785,7 +785,7 @@ Users.helpers({
   },
   getListWidth(boardId, listId) {
     const listWidths = this.getListWidths();
-    if (listWidths[boardId] && listWidths[boardId][listId]) {
+    if (listWidths[boardId] && listWidths[listId]) {
       return listWidths[boardId][listId];
     } else {
       return 270; //TODO(mark-i-m): default?
@@ -797,7 +797,7 @@ Users.helpers({
   },
   getListConstraint(boardId, listId) {
     const listConstraints = this.getListConstraints();
-    if (listConstraints[boardId] && listConstraints[boardId][listId]) {
+    if (listConstraints[boardId] && listConstraints[listId]) {
       return listConstraints[boardId][listId];
     } else {
       return 550;
@@ -810,7 +810,7 @@ Users.helpers({
   },
   getSwimlaneHeight(boardId, listId) {
     const swimlaneHeights = this.getSwimlaneHeights();
-    if (swimlaneHeights[boardId] && swimlaneHeights[boardId][listId]) {
+    if (swimlaneHeights[boardId] && swimlaneHeights[listId]) {
       return swimlaneHeights[boardId][listId];
     } else {
       return -1;
@@ -1947,127 +1947,72 @@ if (Meteor.isServer) {
     return fakeUserId.get() || getUserId();
   };
   if (!isSandstorm) {
-    Users.after.insert((userId, doc) => {
+    Users.after.insert(async function (userId, doc) {
       const fakeUser = {
         extendAutoValueContext: {
           userId: doc._id,
         },
       };
 
-      fakeUserId.withValue(doc._id, () => {
-        /*
-
-        // Insert the Welcome Board
-        Boards.insert({
-          title: TAPi18n.__('welcome-board'),
+      const fakeUserId = new Meteor.EnvironmentVariable();
+      fakeUserId.withValue(doc._id, async () => {
+        const boardId = await Boards.insert({
+          title: TAPi18n.__('templates'),
           permission: 'private',
-        }, fakeUser, (err, boardId) => {
+          type: 'template-container',
+        }, fakeUser);
 
-          Swimlanes.insert({
-            title: TAPi18n.__('welcome-swimlane'),
-            boardId,
-            sort: 1,
-          }, fakeUser);
-
-          ['welcome-list1', 'welcome-list2'].forEach((title, titleIndex) => {
-            Lists.insert({title: TAPi18n.__(title), boardId, sort: titleIndex}, fakeUser);
-          });
+        await Users.update(fakeUserId.get(), {
+          $set: {
+            'profile.templatesBoardId': boardId,
+          },
         });
-        */
 
-        // Insert Template Container
-        const Future = require('fibers/future');
-        const future1 = new Future();
-        const future2 = new Future();
-        const future3 = new Future();
-        Boards.insert(
-          {
-            title: TAPi18n.__('templates'),
-            permission: 'private',
-            type: 'template-container',
+        const cardTemplatesSwimlaneId = await Swimlanes.insert({
+          title: TAPi18n.__('card-templates-swimlane'),
+          boardId,
+          sort: 1,
+          type: 'template-container',
+        }, fakeUser);
+
+        await Users.update(fakeUserId.get(), {
+          $set: {
+            'profile.cardTemplatesSwimlaneId': cardTemplatesSwimlaneId,
           },
-          fakeUser,
-          (err, boardId) => {
-            // Insert the reference to our templates board
-            Users.update(fakeUserId.get(), {
-              $set: {
-                'profile.templatesBoardId': boardId,
-              },
-            });
+        });
 
-            // Insert the card templates swimlane
-            Swimlanes.insert(
-              {
-                title: TAPi18n.__('card-templates-swimlane'),
-                boardId,
-                sort: 1,
-                type: 'template-container',
-              },
-              fakeUser,
-              (err, swimlaneId) => {
-                // Insert the reference to out card templates swimlane
-                Users.update(fakeUserId.get(), {
-                  $set: {
-                    'profile.cardTemplatesSwimlaneId': swimlaneId,
-                  },
-                });
-                future1.return();
-              },
-            );
+        const listTemplatesSwimlaneId = await Swimlanes.insert({
+          title: TAPi18n.__('list-templates-swimlane'),
+          boardId,
+          sort: 2,
+          type: 'template-container',
+        }, fakeUser);
 
-            // Insert the list templates swimlane
-            Swimlanes.insert(
-              {
-                title: TAPi18n.__('list-templates-swimlane'),
-                boardId,
-                sort: 2,
-                type: 'template-container',
-              },
-              fakeUser,
-              (err, swimlaneId) => {
-                // Insert the reference to out list templates swimlane
-                Users.update(fakeUserId.get(), {
-                  $set: {
-                    'profile.listTemplatesSwimlaneId': swimlaneId,
-                  },
-                });
-                future2.return();
-              },
-            );
-
-            // Insert the board templates swimlane
-            Swimlanes.insert(
-              {
-                title: TAPi18n.__('board-templates-swimlane'),
-                boardId,
-                sort: 3,
-                type: 'template-container',
-              },
-              fakeUser,
-              (err, swimlaneId) => {
-                // Insert the reference to out board templates swimlane
-                Users.update(fakeUserId.get(), {
-                  $set: {
-                    'profile.boardTemplatesSwimlaneId': swimlaneId,
-                  },
-                });
-                future3.return();
-              },
-            );
+        await Users.update(fakeUserId.get(), {
+          $set: {
+            'profile.listTemplatesSwimlaneId': listTemplatesSwimlaneId,
           },
-        );
-        // HACK
-        future1.wait();
-        future2.wait();
-        future3.wait();
-        // End of Insert Template Container
+        });
+
+        const boardTemplatesSwimlaneId = await Swimlanes.insert({
+          title: TAPi18n.__('board-templates-swimlane'),
+          boardId,
+          sort: 3,
+          type: 'template-container',
+        }, fakeUser);
+
+        await Users.update(fakeUserId.get(), {
+          $set: {
+            'profile.boardTemplatesSwimlaneId': boardTemplatesSwimlaneId,
+          },
+        });
       });
     });
   }
 
-  Users.after.insert((userId, doc) => {
+  Users.after.insert(async function (userId, doc) {
     // HACK
-    doc = ReactiveCache.getUser(doc._id);
+    doc = await ReactiveCache.getUser(doc._id);
     if (doc.createdThroughApi) {
       // The admin user should be able to create a user despite disabling registration because
       // it is two different things (registration and creation).
@@ -2075,7 +2020,7 @@ if (Meteor.isServer) {
       // the disableRegistration check.
       // Issue : https://github.com/wekan/wekan/issues/1232
       // PR    : https://github.com/wekan/wekan/pull/1251
-      Users.update(doc._id, {
+      await Users.update(doc._id, {
         $set: {
           createdThroughApi: '',
         },
@@ -2084,19 +2029,18 @@ if (Meteor.isServer) {
     }
 
     //invite user to corresponding boards
-    const disableRegistration = ReactiveCache.getCurrentSetting().disableRegistration;
+    const disableRegistration = await ReactiveCache.getCurrentSetting().disableRegistration;
     // If ldap, bypass the inviation code if the self registration isn't allowed.
     // TODO : pay attention if ldap field in the user model change to another content ex : ldap field to connection_type
     if (doc.authenticationMethod !== 'ldap' && disableRegistration) {
       let invitationCode = null;
       if (doc.authenticationMethod.toLowerCase() == 'oauth2') {
-        // OIDC authentication mode
-        invitationCode = ReactiveCache.getInvitationCode({
+        invitationCode = await ReactiveCache.getInvitationCode({
           email: doc.emails[0].address.toLowerCase(),
           valid: true,
         });
       } else {
-        invitationCode = ReactiveCache.getInvitationCode({
+        invitationCode = await ReactiveCache.getInvitationCode({
           code: doc.profile.icode,
           valid: true,
         });
@@ -2104,20 +2048,20 @@ if (Meteor.isServer) {
       if (!invitationCode) {
         throw new Meteor.Error('error-invitation-code-not-exist');
       } else {
-        invitationCode.boardsToBeInvited.forEach((boardId) => {
-          const board = ReactiveCache.getBoard(boardId);
-          board.addMember(doc._id);
-        });
+        for (const boardId of invitationCode.boardsToBeInvited) {
+          const board = await ReactiveCache.getBoard(boardId);
+          await board.addMember(doc._id);
+        }
         if (!doc.profile) {
           doc.profile = {};
         }
         doc.profile.invitedBoards = invitationCode.boardsToBeInvited;
-        Users.update(doc._id, {
+        await Users.update(doc._id, {
           $set: {
             profile: doc.profile,
           },
         });
-        InvitationCodes.update(invitationCode._id, {
+        await InvitationCodes.update(invitationCode._id, {
           $set: {
             valid: false,
           },
