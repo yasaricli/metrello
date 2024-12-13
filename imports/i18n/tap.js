@@ -1,7 +1,7 @@
 import { ReactiveCache } from '/imports/reactiveCache';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
-import Translation from '/models/translation';
+import { Translations } from '/models/translation';
 import i18next from 'i18next';
 import sprintf from 'i18next-sprintf-postprocessor';
 import languages from './languages';
@@ -14,27 +14,31 @@ export const TAPi18n = {
   i18n: null,
   current: new ReactiveVar(DEFAULT_LANGUAGE),
   async init() {
-    this.i18n = i18next.createInstance().use(sprintf);
-    await this.i18n.init({
-      fallbackLng: DEFAULT_LANGUAGE,
-      cleanCode: true,
-      // Show translations debug messages only when DEBUG=true
-      // OLD: debug: Meteor.isDevelopment,
-      debug: process.env.DEBUG === 'true',
-      supportedLngs: Object.values(languages).map(({ tag }) => tag),
-      ns: DEFAULT_NAMESPACE,
-      defaultNs: DEFAULT_NAMESPACE,
-      postProcess: ["sprintf"],
-      // Default values to match tap:i18n behaviour
-      interpolation: {
-        prefix: '__',
-        suffix: '__',
-        escapeValue: false,
-      },
-      resources: {},
-    });
-    // Load the current language data
-    await TAPi18n.loadLanguage(DEFAULT_LANGUAGE);
+    try {
+      this.i18n = i18next.createInstance().use(sprintf);
+      await this.i18n.init({
+        fallbackLng: DEFAULT_LANGUAGE,
+        cleanCode: true,
+        // Show translations debug messages only when DEBUG=true
+        debug: process.env.DEBUG === 'true',
+        supportedLngs: Object.values(languages).map(({ tag }) => tag),
+        ns: DEFAULT_NAMESPACE,
+        defaultNs: DEFAULT_NAMESPACE,
+        postProcess: ["sprintf"],
+        // Default values to match tap:i18n behaviour
+        interpolation: {
+          prefix: '__',
+          suffix: '__',
+          escapeValue: false,
+        },
+        resources: {},
+      });
+      // Load the current language data
+      await TAPi18n.loadLanguage(DEFAULT_LANGUAGE);
+    } catch (err) {
+      console.error('Error initializing i18n:', err);
+      throw err;
+    }
   },
   isLanguageSupported(language) {
     return Object.values(languages).some(({ tag }) => tag === language);

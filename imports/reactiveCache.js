@@ -1,4 +1,5 @@
 import { DataCache } from '@wekanteam/meteor-reactive-cache';
+import { Translation } from '../models/translation';
 
 // Server isn't reactive, so search for the data always.
 const ReactiveCacheServer = {
@@ -1547,3 +1548,10 @@ const ReactiveMiniMongoIndex = {
 }
 
 export { ReactiveCache, ReactiveMiniMongoIndex };
+
+export const getTranslations = () => {
+  if (!Translation) {
+    return [];
+  }
+  return Translation.find({}).fetch();
+};

@@ -1,79 +1,63 @@
-ImpersonatedUsers = new Mongo.Collection('impersonatedUsers');
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'simpl-schema';
 
-/**
- * A Impersonated User in wekan
- */
-ImpersonatedUsers.attachSchema(
-  new SimpleSchema({
-    adminId: {
-      /**
-       * the admin userid that impersonates
-       */
-      type: String,
-      optional: true,
-    },
-    userId: {
-      /**
-       * the userId that is impersonated
-       */
-      type: String,
-      optional: true,
-    },
-    boardId: {
-      /**
-       * the boardId that was exported by anyone that has sometime impersonated
-       */
-      type: String,
-      optional: true,
-    },
-    attachmentId: {
-      /**
-       * the attachmentId that was exported by anyone that has sometime impersonated
-       */
-      type: String,
-      optional: true,
-    },
-    reason: {
-      /**
-       * the reason why impersonated, like exportJSON
-       */
-      type: String,
-      optional: true,
-    },
-    createdAt: {
-      /**
-       * creation date of the impersonation
-       */
-      type: Date,
-      // eslint-disable-next-line consistent-return
-      autoValue() {
-        if (this.isInsert) {
-          return new Date();
-        } else if (this.isUpsert) {
-          return {
-            $setOnInsert: new Date(),
-          };
-        } else {
-          this.unset();
-        }
-      },
-    },
-    modifiedAt: {
-      /**
-       * modified date of the impersonation
-       */
-      type: Date,
-      denyUpdate: false,
-      // eslint-disable-next-line consistent-return
-      autoValue() {
-        if (this.isInsert || this.isUpsert || this.isUpdate) {
-          return new Date();
-        } else {
-          this.unset();
-        }
-      },
-    },
-  }),
-);
+export const ImpersonatedUsers = new Mongo.Collection('impersonated_users');
+
+if (Meteor.isServer) {
+  ImpersonatedUsers.createIndex({ userId: 1 }, { unique: true });
+}
+
+const ImpersonatedUsersSchema = new SimpleSchema({
+  type: {
+    type: String,
+    optional: true,
+    defaultValue: 'user'
+  },
+  adminId: {
+    type: String,
+    optional: true,
+  },
+  userId: {
+    type: String,
+    optional: true,
+  },
+  boardId: {
+    type: String,
+    optional: true,
+  },
+  attachmentId: {
+    type: String,
+    optional: true,
+  },
+  reason: {
+    type: String,
+    optional: true,
+  },
+  createdAt: {
+    type: Date,
+    autoValue() {
+      if (this.isInsert) {
+        return new Date();
+      } else if (this.isUpsert) {
+        return { $setOnInsert: new Date() };
+      } else {
+        this.unset();
+      }
+    }
+  },
+  modifiedAt: {
+    type: Date,
+    autoValue() {
+      if (this.isInsert || this.isUpsert || this.isUpdate) {
+        return new Date();
+      } else {
+        this.unset();
+      }
+    }
+  }
+});
+
+ImpersonatedUsers.attachSchema(ImpersonatedUsersSchema);
 
 export default ImpersonatedUsers;
