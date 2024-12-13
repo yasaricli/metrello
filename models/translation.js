@@ -1,34 +1,22 @@
-Translation = new Mongo.Collection('translation');
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'simpl-schema';
 
-/**
- * A Organization User in wekan
- */
+const Translation = new Mongo.Collection('translation');
+
 Translation.attachSchema(
   new SimpleSchema({
     language: {
-      /**
-       * the language
-       */
       type: String,
       max: 5,
     },
     text: {
-      /**
-       * the text
-       */
       type: String,
     },
     translationText: {
-      /**
-       * the translation text
-       */
       type: String,
       optional: true,
     },
     createdAt: {
-      /**
-       * creation date of the translation custom string
-       */
       type: Date,
       // eslint-disable-next-line consistent-return
       autoValue() {
@@ -43,7 +31,6 @@ Translation.attachSchema(
     },
     modifiedAt: {
       type: Date,
-      denyUpdate: false,
       // eslint-disable-next-line consistent-return
       autoValue() {
         if (this.isInsert || this.isUpsert || this.isUpdate) {
@@ -56,38 +43,10 @@ Translation.attachSchema(
   }),
 );
 
-if (Meteor.isServer) {
-  Translation.allow({
-    insert(userId, doc) {
-      const user = ReactiveCache.getUser(userId) || ReactiveCache.getCurrentUser();
-      if (user?.isAdmin)
-        return true;
-      if (!user) {
-        return false;
-      }
-      return doc._id === userId;
-    },
-    update(userId, doc) {
-      const user = ReactiveCache.getUser(userId) || ReactiveCache.getCurrentUser();
-      if (user?.isAdmin)
-        return true;
-      if (!user) {
-        return false;
-      }
-      return doc._id === userId;
-    },
-    remove(userId, doc) {
-      const user = ReactiveCache.getUser(userId) || ReactiveCache.getCurrentUser();
-      if (user?.isAdmin)
-        return true;
-      if (!user) {
-        return false;
-      }
-      return doc._id === userId;
-    },
-    fetch: [],
-  });
+// Remove deprecated allow rules
 
+// Define Meteor methods instead of allow rules
+if (Meteor.isServer) {
   Meteor.methods({
     setCreateTranslation(
       language,

@@ -1,5 +1,5 @@
 import { ReactiveCache, ReactiveMiniMongoIndex } from '/imports/reactiveCache';
-import { SyncedCron } from 'meteor/percolate:synced-cron';
+import { SyncedCron } from 'meteor/quave:synced-cron';
 import { TAPi18n } from '/imports/i18n';
 import ImpersonatedUsers from './impersonatedUsers';
 import { Index, MongoDBEngine } from 'meteor/easy:search';

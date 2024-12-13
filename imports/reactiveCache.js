@@ -1,7 +1,7 @@
 import { DataCache } from '@wekanteam/meteor-reactive-cache';
 
 // Server isn't reactive, so search for the data always.
-ReactiveCacheServer = {
+const ReactiveCacheServer = {
   getBoard(idOrFirstObjectSelector = {}, options = {}) {
     const ret = Boards.findOne(idOrFirstObjectSelector, options);
     return ret;
@@ -268,7 +268,7 @@ ReactiveCacheServer = {
 // only the Client is reactive
 // saving the result has a big advantage if the query is big and often searched for the same data again and again
 // if the data is changed in the client, the data is saved to the server and depending code is reactive called again
-ReactiveCacheClient = {
+const ReactiveCacheClient = {
   getBoard(idOrFirstObjectSelector = {}, options = {}) {
     const idOrFirstObjectSelect = {idOrFirstObjectSelector, options}
     if (!this.__board) {
@@ -891,7 +891,7 @@ ReactiveCacheClient = {
 // having this class here has several advantages:
 // - The Programmer hasn't to care about in which context he call's this class
 // - having all queries together in 1 class to make it possible to see which queries in Wekan happens, e.g. with console.log
-ReactiveCache = {
+const ReactiveCache = {
   getBoard(idOrFirstObjectSelector = {}, options = {}) {
     let ret;
     if (Meteor.isServer) {
@@ -1319,7 +1319,7 @@ ReactiveCache = {
 }
 
 // Server isn't reactive, so search for the data always.
-ReactiveMiniMongoIndexServer = {
+const ReactiveMiniMongoIndexServer = {
   getSubTasksWithParentId(parentId, addSelect = {}, options = {}) {
     let ret = []
     if (parentId) {
@@ -1373,7 +1373,7 @@ ReactiveMiniMongoIndexServer = {
 }
 
 // Client side little MiniMongo DB "Index"
-ReactiveMiniMongoIndexClient = {
+const ReactiveMiniMongoIndexClient = {
   getSubTasksWithParentId(parentId, addSelect = {}, options = {}) {
     let ret = []
     if (parentId) {
@@ -1498,7 +1498,7 @@ ReactiveMiniMongoIndexClient = {
 // having this class here has several advantages:
 // - The Programmer hasn't to care about in which context he call's this class
 // - having all queries together in 1 class to make it possible to see which queries in Wekan happens, e.g. with console.log
-ReactiveMiniMongoIndex = {
+const ReactiveMiniMongoIndex = {
   getSubTasksWithParentId(parentId, addSelect = {}, options = {}) {
     let ret;
     if (Meteor.isServer) {

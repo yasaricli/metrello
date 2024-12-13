@@ -88,12 +88,12 @@
             </div>
           {{/if}}
         {{/unless}}
-        <i class="fa js-star-board fa-star{{#if board.isStarred}} is-star-active{{else}}-o{{/if}}" title="{{_ 'star-board-title'}}"></i>
+        <i class="fa js-star-board {{starClass}}" title="{{_ 'star-board-title'}}"></i>
         <p class="board-list-item-desc">
           {{board.description}}
         </p>
         {{#if board.hasSpentTimeCards}}
-          <i class="fa js-has-spenttime-cards fa-circle{{#if board.hasOvertimeCards}} has-overtime-card-active{{else}} no-overtime-card-active{{/if}}" title="{{#if board.hasOvertimeCards}}{{_ 'has-overtime-cards'}}{{else}}{{_ 'has-spenttime-cards'}}"></i>
+          <i class="fa js-has-spenttime-cards {{spentTimeClass}}" title="{{spentTimeTitle}}"></i>
         {{/if}}
         {{#if isTouchScreenOrShowDesktopDragHandles}}
           <i class="fa board-handle fa-arrows" title="{{_ 'drag-board'}}"></i>
