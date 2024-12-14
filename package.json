@@ -32,7 +32,6 @@
     "escape-string-regexp": "^5.0.0",
     "file-type": "^16.5.4",
     "filesize": "^8.0.7",
-    "glob": "^9.3.5",
     "i18next": "^21.6.16",
     "i18next-sprintf-postprocessor": "^0.2.2",
     "jquery": "^3.7.1",
@@ -53,7 +52,6 @@
     "pino": "^8.15.0",
     "pretty-ms": "^7.0.1",
     "qs": "^6.13.0",
-    "rimraf": "^4.4.1",
     "simpl-schema": "^3.4.6",
     "source-map-support": "^0.5.20",
     "uuid": "^8.3.2"
