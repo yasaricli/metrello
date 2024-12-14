@@ -12,7 +12,12 @@ const ImpersonatedUsersSchema = new SimpleSchema({
   type: {
     type: String,
     optional: true,
-    defaultValue: 'user'
+    defaultValue: 'user',
+    autoValue() {
+      if (this.isInsert && !this.isSet) {
+        return 'user';
+      }
+    }
   },
   adminId: {
     type: String,

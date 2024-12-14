@@ -1,5 +1,4 @@
 import { DataCache } from '@wekanteam/meteor-reactive-cache';
-import { Translation } from '../models/translation';
 
 // Server isn't reactive, so search for the data always.
 const ReactiveCacheServer = {
@@ -254,15 +253,25 @@ const ReactiveCacheServer = {
     return ret;
   },
   getTranslation(idOrFirstObjectSelector = {}, options = {}) {
-    const ret = Translation.findOne(idOrFirstObjectSelector, options);
-    return ret;
+    try {
+      const ret = Translation?.findOne(idOrFirstObjectSelector, options);
+      return ret;
+    } catch (error) {
+      console.error('Error in getTranslation:', error);
+      return null;
+    }
   },
   getTranslations(selector = {}, options = {}, getQuery = false) {
-    let ret = Translation.find(selector, options);
-    if (getQuery !== true) {
-      ret = ret.fetch();
+    try {
+      let ret = Translation?.find(selector, options);
+      if (getQuery !== true && ret) {
+        ret = ret.fetch();
+      }
+      return ret || [];
+    } catch (error) {
+      console.error('Error in getTranslations:', error);
+      return [];
     }
-    return ret;
   }
 }
 
@@ -858,31 +867,41 @@ const ReactiveCacheClient = {
     return ret;
   },
   getTranslation(idOrFirstObjectSelector = {}, options = {}) {
-    const idOrFirstObjectSelect = {idOrFirstObjectSelector, options}
-    if (!this.__translation) {
-      this.__translation = new DataCache(_idOrFirstObjectSelect => {
-        const __select = EJSON.parse(_idOrFirstObjectSelect);
-        const _ret = Translation.findOne(__select.idOrFirstObjectSelector, __select.options);
-        return _ret;
-      });
+    try {
+      const idOrFirstObjectSelect = {idOrFirstObjectSelector, options};
+      if (!this.__translation) {
+        this.__translation = new DataCache(_idOrFirstObjectSelect => {
+          const __select = EJSON.parse(_idOrFirstObjectSelect);
+          const _ret = Translation.findOne(__select.idOrFirstObjectSelector, __select.options);
+          return _ret;
+        });
+      }
+      const ret = this.__translation.get(EJSON.stringify(idOrFirstObjectSelect));
+      return ret;
+    } catch (error) {
+      console.error('Error in client getTranslation:', error);
+      return null;
     }
-    const ret = this.__translation.get(EJSON.stringify(idOrFirstObjectSelect));
-    return ret;
   },
   getTranslations(selector = {}, options = {}, getQuery = false) {
-    const select = {selector, options, getQuery}
-    if (!this.__translations) {
-      this.__translations = new DataCache(_select => {
-        const __select = EJSON.parse(_select);
-        let _ret = Translation.find(__select.selector, __select.options);
-        if (__select.getQuery !== true) {
-          _ret = _ret.fetch();
-        }
-        return _ret;
-      });
+    try {
+      const select = {selector, options, getQuery};
+      if (!this.__translations) {
+        this.__translations = new DataCache(_select => {
+          const __select = EJSON.parse(_select);
+          let _ret = Translation.find(__select.selector, __select.options);
+          if (__select.getQuery !== true) {
+            _ret = _ret.fetch();
+          }
+          return _ret;
+        });
+      }
+      const ret = this.__translations.get(EJSON.stringify(select));
+      return ret;
+    } catch (error) {
+      console.error('Error in client getTranslations:', error);
+      return [];
     }
-    const ret = this.__translations.get(EJSON.stringify(select));
-    return ret;
   }
 }
 
@@ -1317,7 +1336,28 @@ const ReactiveCache = {
     }
     return ret;
   },
-}
+};
+
+ReactiveCache.getTranslations = function(selector = {}, options = {}, getQuery = false) {
+  try {
+    if (Meteor.isServer) {
+      if (typeof Translation === 'undefined' || !Translation) {
+        console.warn('Translation collection is not yet defined');
+        return [];
+      }
+      let ret = Translation.find(selector, options);
+      if (getQuery !== true) {
+        ret = ret.fetch();
+      }
+      return ret;
+    } else {
+      return ReactiveCacheClient.getTranslations(selector, options, getQuery);
+    }
+  } catch (error) {
+    console.error('Error in getTranslations:', error);
+    return [];
+  }
+};
 
 // Server isn't reactive, so search for the data always.
 const ReactiveMiniMongoIndexServer = {
@@ -1549,9 +1589,27 @@ const ReactiveMiniMongoIndex = {
 
 export { ReactiveCache, ReactiveMiniMongoIndex };
 
-export const getTranslations = () => {
-  if (!Translation) {
-    return [];
+export const getTranslations = (query) => {
+  if (Meteor.isServer) {
+    // On server side, ensure Translation collection exists
+    if (typeof Translation === 'undefined' || !Translation) {
+      console.warn('Translation collection is not yet defined');
+      return [];
+    }
+    try {
+      const translations = Translation.find(query || {});
+      return translations ? translations.fetch() : [];
+    } catch (error) {
+      console.error('Error getting translations on server:', error);
+      return [];
+    }
+  } else {
+    // On client side, use ReactiveCache
+    try {
+      return ReactiveCache.getTranslations(query || {}) || [];
+    } catch (error) {
+      console.error('Error getting translations on client:', error);
+      return [];
+    }
   }
-  return Translation.find({}).fetch();
 };

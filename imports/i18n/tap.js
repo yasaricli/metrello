@@ -66,25 +66,41 @@ export const TAPi18n = {
     });
   },
   async loadLanguage(language) {
-    if (language in languages && 'load' in languages[language]) {
-      let data = await languages[language].load();
+    try {
+      if (language in languages && 'load' in languages[language]) {
+        let data = await languages[language].load();
 
-      let custom_translations = [];
-      await this.loadTranslation(language);
-      custom_translations = ReactiveCache.getTranslations({language: language}, {fields: { text: true, translationText: true }});
+        let custom_translations = [];
+        await this.loadTranslation(language);
 
-      if (custom_translations && custom_translations.length > 0) {
-        data = custom_translations.reduce((acc, cur) => (acc[cur.text]=cur.translationText, acc), data);
+        // Add null check and error handling
+        try {
+          custom_translations = ReactiveCache.getTranslations({language: language}, {fields: { text: true, translationText: true }}) || [];
+        } catch (err) {
+          console.warn('Error loading translations:', err);
+          custom_translations = [];
+        }
+
+        if (custom_translations && custom_translations.length > 0) {
+          data = custom_translations.reduce((acc, cur) => {
+            acc[cur.text] = cur.translationText;
+            return acc;
+          }, data);
+        }
+
+        this.i18n.addResourceBundle(language, DEFAULT_NAMESPACE, data);
+      } else {
+        throw new Error(`Language ${language} is not supported`);
       }
-
-      this.i18n.addResourceBundle(language, DEFAULT_NAMESPACE, data);
-    } else {
-      throw new Error(`Language ${language} is not supported`);
+    } catch (err) {
+      console.error('Error loading language:', err);
+      throw err;
     }
   },
   async setLanguage(language) {
     await this.loadLanguage(language);
     await this.i18n.changeLanguage(language);
+
     this.current.set(language);
   },
   // Return translation by key

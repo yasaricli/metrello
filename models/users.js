@@ -1,14 +1,19 @@
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import SimpleSchema from 'simpl-schema';
+
+// Use existing Meteor.users collection instead of creating new one
+export const Users = Meteor.users;
+
 import { ReactiveCache, ReactiveMiniMongoIndex } from '/imports/reactiveCache';
 import { SyncedCron } from 'meteor/quave:synced-cron';
 import { TAPi18n } from '/imports/i18n';
 import ImpersonatedUsers from './impersonatedUsers';
-import { Index, MongoDBEngine } from 'meteor/easy:search';
 
 // Sandstorm context is detected using the METEOR_SETTINGS environment variable
 // in the package definition.
 const isSandstorm =
   Meteor.settings && Meteor.settings.public && Meteor.settings.public.sandstorm;
-Users = Meteor.users;
 
 const allowedSortValues = [
   '-modifiedAt',
@@ -39,6 +44,7 @@ Users.attachSchema(
             return name.value.toLowerCase().replace(/\s/g, '');
           }
         }
+        return undefined;
       },
     },
     orgs: {
@@ -523,66 +529,61 @@ Users.attachSchema(
   }),
 );
 
-Users.allow({
-  update(userId, doc) {
+// Add new methods to handle user updates and removals
+Meteor.methods({
+  'users.update'(userId, doc) {
+    check(userId, String);
+    check(doc, Object);
+
     const user = ReactiveCache.getUser(userId) || ReactiveCache.getCurrentUser();
-    if (user?.isAdmin)
-      return true;
+
     if (!user) {
-      return false;
-    }
-    return doc._id === userId;
-  },
-  remove(userId, doc) {
-    const adminsNumber = ReactiveCache.getUsers({
-      isAdmin: true,
-    }).length;
-    const isAdmin = ReactiveCache.getUser(
-      {
-        _id: userId,
-      },
-      {
-        fields: {
-          isAdmin: 1,
-        },
-      },
-    );
-
-    // Prevents remove of the only one administrator
-    if (adminsNumber === 1 && isAdmin && userId === doc._id) {
-      return false;
+      throw new Meteor.Error('unauthorized', 'User not found');
     }
 
-    // If it's the user or an admin
-    return userId === doc._id || isAdmin;
+    // Only allow users to update their own profile or if they're admin
+    if (user.isAdmin || userId === user._id) {
+      // Check if trying to change isAdmin status
+      if (doc.isAdmin !== undefined && !user.isAdmin) {
+        throw new Meteor.Error('unauthorized', 'Only admins can change admin status');
+      }
+
+      Users.update(userId, {
+        $set: doc
+      });
+      return true;
+    }
+
+    throw new Meteor.Error('unauthorized', 'Not authorized to update this user');
   },
-  fetch: [],
-});
 
-// Non-Admin users can not change to Admin
-Users.deny({
-  update(userId, board, fieldNames) {
-    return _.contains(fieldNames, 'isAdmin') && !ReactiveCache.getCurrentUser().isAdmin;
-  },
-  fetch: [],
-});
+  'users.remove'(userId, targetUserId) {
+    check(userId, String);
+    check(targetUserId, String);
 
+    const user = ReactiveCache.getUser(userId);
 
-// Search a user in the complete server database by its name, username or emails adress. This
-// is used for instance to add a new user to a board.
-UserSearchIndex = new Index({
-  collection: Users,
-  fields: ['username', 'profile.fullname', 'profile.avatarUrl'],
-  allowedFields: ['username', 'profile.fullname', 'profile.avatarUrl'],
-  engine: new MongoDBEngine({
-    fields: function (searchObject, options) {
-      return {
-        username: 1,
-        'profile.fullname': 1,
-        'profile.avatarUrl': 1,
-      };
-    },
-  }),
+    if (!user) {
+      throw new Meteor.Error('unauthorized', 'User not found');
+    }
+
+    // Only allow users to remove themselves or if they're admin
+    if (user.isAdmin || userId === targetUserId) {
+      const adminsNumber = ReactiveCache.getUsers({
+        isAdmin: true,
+      }).length;
+
+      // Prevent removal of last admin
+      if (adminsNumber === 1 && user.isAdmin && userId === targetUserId) {
+        throw new Meteor.Error('unauthorized', 'Cannot remove last admin');
+      }
+
+      Users.remove(targetUserId);
+      return true;
+    }
+
+    throw new Meteor.Error('unauthorized', 'Not authorized to remove this user');
+  }
 });
 
 Users.safeFields = {
@@ -1692,6 +1693,17 @@ if (Meteor.isServer) {
         });
       }
     },
+    'users.search'(searchText, options = {}) {
+      check(searchText, String);
+      check(options, Object);
+
+      // Limit who can search users
+      if (!Meteor.userId()) {
+        throw new Meteor.Error('not-authorized');
+      }
+
+      return UserSearchIndex.search(searchText, options);
+    }
   });
   Accounts.onCreateUser((options, user) => {
     const userCount = ReactiveCache.getUsers({}, {}, true).count();
@@ -2580,6 +2592,22 @@ if (Meteor.isServer) {
       });
     }
   });
+}
+
+import { Email } from 'meteor/email';  // Add this import
+
+// Ensure Email package is available
+if (Meteor.isServer) {
+  if (!Email || typeof Email !== 'object') {
+
+    console.error('Email package is not properly initialized');
+    // Provide fallback or throw meaningful error
+    global.Email = {
+      send: function(options) {
+        console.error('Email sending is not available:', options);
+      }
+    };
+  }
 }
 
 export default Users;
