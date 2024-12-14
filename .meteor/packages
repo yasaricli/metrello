@@ -51,7 +51,6 @@ quave:migrations
 
 # jam
 jam:offline
-jam:easy-schema
 jam:pub-sub
 jam:method
 jam:mongo-transactions
@@ -74,3 +73,4 @@ cottz:publish-relations
 service-configuration@1.3.5
 ddp-rate-limiter@1.2.2
 useraccounts:core
+aldeed:collection2@3.5.0

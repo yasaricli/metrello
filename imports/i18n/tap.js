@@ -51,17 +51,23 @@ export const TAPi18n = {
   },
   loadTranslation(language) {
     return new Promise((resolve, reject) => {
-      if (Meteor.isClient) {
-        const translationSubscription = Meteor.subscribe('translation', {language: language},  0, {
-          onReady() {
-            resolve(translationSubscription);
-          },
-          onError(error) {
-            reject(error);
-          }
-        });
-      } else {
-        resolve();
+      try {
+        if (Meteor.isClient) {
+          const translationSubscription = Meteor.subscribe('translation', {language: language}, 0, {
+            onReady() {
+              resolve(translationSubscription);
+            },
+            onError(error) {
+              console.error('Translation subscription error:', error);
+              reject(error);
+            }
+          });
+        } else {
+          resolve();
+        }
+      } catch (err) {
+        console.error('Error loading translation:', err);
+        reject(err);
       }
     });
   },

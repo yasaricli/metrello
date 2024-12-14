@@ -1344,19 +1344,15 @@ const ReactiveCache = {
 
 ReactiveCache.getTranslations = function(selector = {}, options = {}, getQuery = false) {
   try {
-    if (Meteor.isServer) {
-      if (typeof Translation === 'undefined' || !Translation) {
-        console.warn('Translation collection is not yet defined');
-        return [];
-      }
-      let ret = Translation.find(selector, options);
-      if (getQuery !== true) {
-        ret = ret.fetch();
-      }
-      return ret;
-    } else {
-      return ReactiveCacheClient.getTranslations(selector, options, getQuery);
-    }
+    const ret = Meteor.isServer ?
+      (() => {
+        const { Translation } = require('../models/translation');
+        if (!Translation) return [];
+        let result = Translation.find(selector, options);
+        return getQuery !== true ? result.fetch() : result;
+      })() :
+      ReactiveCacheClient.getTranslations(selector, options, getQuery);
+    return ret;
   } catch (error) {
     console.error('Error in getTranslations:', error);
     return [];

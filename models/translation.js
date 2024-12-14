@@ -1,51 +1,54 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { EasySchema } from 'meteor/jam:easy-schema';
+import fs from 'fs';
+import path from 'path';
 
-export const Translation = new Mongo.Collection('translation');
+const translationsCache = {};
+const isServer = typeof window === 'undefined';
 
-// Define the schema for translations
-const TranslationSchema = new EasySchema({
-  languageCode: {
-    type: String,
-    max: 5,
+export const Translations = {
+  // Load translation file for a specific language
+  loadTranslation(language) {
+    if (translationsCache[language]) {
+      return translationsCache[language];
+    }
+
+    try {
+      const filePath = path.join(process.cwd(), 'imports/i18n/data', `${language}.json`);
+      const content = fs.readFileSync(filePath, 'utf8');
+      translationsCache[language] = JSON.parse(content);
+      return translationsCache[language];
+    } catch (error) {
+      console.error(`Error loading translation for ${language}:`, error);
+      return translationsCache[language];
+    }
   },
-  text: {
-    type: String,
-    optional: true,
+
+  // Get translation text
+  getTranslation(language, key) {
+    const translations = this.loadTranslation(language);
+    return translations ? translations[key] || key : key;
   },
-  createdAt: {
-    type: Date,
-    autoValue() {
-      if (this.isInsert) {
-        return new Date();
+
+  // Get available languages by scanning the i18n directory
+  getAvailableLanguages() {
+    if (isServer) {
+      try {
+        const i18nPath = path.join(process.cwd(), 'imports/i18n/data');
+        return fs.readdirSync(i18nPath)
+          .filter(file => file.endsWith('.json'))
+          .map(file => file.replace('.json', ''));
+      } catch (error) {
+        console.error('Error reading available languages:', error);
+        return [];
       }
-      return this.unset();
-    },
-  },
-  modifiedAt: {
-    type: Date,
-    autoValue() {
-      return new Date();
-    },
-  },
-});
+    }
+    return [];
+  }
+};
 
-Translation.attachSchema(TranslationSchema);
-
-if (Meteor.isServer) {
-  Translation.allow({
-    insert(userId) {
-      return userId && Meteor.user().isAdmin;
-    },
-    update(userId) {
-      return userId && Meteor.user().isAdmin;
-    },
-    remove(userId) {
-      return userId && Meteor.user().isAdmin;
-    },
-    fetch: [],
-  });
+if (isServer) {
+  // Initialize translations on server startup
+  const languages = Translations.getAvailableLanguages();
+  console.log('Available languages:', languages);
 }
 
-export default Translation;
+export default Translations;

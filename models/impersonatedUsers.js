@@ -2,67 +2,68 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
-export const ImpersonatedUsers = new Mongo.Collection('impersonated_users');
+// Create the collection
+export const ImpersonatedUsers = new Mongo.Collection('impersonatedUsers');
 
-if (Meteor.isServer) {
-  ImpersonatedUsers.createIndex({ userId: 1 }, { unique: true });
-}
-
+// Define the schema
 const ImpersonatedUsersSchema = new SimpleSchema({
-  type: {
-    type: String,
-    optional: true,
-    defaultValue: 'user',
-    autoValue() {
-      if (this.isInsert && !this.isSet) {
-        return 'user';
-      }
-    }
-  },
-  adminId: {
-    type: String,
-    optional: true,
-  },
   userId: {
     type: String,
-    optional: true,
   },
-  boardId: {
+  impersonatedByUserId: {
     type: String,
-    optional: true,
   },
-  attachmentId: {
-    type: String,
-    optional: true,
-  },
-  reason: {
-    type: String,
-    optional: true,
-  },
-  createdAt: {
+  impersonatedAt: {
     type: Date,
-    autoValue() {
-      if (this.isInsert) {
-        return new Date();
-      } else if (this.isUpsert) {
-        return { $setOnInsert: new Date() };
-      } else {
-        this.unset();
-      }
-    }
+    defaultValue: new Date(),
   },
-  modifiedAt: {
-    type: Date,
-    autoValue() {
-      if (this.isInsert || this.isUpsert || this.isUpdate) {
-        return new Date();
-      } else {
-        this.unset();
-      }
-    }
+  active: {
+    type: Boolean,
+    defaultValue: true,
   }
 });
 
-ImpersonatedUsers.attachSchema(ImpersonatedUsersSchema);
+// Create index on server
+if (Meteor.isServer) {
+  Meteor.startup(() => {
+    ImpersonatedUsers.createIndex({ userId: 1 });
+  });
+
+  // Define methods for secure operations
+  Meteor.methods({
+    'impersonatedUsers.insert'(doc) {
+      // Validate doc
+      ImpersonatedUsersSchema.validate(doc);
+
+      // Add security check
+      if (!Meteor.userId() || !Meteor.user().isAdmin) {
+        throw new Meteor.Error('not-authorized');
+      }
+
+      return ImpersonatedUsers.insert(doc);
+    },
+
+    'impersonatedUsers.update'(selector, modifier) {
+      // Validate modifier
+      ImpersonatedUsersSchema.validate(modifier, { modifier: true });
+
+      // Add security check
+      if (!Meteor.userId() || !Meteor.user().isAdmin) {
+        throw new Meteor.Error('not-authorized');
+      }
+
+      return ImpersonatedUsers.update(selector, modifier);
+    }
+  });
+}
+
+// Remove direct operation capability
+ImpersonatedUsers.insert = function() {
+  throw new Meteor.Error('not-allowed', 'Direct inserts are not allowed. Use Meteor.call("impersonatedUsers.insert")');
+};
+
+ImpersonatedUsers.update = function() {
+  throw new Meteor.Error('not-allowed', 'Direct updates are not allowed. Use Meteor.call("impersonatedUsers.update")');
+};
 
 export default ImpersonatedUsers;
