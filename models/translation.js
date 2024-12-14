@@ -1,20 +1,21 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { EasySchema } from 'meteor/jam:easy-schema';
 
 export const Translation = new Mongo.Collection('translation');
 
-// Define the schema with required fields
-Translation.attachSchema(new SimpleSchema({
-  code: {
+// Define the schema for translations
+const TranslationSchema = new EasySchema({
+  languageCode: {
     type: String,
+    max: 5,
   },
-  language: {
+  text: {
     type: String,
+    optional: true,
   },
   createdAt: {
     type: Date,
-    optional: true,
-    // Set default value to avoid schema validation errors
     autoValue() {
       if (this.isInsert) {
         return new Date();
@@ -22,11 +23,29 @@ Translation.attachSchema(new SimpleSchema({
       return this.unset();
     },
   },
-  // Add any other required fields
-}));
+  modifiedAt: {
+    type: Date,
+    autoValue() {
+      return new Date();
+    },
+  },
+});
+
+Translation.attachSchema(TranslationSchema);
 
 if (Meteor.isServer) {
-  Translation._ensureIndex({ code: 1 });
+  Translation.allow({
+    insert(userId) {
+      return userId && Meteor.user().isAdmin;
+    },
+    update(userId) {
+      return userId && Meteor.user().isAdmin;
+    },
+    remove(userId) {
+      return userId && Meteor.user().isAdmin;
+    },
+    fetch: [],
+  });
 }
 
 export default Translation;

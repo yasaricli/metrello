@@ -254,7 +254,9 @@ const ReactiveCacheServer = {
   },
   getTranslation(idOrFirstObjectSelector = {}, options = {}) {
     try {
-      const ret = Translation?.findOne(idOrFirstObjectSelector, options);
+      const { Translation } = require('../models/translation');
+      if (!Translation) return null;
+      const ret = Translation.findOne(idOrFirstObjectSelector, options);
       return ret;
     } catch (error) {
       console.error('Error in getTranslation:', error);
@@ -263,11 +265,13 @@ const ReactiveCacheServer = {
   },
   getTranslations(selector = {}, options = {}, getQuery = false) {
     try {
-      let ret = Translation?.find(selector, options);
-      if (getQuery !== true && ret) {
+      const { Translation } = require('../models/translation');
+      if (!Translation) return [];
+      let ret = Translation.find(selector, options);
+      if (getQuery !== true) {
         ret = ret.fetch();
       }
-      return ret || [];
+      return ret;
     } catch (error) {
       console.error('Error in getTranslations:', error);
       return [];
@@ -1590,26 +1594,19 @@ const ReactiveMiniMongoIndex = {
 export { ReactiveCache, ReactiveMiniMongoIndex };
 
 export const getTranslations = (query) => {
-  if (Meteor.isServer) {
-    // On server side, ensure Translation collection exists
-    if (typeof Translation === 'undefined' || !Translation) {
-      console.warn('Translation collection is not yet defined');
-      return [];
-    }
-    try {
+  try {
+    if (Meteor.isServer) {
+      const { Translation } = require('../models/translation');
+      if (!Translation) {
+        return [];
+      }
       const translations = Translation.find(query || {});
       return translations ? translations.fetch() : [];
-    } catch (error) {
-      console.error('Error getting translations on server:', error);
-      return [];
-    }
-  } else {
-    // On client side, use ReactiveCache
-    try {
+    } else {
       return ReactiveCache.getTranslations(query || {}) || [];
-    } catch (error) {
-      console.error('Error getting translations on client:', error);
-      return [];
     }
+  } catch (error) {
+    console.error('Error in getTranslations:', error);
+    return [];
   }
 };
